@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6E0907A0-84D2-4F3B-B575-0379BCC5694C}</ProjectGuid>
+    <ProjectGuid>{696ED01D-C559-4460-B5B9-19A5425499DE}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>DAL</RootNamespace>
-    <AssemblyName>DAL</AssemblyName>
+    <RootNamespace>Entidades</RootNamespace>
+    <AssemblyName>Entidades</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -18,7 +18,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>DAL.xml</DocumentationFile>
+    <DocumentationFile>Entidades.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -27,7 +27,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>DAL.xml</DocumentationFile>
+    <DocumentationFile>Entidades.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -63,12 +63,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Acceso.vb" />
-    <Compile Include="BackupRestoreDAL.vb" />
-    <Compile Include="BitacoraDAL.vb" />
-    <Compile Include="DigitoVerificadorDAL.vb" />
-    <Compile Include="GestorPermisosDAL.vb" />
-    <Compile Include="IdiomaDAL.vb" />
+    <Compile Include="BackupRestoreEntidad.vb" />
+    <Compile Include="BitacoraEntidad.vb" />
+    <Compile Include="GrupoPermisoEntidad.vb" />
+    <Compile Include="IdiomaEntidad.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -84,7 +82,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="UsuarioDAL.vb" />
+    <Compile Include="Palabras.vb" />
+    <Compile Include="PermisoBaseEntidad.vb" />
+    <Compile Include="PermisoEntidad.vb" />
+    <Compile Include="TipoBitacora.vb" />
+    <Compile Include="UsuarioEntidad.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
