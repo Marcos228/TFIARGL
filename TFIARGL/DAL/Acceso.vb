@@ -1,8 +1,13 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Data.Sql
+Imports System.Globalization
 Imports System.Configuration
-Public Class Acceso
+Imports System.Web.Configuration
+Imports System.Threading
+Imports System.Reflection
 
+Public Class Acceso
+    Public Shared BackUpFolder As String = System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString()
     Public Shared Function Lectura(command As SqlCommand) As DataTable
         Try
             Dim Da As New SqlDataAdapter(command)
@@ -16,10 +21,12 @@ Public Class Acceso
     Public Shared Function Scalar(ByVal command As SqlCommand) As Integer
 
         Try
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US")
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
             command.Connection.Open()
             Return command.ExecuteScalar
         Catch ex As Exception
-            Throw
+            Throw New Exception(ex.Message)
         Finally
             command.Connection.Close()
             command.Connection.Dispose()
@@ -27,6 +34,8 @@ Public Class Acceso
     End Function
     Public Shared Function Escritura(command As SqlCommand) As Integer
         Try
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US")
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
             command.Connection.Open()
             Return command.ExecuteNonQuery()
         Catch ex As Exception
@@ -56,12 +65,12 @@ Public Class Acceso
         End Try
     End Function
     Public Shared Function MiConexion() As SqlConnection
-        Dim MiConecction = New SqlConnection(ConfigurationManager.ConnectionStrings("SQLProvider").ConnectionString)
+        Dim MiConecction = New SqlConnection(WebConfigurationManager.ConnectionStrings("SaitamaDell").ConnectionString)
         Return MiConecction
     End Function
 
     Public Shared Function MiConexionMaster() As SqlConnection
-        Dim MiConecction = New SqlConnection(ConfigurationManager.ConnectionStrings("SQLProviderMaster").ConnectionString)
+        Dim MiConecction = New SqlConnection(System.Web.Configuration.WebConfigurationManager.ConnectionStrings("SaitamaDellMaster").ConnectionString)
         Return MiConecction
     End Function
 
@@ -82,5 +91,31 @@ Public Class Acceso
             Throw ex
         End Try
     End Function
+
+    Public Shared Sub AgregarParametros(ByVal Someobject As Object, ByRef listaparam As List(Of String))
+        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US")
+        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
+        Dim _type As Type = Someobject.GetType()
+        Dim properties() As PropertyInfo = _type.GetProperties()
+        For Each _property As PropertyInfo In properties
+            If _property.PropertyType.FullName.Contains("Entidades.") Then
+                If Not _property.PropertyType.FullName.Contains("Collections.") Then
+                    If _property.PropertyType.GetProperties.Count > 0 Then
+                        For Each _property2 As PropertyInfo In _property.PropertyType.GetProperties
+                            Dim Objeto As Object = _property.GetValue(Someobject, Nothing)
+                            If _property2.Name.Contains("ID") Then
+                                listaparam.Add(_property2.GetValue(Objeto, Nothing).ToString)
+                                Exit For
+                            End If
+                        Next
+                    Else
+                        listaparam.Add(_property.GetValue(Someobject, Nothing))
+                    End If
+                End If
+            Else
+                listaparam.Add(_property.GetValue(Someobject, Nothing))
+            End If
+        Next
+    End Sub
 
 End Class

@@ -3,88 +3,101 @@ Imports Entidades
 Imports DAL
 Public Class GestorPermisosDAL
 
-    Public Sub Alta(ByVal perm As PermisoBaseEntidad)
+    Public Sub Alta(ByVal perm As PermisoCompuestoEntidad)
         Try
-            Dim MiID As Integer = Acceso.TraerID("ID_Permiso", "Permiso")
-
             If perm.tieneHijos = True Then
                 'Es un Perfil
-                Dim Command As SqlCommand = Acceso.MiComando("insert into Permiso values(@ID_Permiso, @Nombre, @esAccion)")
+                Dim Command As SqlCommand = Acceso.MiComando("insert into Permiso (Nombre,esAccion) OUTPUT INSERTED.ID_Rol values(@Nombre,@esAccion)")
                 With Command.Parameters
-                    .Add(New SqlParameter("@ID_Permiso", MiID))
                     .Add(New SqlParameter("@Nombre", perm.Nombre))
                     .Add(New SqlParameter("@esAccion", 0))
                 End With
-                Acceso.Escritura(Command)
+                Dim ID As Integer = Acceso.Scalar(Command)
 
-                For Each MiPermiso As PermisoBaseEntidad In perm.obtenerHijos
+                For Each MiPermiso As PermisoBaseEntidad In perm.Hijos
                     Command = Acceso.MiComando("insert into Permiso_Permiso values (@ID_Padre, @ID_Hijo)")
                     With Command.Parameters
-                        .Add(New SqlParameter("@ID_Padre", MiID))
+                        .Add(New SqlParameter("@ID_Padre", ID))
                         .Add(New SqlParameter("@ID_Hijo", MiPermiso.ID))
                     End With
                     Acceso.Escritura(Command)
                 Next
             Else
                 'Es un Permiso
-                Dim Command As SqlCommand = Acceso.MiComando("insert into Permiso values(@ID_Permiso, @Nombre, @esAccion)")
-                With Command.Parameters
-                    .Add(New SqlParameter("@ID_Permiso", MiID))
-                    .Add(New SqlParameter("@Nombre", perm.Nombre))
-                    .Add(New SqlParameter("@esAccion", 1))
-                End With
-                Acceso.Escritura(Command)
+                'Dim Command As SqlCommand = Acceso.MiComando("insert into Permiso values(@ID_Permiso, @Nombre, @esAccion)")
+                'With Command.Parameters
+                '    .Add(New SqlParameter("@ID_Permiso", MiID))
+                '    .Add(New SqlParameter("@Nombre", perm.Nombre))
+                '    .Add(New SqlParameter("@esAccion", 1))
+                'End With
+                'Acceso.Escritura(Command)
             End If
         Catch ex As Exception
             Throw ex
         End Try
     End Sub
 
-    Public Sub Baja(ByVal ID As Integer)
+    Public Function Baja(ByVal ID As Integer) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Update Usuario set Perfil=@PerfilEliminado where Perfil=@ID_Padre")
-            With Command.Parameters
-                .Add(New SqlParameter("@PerfilEliminado", 0))
-                .Add(New SqlParameter("@ID_Padre", ID))
-            End With
-            Acceso.Escritura(Command)
-            Command.Dispose()
-
-            Dim VerificadorUsuario As UsuarioDAL = New UsuarioDAL
-            VerificadorUsuario.PerfilEliminadoActualizacion()
-
-            Command = Acceso.MiComando("delete from Permiso_Permiso where ID_Padre=@ID_Padre")
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Usuario from Usuario where ID_Perfil=@ID_Padre")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Padre", ID))
             End With
-            Acceso.Escritura(Command)
+            Dim dt_usu As DataTable = Acceso.Lectura(Command)
             Command.Dispose()
-            Command = Acceso.MiComando("delete from Permiso_Permiso where ID_Hijo=@ID_Padre")
-            With Command.Parameters
-                .Add(New SqlParameter("@ID_Padre", ID))
-            End With
-            Acceso.Escritura(Command)
-            Command.Dispose()
+            If dt_usu.Rows.Count = 0 Then
+                Command = Acceso.MiComando("delete from Permiso_Permiso where ID_Rol=@ID_Padre")
+                With Command.Parameters
+                    .Add(New SqlParameter("@ID_Padre", ID))
+                End With
+                Acceso.Escritura(Command)
+                Command.Dispose()
+                Command = Acceso.MiComando("delete from Permiso_Permiso where ID_Permiso=@ID_Padre")
+                With Command.Parameters
+                    .Add(New SqlParameter("@ID_Padre", ID))
+                End With
+                Acceso.Escritura(Command)
+                Command.Dispose()
 
-            Command = Acceso.MiComando("delete from Permiso where ID_Permiso=@IDPermiso")
-            With Command.Parameters
-                .Add(New SqlParameter("@IDPermiso", ID))
-            End With
-            Acceso.Escritura(Command)
+                Command = Acceso.MiComando("delete from Permiso where ID_ROL=@IDPermiso")
+                With Command.Parameters
+                    .Add(New SqlParameter("@IDPermiso", ID))
+                End With
+                Acceso.Escritura(Command)
+                Return True
+            Else
+                Return False
+            End If
+
+
+
+
+            'Dim Command As SqlCommand = Acceso.MiComando("Update Usuario set Perfil=@PerfilEliminado where Perfil=@ID_Padre")
+            'With Command.Parameters
+            '    .Add(New SqlParameter("@PerfilEliminado", 0))
+            '    .Add(New SqlParameter("@ID_Padre", ID))
+            'End With
+            'Acceso.Escritura(Command)
+            'Command.Dispose()
+
+            'Dim VerificadorUsuario As UsuarioDAL = New UsuarioDAL
+            'VerificadorUsuario.PerfilEliminadoActualizacion()
+
+
         Catch ex As Exception
             Throw ex
         End Try
-    End Sub
+    End Function
 
-    Public Sub Modificar(ByVal perm As Entidades.PermisoBaseEntidad)
+    Public Sub Modificar(ByVal perm As PermisoCompuestoEntidad)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("delete from permiso_permiso where ID_Padre=@ID_Padre")
+            Dim Command As SqlCommand = Acceso.MiComando("delete from permiso_permiso where ID_Rol=@ID_Padre")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Padre", perm.ID))
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
-            For Each MiPermiso As Entidades.PermisoBaseEntidad In perm.obtenerHijos
+            For Each MiPermiso As Entidades.PermisoBaseEntidad In perm.Hijos
                 Command = Acceso.MiComando("insert into permiso_permiso values (@ID_Padre, @ID_Hijo)")
                 With Command.Parameters
                     .Add(New SqlParameter("@ID_Padre", perm.ID))
@@ -102,7 +115,7 @@ Public Class GestorPermisosDAL
         Try
             Dim _listaFamilias As New List(Of PermisoBaseEntidad)
             Dim Command As SqlCommand
-            Command = Acceso.MiComando("Select * from Permiso where esAccion= @accion and ID_Permiso <> @PerfilEliminado order by esAccion asc, ID_Permiso asc")
+            Command = Acceso.MiComando("Select * from Permiso where esAccion= @accion and ID_ROL > @PerfilEliminado order by esAccion asc, ID_ROL asc")
 
             If filtro = True Then
                 Command.Parameters.Add(New SqlParameter("@accion", 0))
@@ -123,10 +136,10 @@ Public Class GestorPermisosDAL
 
     End Function
 
-    Public Function ConsultarporID(ByVal ID As Integer) As GrupoPermisoEntidad
+    Public Function ConsultarporID(ByVal ID As Integer) As Entidades.PermisoCompuestoEntidad
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Select * from Permiso where ID_Permiso=@IDPermiso")
-            Command.Parameters.Add(New SqlParameter("@IDPermiso", ID))
+            Dim Command As SqlCommand = Acceso.MiComando("Select * from Permiso where ID_ROL=@ID_ROL")
+            Command.Parameters.Add(New SqlParameter("@ID_ROL", ID))
             Dim _dt As DataTable = Acceso.Lectura(Command)
             If _dt.Rows.Count = 1 Then
                 Return ConvertirDataRowEnPermiso(_dt.Rows(0))
@@ -143,7 +156,7 @@ Public Class GestorPermisosDAL
         Try
             Dim _listaPermisos As New List(Of PermisoBaseEntidad)
             Dim Command As SqlCommand
-            Command = Acceso.MiComando("Select * from Permiso where ID_Permiso <> 0 order by esAccion asc, ID_Permiso asc")
+            Command = Acceso.MiComando("Select * from Permiso where ID_Rol <> 0 order by esAccion asc, ID_Rol asc")
             Dim _dt As DataTable = Acceso.Lectura(Command)
             For Each _dr As DataRow In _dt.Rows
                 Dim _permiso As PermisoBaseEntidad = ConvertirDataRowEnPermiso(_dr)
@@ -176,10 +189,11 @@ Public Class GestorPermisosDAL
             If Not _dr.Item("esAccion") Is DBNull.Value AndAlso Convert.ToBoolean(_dr.Item("esAccion")) Then
                 _permiso = New PermisoEntidad
             Else
-                _permiso = New GrupoPermisoEntidad
+                _permiso = New PermisoCompuestoEntidad
             End If
-            _permiso.ID = CInt(_dr.Item("ID_Permiso"))
+            _permiso.ID = CInt(_dr.Item("ID_Rol"))
             _permiso.Nombre = Convert.ToString(_dr.Item("Nombre"))
+            _permiso.URL = Convert.ToString(_dr.Item("URL"))
             If _permiso.tieneHijos Then
                 Dim ListaHijos As List(Of PermisoBaseEntidad) = Me.ListarHijos(_permiso.ID)
                 For Each hijo As PermisoBaseEntidad In ListaHijos
@@ -194,7 +208,7 @@ Public Class GestorPermisosDAL
     Private Function ListarHijos(ByVal _id As Integer) As List(Of PermisoBaseEntidad)
         Try
             Dim lista As List(Of PermisoBaseEntidad) = New List(Of PermisoBaseEntidad)
-            Dim Command As SqlClient.SqlCommand = Acceso.MiComando("SELECT P.ID_Permiso,Nombre,esAccion FROM Permiso as P LEFT JOIN Permiso_Permiso as PP ON (PP.ID_Hijo=P.ID_Permiso) WHERE PP.ID_Padre = @IDPadre  ORDER BY P.ID_Permiso ASC")
+            Dim Command As SqlClient.SqlCommand = Acceso.MiComando("SELECT P.ID_ROL,Nombre,esAccion,URL FROM Permiso as P LEFT JOIN Permiso_Permiso as PP ON (PP.ID_Permiso=P.ID_ROL) WHERE PP.ID_ROL = @IDPadre  ORDER BY P.ID_Rol ASC")
             Command.Parameters.Add(New SqlParameter("@IDPadre", _id))
             Dim dt As DataTable = Acceso.Lectura(Command)
             For Each row As DataRow In dt.Rows

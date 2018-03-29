@@ -1,0 +1,61 @@
+﻿.fondoGris {
+    background-color: #336699;
+}
+
+.fondoClaro {
+    background-color: #FF9C47;
+}
+
+.bordeMenu {
+    border-color: black;
+    border-width: 1px;
+    border-right: solid;
+    border-left: solid;
+    border-bottom: solid;
+}
+
+.bordeImagen {
+    border-color: black;
+    border-width: 1px;
+    border-right: solid;
+    border-left: solid;
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.lineaCopyright {
+    background-color: #333333;
+    height: 2px;
+}
+
+/* GRID */
+.Grid-verde {
+    width: 95%;
+    background-color: #ffffff;
+    border: solid 1px #333333;
+}
+
+    .Grid-verde th {
+        color: #ffffff;
+        background: #00919E;
+        border-color: black;
+        font-size: 16px;
+        text-align: center;
+        font-weight: normal;
+        height: 25px;
+    }
+
+    .Grid-verde td {
+        border-color: black;
+        color: #000000;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .Grid-verde tr:hover {
+        background-color: #BCCDE0;
+    }
+.margenIconoMensaje {
+    margin-top: 7px;
+    margin-left: 6px;
+}

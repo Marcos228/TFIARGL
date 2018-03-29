@@ -63,10 +63,13 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackupRestoreEntidad.vb" />
-    <Compile Include="BitacoraEntidad.vb" />
-    <Compile Include="GrupoPermisoEntidad.vb" />
-    <Compile Include="IdiomaEntidad.vb" />
+    <Compile Include="Detalle_Factura.vb" />
+    <Compile Include="Equipo.vb" />
+    <Compile Include="Estadistica.vb" />
+    <Compile Include="Factura.vb" />
+    <Compile Include="Fases.vb" />
+    <Compile Include="Game.vb" />
+    <Compile Include="Jugador.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -82,11 +85,28 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Palabras.vb" />
-    <Compile Include="PermisoBaseEntidad.vb" />
-    <Compile Include="PermisoEntidad.vb" />
-    <Compile Include="TipoBitacora.vb" />
-    <Compile Include="UsuarioEntidad.vb" />
+    <Compile Include="Partida.vb" />
+    <Compile Include="Posicion.vb" />
+    <Compile Include="Premios.vb" />
+    <Compile Include="Rol_Jugador.vb" />
+    <Compile Include="Servicios\BackupRestoreEntidad.vb" />
+    <Compile Include="Servicios\Bitacora.vb" />
+    <Compile Include="Servicios\BitacoraAuditoria.vb" />
+    <Compile Include="Servicios\BitacoraErrores.vb" />
+    <Compile Include="Servicios\FilaCorrupta.vb" />
+    <Compile Include="Servicios\IdiomaEntidad.vb" />
+    <Compile Include="Servicios\Palabras.vb" />
+    <Compile Include="Servicios\PermisoBaseEntidad.vb" />
+    <Compile Include="Servicios\PermisoCompuestoEntidad.vb" />
+    <Compile Include="Servicios\PermisoEntidad.vb" />
+    <Compile Include="Servicios\Tipo_Bitacora.vb" />
+    <Compile Include="Servicios\UsuarioEntidad.vb" />
+    <Compile Include="Sponsor.vb" />
+    <Compile Include="Tipo_Estadistica.vb" />
+    <Compile Include="Tipo_Juego.vb" />
+    <Compile Include="Tipo_Pago.vb" />
+    <Compile Include="Tipo_Rol.vb" />
+    <Compile Include="Torneo.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

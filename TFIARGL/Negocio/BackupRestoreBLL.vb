@@ -3,23 +3,20 @@ Imports DAL
 Public Class BackupRestoreBLL
     Private _backuprestoredal As BackupRestoreDAL
     Private _backuprestoreentidad As BackupRestoreEntidad
+    Private Bitacora As New BitacoraBLL
 
-    Public Function CrearBackup(ByRef directorio As String, ByRef nombre As String) As Boolean
+    Public Function CrearBackup(ByRef directorio As String, ByRef nombre As String, ByRef usuario As UsuarioEntidad) As Boolean
         Try
-            Me._backuprestoreentidad = New BackupRestoreEntidad With {.Directorio = directorio, .Nombre = nombre}
+            Me._backuprestoreentidad = New BackupRestoreEntidad(directorio, usuario, nombre)
             Me._backuprestoredal = New BackupRestoreDAL
             If Me._backuprestoredal.RealizarBackup(Me._backuprestoreentidad) Then
-                BitacoraBLL.CrearBitacora("Se ha creado un backup del sistema.", TipoBitacora.Backup, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                Bitacora.makeSimpleLog("Se ha creado un backup del sistema.")
                 Return True
             Else
                 Return False
             End If
-        Catch FalloConexion As InvalidOperationException
-            Dim Bitacora As New BitacoraEntidad("No se pudo crear un backup del sistema. Error de Conexion", TipoBitacora.Backup, SessionBLL.SesionActual.ObtenerUsuarioActual)
-            BitacoraBLL.ArchivarBitacora(Bitacora)
-            Throw FalloConexion
         Catch ex As Exception
-            BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Bitacora.makeSimpleLog("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message)
             Throw ex
         End Try
 
@@ -29,17 +26,13 @@ Public Class BackupRestoreBLL
         Try
             _backuprestoredal = New BackupRestoreDAL
             If _backuprestoredal.RealizarRestore(BackupEntidad) Then
-                BitacoraBLL.CrearBitacora("Se ha realizado un restore del sistema.", TipoBitacora.Restore, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                Bitacora.makeSimpleLog("Se ha realizado un restore del sistema.")
                 Return True
             Else
                 Return False
             End If
-        Catch FalloConexion As InvalidOperationException
-            Dim Bitacora As New BitacoraEntidad("No se pudo realizar un restore del sistema. Error de Conexion", TipoBitacora.Backup, SessionBLL.SesionActual.ObtenerUsuarioActual)
-            BitacoraBLL.ArchivarBitacora(Bitacora)
-            Throw FalloConexion
         Catch ex As Exception
-            BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Bitacora.makeSimpleLog("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message)
             Throw ex
         End Try
     End Function

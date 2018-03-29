@@ -1,64 +1,43 @@
-﻿Imports DAL
-Imports System.Security.Cryptography
-Imports Entidades
-Imports System.Text
-Imports Negocio
-Imports System.Threading
-Public Class DigitoVerificadorBLL
-    Public Shared Function Integridad() As Boolean
-        Try
-            Thread.CurrentThread.CurrentCulture = SessionBLL.SesionActual.IdiomaPredeterminado.Cultura
-            Thread.CurrentThread.CurrentUICulture = SessionBLL.SesionActual.IdiomaPredeterminado.Cultura
-            Dim gestorbitacora As BitacoraDAL = New BitacoraDAL
-            Dim gestorusuario As UsuarioDAL = New UsuarioDAL
-            Dim gestorevento As EventoDAL = New EventoDAL
-            Dim DHBitacora As String = ""
-            Dim DHUsuario As String = ""
-            Dim DHEvento As String = ""
-            DHBitacora = gestorbitacora.Integridad
-            DHUsuario = gestorusuario.Integridad
-            DHEvento = gestorevento.integridad
-            If Not IsNothing(DHBitacora) Then
-                If Not IsNothing(DHUsuario) Then
-                    If Not IsNothing(DhEvento) Then
-                        Dim DataTabla = (New DigitoVerificadorDAL).VerificarIntegridad
-                        For Each row As DataRow In DataTabla.Rows
-                            If row.Item(0) = "Bitacora" And DigitoVerificadorDAL.CalcularDVH(DHBitacora) = row.Item(1) Then
+﻿Public Class DigitoVerificadorBLL
 
-                            ElseIf row.Item(0) = "Usuario" And DigitoVerificadorDAL.CalcularDVH(DHUsuario) = row.Item(1) Then
+    Public Shared Function VerifyAllIntegrity() As List(Of Entidades.FilaCorrupta)
+        Dim tablasARevisar As New List(Of String)
+        tablasARevisar.Add("Usuario")
+        tablasARevisar.Add("BitacoraAuditoria")
+        tablasARevisar.Add("BitacoraErrores")
 
-                            ElseIf row.Item(0) = "Evento" And DigitoVerificadorDAL.CalcularDVH(DHEvento) = row.Item(1) Then
+        Dim isHorizontallyIntegral As Boolean = True
+        Dim isVerticallyIntegral As Boolean = True
+        Dim filascorruptas As New List(Of Entidades.FilaCorrupta)
 
-                            Else
-                                Return False
-                            End If
-                        Next
-                        Return True
-                    Else
-                        Throw New ExceptionIntegridadEvento
-                    End If
-                Else
-                    Throw New ExceptionIntegridadUsuario
-                End If
+        For Each t In tablasARevisar
+            Dim nocorrupto As Boolean = True
+            filascorruptas.AddRange(DAL.DigitoVerificadorDAL.VerifyHorizontally(t))
+            If filascorruptas.Count = 0 Then
+                nocorrupto = True
             Else
-                Throw New ExceptionIntegridadBitacora
+                nocorrupto = False
             End If
-            Return False
-        Catch ExcepcionUsuario As ExceptionIntegridadUsuario
-            Throw ExcepcionUsuario
-        Catch ExcepcionBitacora As ExceptionIntegridadBitacora
-            Throw ExcepcionBitacora
-        Catch ExcepcionEvento As ExceptionIntegridadEvento
-            Throw ExcepcionEvento
-        Catch FalloConexion As InvalidOperationException
-            Throw FalloConexion
-        Catch ex As Exception
-            BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
-            Throw ex
-        End Try
+            isHorizontallyIntegral = nocorrupto And isHorizontallyIntegral
+            isVerticallyIntegral = DAL.DigitoVerificadorDAL.VerifyVertically(t) And isVerticallyIntegral
+
+            If isVerticallyIntegral = False Then
+                filascorruptas.Add(New Entidades.FilaCorrupta(t, "Digito_Verificador_Vertical"))
+            End If
+
+        Next
+
+        Return filascorruptas
     End Function
 
-    Public Function ProbarConectividad() As Boolean
-        Return (New DigitoVerificadorDAL).ProbarConectividad
-    End Function
+    Public Shared Sub RepareIntegrity()
+        Dim tablasARevisar As New List(Of String)
+        tablasARevisar.Add("Cliente")
+        tablasARevisar.Add("Bitacora")
+
+        For Each t In tablasARevisar
+            DAL.DigitoVerificadorDAL.RepareIntegrity(t)
+        Next
+    End Sub
+
 End Class

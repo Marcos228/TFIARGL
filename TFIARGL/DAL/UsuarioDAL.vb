@@ -5,53 +5,70 @@ Public Class UsuarioDAL
 
     Public Function Alta(ByRef Usuario As UsuarioEntidad) As Boolean
         Try
-            Usuario.ID_Usuario = Acceso.TraerID("ID_Usuario", "Usuario")
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Usuario values (@ID_Usuario, @NombreUsuario, @Password, @Bloqueo, @Intento, @Idioma, @Perfil,@BL, @DVH)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Usuario (NombreUsuario,Password,Nombre,Apellido,Fecha_Alta,Salt,Bloqueo,Intentos,ID_Idioma,ID_Perfil,Empleado,BL) OUTPUT INSERTED.ID_Usuario values (@NombreUsuario, @Password,@Nombre,@Apellido,@Fecha ,@Salt, @Bloqueo, @Intento, @Idioma, @Perfil,@Empleado,@BL)")
             With Command.Parameters
-                .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
+                .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
                 .Add(New SqlParameter("@Password", Usuario.Password))
-                .Add(New SqlParameter("@Bloqueo", False))
+                .Add(New SqlParameter("@Nombre", Usuario.Nombre))
+                .Add(New SqlParameter("@Apellido", Usuario.Apellido))
+                .Add(New SqlParameter("@Fecha", Usuario.FechaAlta))
+                .Add(New SqlParameter("@Salt", Usuario.Salt))
+                .Add(New SqlParameter("@Bloqueo", Usuario.Bloqueo))
                 .Add(New SqlParameter("@Intento", Usuario.Intento))
-                .Add(New SqlParameter("@Idioma", Usuario.IdiomaEntidad.ID_Idioma))
+                .Add(New SqlParameter("@Idioma", Usuario.Idioma.ID_Idioma))
                 .Add(New SqlParameter("@Perfil", Usuario.Perfil.ID))
+                .Add(New SqlParameter("@Empleado", Usuario.Empleado))
                 .Add(New SqlParameter("@BL", False))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Command.Parameters("@ID_Usuario").Value & Command.Parameters("@NombreUsuario").Value & Command.Parameters("@Password").Value & Command.Parameters("@Bloqueo").Value & Command.Parameters("@Intento").Value & Command.Parameters("@Idioma").Value & Command.Parameters("@Perfil").Value & Command.Parameters("@BL").Value)))
             End With
-            Acceso.Escritura(Command)
+
+            Usuario.ID_Usuario = Acceso.Scalar(Command)
             Command.Dispose()
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
+            Dim Command2 As SqlCommand = Acceso.MiComando("Update Usuario set DVH=@DVH where ID_Usuario=@ID_Usuario")
+            With Command2.Parameters
+                .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
+            End With
+            Acceso.Escritura(Command2)
+            Command2.Dispose()
+
+            ActualizarDVH()
+
             Return True
         Catch ex As Exception
             Throw ex
         End Try
     End Function
+
+    Private Sub ActualizarDVH()
+        Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
+        Dim DataTabla = Acceso.Lectura(CommandVerificador)
+        Dim Digitos As New List(Of String)
+        For Each row As DataRow In DataTabla.Rows
+            Digitos.Add(row.Item("DVH"))
+        Next
+        DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+    End Sub
+
     Public Function Modificar(ByRef Usuario As UsuarioEntidad) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("update Usuario set NombreUsuario=@NombreUsuario, Idioma=@Idioma, Perfil=@Perfil, DVH=@DVH where ID_Usuario=@ID_Usuario and BL=@BL")
+            Dim Command As SqlCommand = Acceso.MiComando("update Usuario set NombreUsuario=@NombreUsuario, ID_Idioma=@Idioma, ID_Perfil=@Perfil, DVH=@DVH where ID_Usuario=@ID_Usuario and BL=@BL")
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
-                .Add(New SqlParameter("@Idioma", Usuario.IdiomaEntidad.ID_Idioma))
+                .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
+                .Add(New SqlParameter("@Idioma", Usuario.Idioma.ID_Idioma))
                 .Add(New SqlParameter("@Perfil", Usuario.Perfil.ID))
                 .Add(New SqlParameter("@BL", False))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Command.Parameters("@ID_Usuario").Value & Command.Parameters("@NombreUsuario").Value & Usuario.Password & Usuario.Bloqueo & Usuario.Intento & Command.Parameters("@Idioma").Value & Command.Parameters("@Perfil").Value & Command.Parameters("@BL").Value)))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
             Return True
         Catch ex As Exception
             Throw ex
@@ -60,22 +77,20 @@ Public Class UsuarioDAL
 
     Public Function Eliminar(ByRef Usuario As UsuarioEntidad) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Update Usuario set BL=@BL, DVH = @DVH where ID_Usuario = @ID_Usuario")
+            Dim Command As SqlCommand = Acceso.MiComando("Update Usuario Set BL=@BL, DVH = @DVH where ID_Usuario = @ID_Usuario")
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(True.ToString) 'Agregado de Baja Logica
             With Command.Parameters
                 .Add(New SqlParameter("@BL", True))
                 .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & Usuario.Bloqueo & Usuario.Intento & Usuario.IdiomaEntidad.ID_Idioma & Usuario.Perfil.ID & Command.Parameters("@BL").Value)))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
 
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
+
             Return True
         Catch ex As Exception
             Throw ex
@@ -84,19 +99,11 @@ Public Class UsuarioDAL
 
     Public Function TraerUsuario(ByVal Usuario As Entidades.UsuarioEntidad) As Entidades.UsuarioEntidad
         Try
-            Dim consulta As String = "Select * from Usuario where NombreUsuario= @NombreUsuario and BL = 0"
-            Dim Command As SqlCommand = Acceso.MiComando(consulta)
-            With Command.Parameters
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
-            End With
-            Dim dt As DataTable = Acceso.Lectura(Command)
-            If dt.Rows.Count > 0 Then
-                FormatearUsuario(Usuario, dt.Rows(0))
-                Usuario.Password = dt.Rows(0).Item(2)
-                Return Usuario
-            Else
-                Return Nothing
-            End If
+            Dim GestorPermisos As New GestorPermisosDAL
+            Usuario.Perfil = GestorPermisos.ConsultarporID(Usuario.Perfil.ID)
+            Dim GestorIdioma As New IdiomaDAL
+            Usuario.Idioma = GestorIdioma.ConsultarPorID(Usuario.Idioma.ID_Idioma)
+            Return Usuario
         Catch ex As Exception
             Throw ex
         End Try
@@ -104,10 +111,10 @@ Public Class UsuarioDAL
     End Function
     Public Function ExisteUsuario(ByVal Usuario As Entidades.UsuarioEntidad) As Entidades.UsuarioEntidad
         Try
-            Dim consulta As String = "Select * from Usuario where NombreUsuario= @NombreUsuario and BL = 0"
+            Dim consulta As String = "Select * from Usuario where NombreUsuario= @NombreUsuario And BL = 0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             With Command.Parameters
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
+                .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)
             If dt.Rows.Count > 0 Then
@@ -124,7 +131,7 @@ Public Class UsuarioDAL
 
     Public Function BuscarUsuarioID(ByVal Usuario As Entidades.UsuarioEntidad) As Entidades.UsuarioEntidad
         Try
-            Dim consulta As String = "Select * from Usuario where ID_Usuario= @ID_Usuario and BL = 0"
+            Dim consulta As String = "Select * from Usuario where ID_Usuario= @ID_Usuario And BL = 0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
@@ -164,10 +171,10 @@ Public Class UsuarioDAL
 
     Public Function VerificarPassword(ByVal Usuario As Entidades.UsuarioEntidad) As Boolean
         Try
-            Dim consulta As String = "Select * from Usuario where NombreUsuario= @NombreUsuario and Password= @Password and BL = 0"
+            Dim consulta As String = "Select * from Usuario where NombreUsuario= @NombreUsuario And Password= @Password And BL = 0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             With Command.Parameters
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
+                .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
                 .Add(New SqlParameter("@Password", Usuario.Password))
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)
@@ -184,21 +191,18 @@ Public Class UsuarioDAL
 
     Public Function CambiarPassword(ByVal Usuario As Entidades.UsuarioEntidad) As Boolean
         Try
-            Dim consulta As String = "update Usuario set Password= @Password, DVH = @DVH where ID_Usuario=@ID_Usuario and BL = 0"
+            Dim consulta As String = "update Usuario set Password= @Password, DVH = @DVH where ID_Usuario=@ID_Usuario And BL = 0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(True.ToString) 'Agregado de Baja Logica
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
                 .Add(New SqlParameter("@Password", Usuario.Password))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & Usuario.Bloqueo & Usuario.Intento & Usuario.IdiomaEntidad.ID_Idioma & Usuario.Perfil.ID & False)))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
             Return True
         Catch ex As Exception
             Throw ex
@@ -209,20 +213,20 @@ Public Class UsuarioDAL
         Try
             Dim Consulta As String = "update Usuario set Intentos = @Intentos, DVH = @DVH where NombreUsuario=@NombreUsuario and BL=0"
             Dim Command = Acceso.MiComando(Consulta)
+            Usuario.Intento = 0
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
             With Command.Parameters
-                .Add(New SqlParameter("@Intentos", 0))
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & Usuario.Bloqueo & Usuario.Intento & Usuario.IdiomaEntidad.ID_Idioma & Usuario.Perfil.ID & False)))
+                .Add(New SqlParameter("@Intentos", Usuario.Intento))
+                .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
+
             Acceso.Escritura(Command)
 
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
+
         Catch ex As Exception
             Throw ex
         End Try
@@ -235,16 +239,17 @@ Public Class UsuarioDAL
             Dim DataTabla = Acceso.Lectura(Command)
             Dim DigitosHorizontales As String = ""
             For Each row As DataRow In DataTabla.Rows
-                Dim Fila As String = ""
-                Fila = Fila & row.Item(0)
-                Fila = Fila & row.Item(1)
-                Fila = Fila & row.Item(2)
-                Fila = Fila & row.Item(3)
-                Fila = Fila & row.Item(4)
-                Fila = Fila & row.Item(5)
-                Fila = Fila & row.Item(6)
-                Fila = Fila & row.Item(7)
-                If Not DigitoVerificadorDAL.CalcularDVH(Fila) = row.Item(8) Then
+                Dim ListaColumnas As New List(Of String)
+                ListaColumnas.Add(row.Item(0))
+                ListaColumnas.Add(row.Item(1))
+                ListaColumnas.Add(row.Item(2))
+                ListaColumnas.Add(row.Item(3))
+                ListaColumnas.Add(row.Item(4))
+                ListaColumnas.Add(row.Item(5))
+                ListaColumnas.Add(row.Item(6))
+                ListaColumnas.Add(row.Item(7))
+
+                If Not DigitoVerificadorDAL.CalcularDVH(ListaColumnas) = row.Item(8) Then
                     Return Nothing
                 End If
                 DigitosHorizontales = DigitosHorizontales + row.Item(8)
@@ -260,39 +265,36 @@ Public Class UsuarioDAL
             If Usuario.Bloqueo = True Then
                 Dim Consulta As String = "update Usuario set Bloqueo = 'False', DVH = @DVH where NombreUsuario=@NombreUsuario and BL = 0"
                 Dim Command = Acceso.MiComando(Consulta)
+                Usuario.Bloqueo = False
+                Dim ListaParametros As New List(Of String)
+                Acceso.AgregarParametros(Usuario, ListaParametros)
+                ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
                 With Command.Parameters
-                    .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
-                    .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & False & Usuario.Intento & Usuario.IdiomaEntidad.ID_Idioma & Usuario.Perfil.ID & False)))
+                    .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
+                    .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
                 End With
                 Acceso.Escritura(Command)
                 Usuario.Bloqueo = False
                 ResetearIntentos(Usuario)
-                Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-                Dim DataTabla = Acceso.Lectura(CommandVerificador)
-                Dim Digitos As String = ""
-                For Each row As DataRow In DataTabla.Rows
-                    Digitos = Digitos + row.Item("DVH")
-                Next
-                DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+                ActualizarDVH()
 
                 Return False
             Else
                 Dim Consulta As String = "update Usuario set Bloqueo = 'True', DVH = @DVH where NombreUsuario=@NombreUsuario and BL = 0"
                 Dim Command = Acceso.MiComando(Consulta)
+                Usuario.Bloqueo = True
+                Dim ListaParametros As New List(Of String)
+                Acceso.AgregarParametros(Usuario, ListaParametros)
+                ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
                 With Command.Parameters
-                    .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
-                    .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & True & Usuario.Intento & Usuario.IdiomaEntidad.ID_Idioma & Usuario.Perfil.ID & False)))
+                    .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
+                    .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
                 End With
                 Acceso.Escritura(Command)
 
 
-                Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-                Dim DataTabla = Acceso.Lectura(CommandVerificador)
-                Dim Digitos As String = ""
-                For Each row As DataRow In DataTabla.Rows
-                    Digitos = Digitos + row.Item("DVH")
-                Next
-                DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+                ActualizarDVH()
+
                 Return True
             End If
         Catch ex As Exception
@@ -304,26 +306,48 @@ Public Class UsuarioDAL
         Try
             Dim Consulta As String = "update Usuario set Intentos = @Intentos, DVH = @DVH where NombreUsuario=@NombreUsuario and BL = 0"
             Dim Command = Acceso.MiComando(Consulta)
+
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
+
             With Command.Parameters
                 .Add(New SqlParameter("@Intentos", Usuario.Intento))
-                .Add(New SqlParameter("@NombreUsuario", Usuario.Nombre))
+                .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
             End With
             Usuario = TraerUsuario(Usuario)
-            Command.Parameters.Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & Usuario.Bloqueo & Command.Parameters("@Intentos").Value & Usuario.IdiomaEntidad.ID_Idioma & Usuario.Perfil.ID & False)))
+
+            Command.Parameters.Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
 
             Acceso.Escritura(Command)
 
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
         Catch ex As Exception
             Throw ex
         End Try
     End Sub
+
+
+    Public Function TraerUsuariosPerfil(ByRef ID_Perfil As Int16) As List(Of UsuarioEntidad)
+        Try
+            Dim consulta As String = "Select * from Usuario where Bloqueo=0 and BL=0 and ID_Usuario <> 0 and ID_Perfil=@ID_Perfil"
+            Dim Command As SqlCommand = Acceso.MiComando(consulta)
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Perfil", ID_Perfil))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Dim ListaUsuario As List(Of UsuarioEntidad) = New List(Of UsuarioEntidad)
+            For Each row As DataRow In dt.Rows
+                Dim Usuario As UsuarioEntidad = New UsuarioEntidad
+                FormatearUsuario(Usuario, row)
+                Usuario.Password = row.Item(2)
+                ListaUsuario.Add(Usuario)
+            Next
+            Return ListaUsuario
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function TraerUsuarios() As List(Of UsuarioEntidad)
         Try
@@ -345,14 +369,15 @@ Public Class UsuarioDAL
 
     Public Function TraerUsuariosParaBloqueo() As List(Of UsuarioEntidad)
         Try
-            Dim consulta As String = "Select * from Usuario where BL=0 and ID_Usuario <>0"
+            Dim consulta As String = "Select Usuario.*, Permiso.Nombre as PermN,Idioma.Nombre as IdioN from Usuario inner join Permiso on ID_Rol=ID_Perfil inner join Idioma on Usuario.ID_Idioma=Idioma.ID_Idioma where Usuario.BL=0 and ID_Usuario <>0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             Dim dt As DataTable = Acceso.Lectura(Command)
             Dim ListaUsuario As List(Of UsuarioEntidad) = New List(Of UsuarioEntidad)
             For Each row As DataRow In dt.Rows
                 Dim Usuario As UsuarioEntidad = New UsuarioEntidad
                 FormatearUsuario(Usuario, row)
-                Usuario.Password = row.Item(2)
+                Usuario.Idioma.Nombre = row("IdioN")
+                Usuario.Perfil.Nombre = row("PermN")
                 ListaUsuario.Add(Usuario)
             Next
             Return ListaUsuario
@@ -372,22 +397,22 @@ Public Class UsuarioDAL
         For Each row As DataRow In TableUsuarios.Rows
             Dim usuario As UsuarioEntidad = New UsuarioEntidad
             Dim UsuarioDAL As UsuarioDAL = New UsuarioDAL
-            usuario.Nombre = row.Item(1)
+            usuario.NombreUsu = row.Item(1)
             usuario = TraerUsuario(usuario)
+
             Dim Command2 As SqlCommand = Acceso.MiComando("update Usuario set DVH=@DVH where ID_Usuario = @ID_Usuario and BL = @BL")
+
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
+
             With Command2.Parameters
                 .Add(New SqlParameter("@ID_Usuario", usuario.ID_Usuario))
                 .Add(New SqlParameter("@BL", False))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(usuario.ID_Usuario & usuario.Nombre & usuario.Password & usuario.Bloqueo & usuario.Intento & usuario.IdiomaEntidad.ID_Idioma & usuario.Perfil.ID & Command.Parameters("@BL").Value)))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
             Acceso.Escritura(Command2)
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row2 As DataRow In DataTabla.Rows
-                Digitos = Digitos + row2.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
         Next
         Command.Dispose()
     End Sub
@@ -402,40 +427,58 @@ Public Class UsuarioDAL
         For Each row As DataRow In TableUsuarios.Rows
             Dim usuario As UsuarioEntidad = New UsuarioEntidad
             Dim UsuarioDAL As UsuarioDAL = New UsuarioDAL
-            usuario.Nombre = row.Item(1)
+            usuario.NombreUsu = row.Item(1)
             usuario = TraerUsuario(usuario)
             Dim Command2 As SqlCommand = Acceso.MiComando("update Usuario set DVH=@DVH where ID_Usuario = @ID_Usuario and BL = @BL")
+
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
+
             With Command2.Parameters
                 .Add(New SqlParameter("@ID_Usuario", usuario.ID_Usuario))
                 .Add(New SqlParameter("@BL", False))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(usuario.ID_Usuario & usuario.Nombre & usuario.Password & usuario.Bloqueo & usuario.Intento & usuario.IdiomaEntidad.ID_Idioma & usuario.Perfil.ID & Command.Parameters("@BL").Value)))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
             Acceso.Escritura(Command2)
-            Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
-            Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
-            For Each row2 As DataRow In DataTabla.Rows
-                Digitos = Digitos + row2.Item("DVH")
-            Next
-            DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
+            ActualizarDVH()
         Next
         Command.Dispose()
     End Sub
 
     Public Sub FormatearUsuario(ByVal Usuario As Entidades.UsuarioEntidad, ByVal row As DataRow)
         Try
-            Usuario.ID_Usuario = row(0)
-            Usuario.Nombre = row(1)
-            Usuario.Bloqueo = row(3)
-            Usuario.Intento = row(4)
-            Usuario.IdiomaEntidad = New Entidades.IdiomaEntidad With {.ID_Idioma = row(5)}
-            Usuario.Perfil = New Entidades.GrupoPermisoEntidad With {.ID = row(6)}
+
+            Usuario.ID_Usuario = row("ID_Usuario")
+            Usuario.NombreUsu = row("NombreUsuario")
+            Usuario.Apellido = row("Apellido")
+            Usuario.Nombre = row("Nombre")
+            Usuario.FechaAlta = row("Fecha_Alta")
+            Usuario.Salt = row("Salt")
+            Usuario.Password = row("Password")
+            Usuario.Intento = row("Intentos")
+            Usuario.Bloqueo = row("Bloqueo")
+            Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID = row("ID_Perfil")}
+            Usuario.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = row("ID_Idioma")}
+            Usuario.Empleado = row("Empleado")
         Catch ex As Exception
             Throw ex
         End Try
     End Sub
+
     Public Function ProbarConectividad() As Boolean
-
+        Try
+            Dim MiConecction As New SqlCommand
+            MiConecction.Connection = Acceso.MiConexion
+            MiConecction.Connection.Open()
+            If MiConecction.Connection.State = ConnectionState.Open Then
+                MiConecction.Connection.Close()
+                Return True
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Return False
+        End Try
     End Function
-
 End Class

@@ -1,23 +1,31 @@
 ﻿
 Imports System.Security.Cryptography
 Imports System.Text
-Imports Negocio
 Imports Entidades
 Public Class EncriptarBLL
 
-    Public Shared Function EncriptarPassword(ByVal Pass As String) As String
+    Public Shared Function EncriptarPassword(ByVal pass As String, Optional ByVal salt As String = Nothing) As List(Of String)
         Try
-            Dim MiMD5 As MD5 = MD5CryptoServiceProvider.Create()
-            Dim MiData As Byte() = MiMD5.ComputeHash(Encoding.Default.GetBytes(Pass))
-            Dim MiStringBuilder As StringBuilder = New StringBuilder()
-            For i As Integer = 0 To MiData.Length - 1
-                MiStringBuilder.AppendFormat("{0:x2}", MiData(i))
-            Next
-            Return MiStringBuilder.ToString.ToUpper
-        Catch FalloConexion As InvalidOperationException
-            Throw FalloConexion
+            Dim Listaretorno As New List(Of String)
+            If IsNothing(salt) Then
+                Dim byte_count As Byte() = New Byte(6) {}
+                Dim random_number As New RNGCryptoServiceProvider()
+                random_number.GetBytes(byte_count)
+                salt = Math.Abs(BitConverter.ToInt32(byte_count, 0)).ToString
+                Listaretorno.Add(salt)
+            End If
+
+
+            Dim UE As New UnicodeEncoding
+            Dim bHash As Byte()
+            Dim bCadena() As Byte = UE.GetBytes(Left(salt, salt.Length - 4) & pass & Right(salt, salt.Length - (salt.Length - 4)))
+            Dim s1Service As New SHA1CryptoServiceProvider
+            bHash = s1Service.ComputeHash(bCadena)
+            Listaretorno.Add(Convert.ToBase64String(bHash))
+
+            Return Listaretorno
+
         Catch ex As Exception
-            BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
             Throw ex
         End Try
     End Function

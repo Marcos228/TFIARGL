@@ -85,18 +85,22 @@ Public Class IdiomaDAL
     Public Function SeleccionarIdioma(ByRef Usuario As UsuarioEntidad, ByRef ID_Idioma As Integer) As IdiomaEntidad
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Update Usuario SET Idioma=@ID_Idioma, DVH=@DVH where ID_Usuario=@ID_Usuario")
+            Dim ListaParametros As New List(Of String)
+            Acceso.AgregarParametros(Usuario, ListaParametros)
+            ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
+
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Idioma", ID_Idioma))
                 .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(Usuario.ID_Usuario & Usuario.Nombre & Usuario.Password & Usuario.Bloqueo & Usuario.Intento & ID_Idioma & Usuario.Perfil.ID & False)))
+                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
             Dim CommandVerificador As SqlCommand = Acceso.MiComando("Select DVH from Usuario")
             Dim DataTabla = Acceso.Lectura(CommandVerificador)
-            Dim Digitos As String = ""
+            Dim Digitos As New List(Of String)
             For Each row As DataRow In DataTabla.Rows
-                Digitos = Digitos + row.Item("DVH")
+                Digitos.Add(row.Item("DVH"))
             Next
             DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
             Return Me.ConsultarPorID(ID_Idioma)
@@ -182,7 +186,6 @@ Public Class IdiomaDAL
         Catch ex As Exception
             Throw ex
         End Try
-
     End Function
 
     Public Function TraerPalabras(ByRef ID_Idioma As Integer) As List(Of Palabras)

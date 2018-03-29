@@ -4,11 +4,12 @@ Imports Entidades
 Public Class SerializadorJSON(Of T)
     Public Sub Serializar(que As T)
         Dim fs As FileStream
-        Dim bitacoras As New List(Of BitacoraEntidad)
-        If que.GetType.Equals(bitacoras.GetType) Then
-            fs = New FileStream("Bitacoras.JSON", FileMode.Append)
+        Dim bitaudit As New List(Of BitacoraAuditoria)
+        Dim biterror As New List(Of BitacoraErrores)
+        If que.GetType.Equals(bitaudit.GetType) Then
+            fs = New FileStream("BitacorasAuditoria.JSON", FileMode.Append)
         Else
-            fs = New FileStream("Objetos.JSON", FileMode.Append)
+            fs = New FileStream("BitacorasErrores.JSON", FileMode.Append)
         End If
         Dim writer As TextWriter
         writer = New StreamWriter(fs)

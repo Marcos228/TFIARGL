@@ -1,0 +1,236 @@
+﻿.fondoAzul {
+    background-color: midnightblue;
+}
+
+.fondoClaro {
+    background-color: dodgerblue;
+}
+
+.fondoPagina {
+    background-color: #F5FAFC;
+}
+
+
+.floatRight {
+    float: right !important;
+}
+
+.bordeMenu {
+    border-color: black;
+    border-width: 1px;
+    border-right: solid;
+    border-left: solid;
+    border-bottom: solid;
+    border-top: solid;
+}
+
+.bordeImagen {
+    border-color: black;
+    border-width: 1px;
+    border-right: solid;
+    border-left: solid;
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.lineaCopyright {
+    background-color: #333333;
+    height: 2px;
+}
+
+
+/*Opciones de usuario de página maestra*/
+.menuUsuario {
+    margin-top: 8%;
+    margin-bottom: 8%;
+}
+
+.botonUsuario {
+    background-color: #ffffff;
+    border: 0px solid;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 10px;
+    padding: 5px 10px 5px 10px;
+}
+
+    .botonUsuario:hover {
+        /*background-color: #83C28B;*/
+    }
+
+
+.botonUsuarioImagen {
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+}
+
+.botonUsuarioTexto {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.menuUsuarioli {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-decoration: none;
+}
+
+.menuUsuarioOpciones {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+
+/*ESTILOS FUERA DE LA MASTER*/
+
+.mensaje-error {
+    border-radius: 3px;
+    margin: 0 0 20px 0;
+    padding: 15px 30px 15px 15px;
+    border-left: 5px solid #eee;
+    background-color: #DD4B39;
+    border-color: #c23321;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+    .mensaje-error p:last-child {
+        margin-bottom: 0;
+    }
+
+
+.mensaje-ok {
+    border-radius: 3px;
+    margin: 0 0 20px 0;
+    padding: 15px 30px 15px 15px;
+    border-left: 5px solid #039644;
+    background-color: #44BB39;
+    border-color: #039644;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+    .mensaje-ok p:last-child {
+        margin-bottom: 0;
+    }
+
+
+.labelStyle {
+    font-size: 16px;
+}
+
+
+.panel-verde {
+    border-color: #333333;
+    border-width: 2px;
+    font-size: 16px;
+}
+
+    .panel-verde > .panel-heading {
+        color: #333333;
+        background-color: #99CDA0;
+        border-width: unset;
+        border-color: #333333;
+        text-align: center;
+        font-size: 18px;
+    }
+
+
+.textoValidacion {
+    font-size: 18px;
+    color: red;
+}
+
+.noLink a:hover {
+    text-decoration: none;
+}
+
+.lineaMenu {
+    background: #333333;
+    background: -moz-linear-gradient(top, #333333 0%, #dedede 100%);
+    background: -webkit-linear-gradient(top, #333333 0%,#dedede 100%);
+    background: linear-gradient(to bottom, #333333 0%,#dedede 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#ffffff',GradientType=0 );
+}
+
+.labelRojo {
+    color: red;
+}
+
+
+
+.Grid-verde {
+    width: 95%;
+    background-color: #ffffff;
+    border: solid 1px #333333;
+}
+
+    .Grid-verde th {
+        color: #ffffff;
+        background: #99CDA0;
+        border-color: black;
+        font-size: 16px;
+        text-align: center;
+        font-weight: normal;
+        height: 25px;
+    }
+
+    .Grid-verde td {
+        border-color: black;
+        color: #000000;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .Grid-verde tr:hover {
+        background-color: #BDEFBD;
+    }
+
+
+.margenPaginacion {
+    margin-right: 5px;
+    color:black;
+    font-size:medium;
+}
+
+.margenIconoMensaje {
+    margin-top: 7px;
+    margin-left: 6px;
+}
+
+.Negrita{
+    font-weight: bold;
+}
+
+.margenGridBErrores {
+    margin-top: 7px;
+    margin-left: 20px;
+}
+
+
+.Titulo{
+    color:black;
+    font-weight: bold;
+    font-size: 50px;
+}
+
+.NegritaPromo{
+    font-weight: bold;
+    font-size:14px;
+}
+
+.labelVerde {
+    color: #004812;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.img-lista-producto {
+height:400px;
+}
