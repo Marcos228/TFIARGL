@@ -17,7 +17,7 @@ Public Class Login
                 Cliente.NombreUsu = txtUsuario.Text
                 Cliente.Password = txtPassword.Text
                 Dim clienteLogeado = GestorUsu.ExisteUsuario(Cliente)
-                Dim Bitac As New BitacoraAuditoria(clienteLogeado, "El Usuario: " & clienteLogeado.NombreUsu & " ingresó al sistema de forma correcta.", Tipo_Bitacora.Login, Now, "", "", "", "")
+                Dim Bitac As New BitacoraAuditoria(clienteLogeado, "El Usuario: " & clienteLogeado.NombreUsu & " ingresó al sistema de forma correcta.", Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 BitacoraBLL.CrearBitacora(Bitac)
                 Current.Session("cliente") = clienteLogeado
                 Me.success.Visible = True
@@ -40,7 +40,9 @@ Public Class Login
             Me.alertvalid.Visible = True
             Me.textovalid.InnerText = Password.Mensaje
             Me.success.Visible = False
-            '     BitacoraBLL.CrearBitacoraAuditoria("El Usuario: " & Cliente.Nombre & " quiso ingresar al sistema con una contraseña invalida.", Tipo_Bitacora.Login, Current.Session("cliente"), DateTime.Now, Dns.GetHostAddresses(Dns.GetHostName).ToString, Request().UserAgent.ToUpper, "")
+            Dim clienteLogeado As UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New BitacoraAuditoria(clienteLogeado, "El Usuario: " & clienteLogeado.NombreUsu & " quiso ingresar al sistema con una contraseña invalida.", Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            BitacoraBLL.CrearBitacora(Bitac)
         Catch ex As Exception
             '  BitacoraBLL.CrearBitacoraErrores(ex.Message, Tipo_Bitacora.Errores, Current.Session("cliente"), DateTime.Now, Dns.GetHostAddresses(Dns.GetHostName).ToString, Request().UserAgent.ToUpper, ex.GetType.ToString, ex.StackTrace, Request.Url.AbsolutePath)
         End Try
@@ -56,7 +58,7 @@ Public Class Login
                 Dim Lstabitacoras As New List(Of BitacoraAuditoria)
                 Lstabitacoras = Jsonarray.Deserializar(mistreamreader, Lstabitacoras)
                 For Each bitacora As BitacoraAuditoria In Lstabitacoras
-                    '     BitacoraBLL.CrearBitacoraAuditoria(bitacora)
+                    BitacoraBLL.CrearBitacora(bitacora)
                 Next
                 mistreamreader.Close()
                 File.Delete("BitacorasAuditoria.json")
@@ -66,7 +68,7 @@ Public Class Login
                 Dim Lstabitacoras As New List(Of BitacoraErrores)
                 Lstabitacoras = Jsonarray.Deserializar(mistreamreader, Lstabitacoras)
                 For Each bitacora As BitacoraErrores In Lstabitacoras
-                    '     BitacoraBLL.CrearBitacoraErrores(bitacora)
+                    BitacoraBLL.CrearBitacora(bitacora)
                 Next
                 mistreamreader.Close()
                 File.Delete("BitacorasErrores.json")

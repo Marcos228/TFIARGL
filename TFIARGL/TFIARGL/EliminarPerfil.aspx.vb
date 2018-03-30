@@ -50,6 +50,10 @@ Public Class EliminarPerfil
             alertvalid.Visible = True
             success.Visible = False
         Else
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se eliminó el perfil " & Roles(lstperfil.SelectedIndex).Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+
             alertvalid.Visible = False
             success.Visible = True
             CargarPerfiles()

@@ -1,4 +1,5 @@
-﻿Public Class Restore
+﻿Imports System.Web.HttpContext
+Public Class Restore
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -11,6 +12,9 @@
         Dim bkre = New Entidades.BackupRestoreEntidad("")
         bkre.Nombre = Server.MapPath("restoreUpload")
         If gestorBK.RealizarRestore(bkre) Then
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se realizó una restauracion de la base de datos.", Entidades.Tipo_Bitacora.Restore, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
             Me.success.Visible = True
             Me.alertvalid.Visible = False
         End If

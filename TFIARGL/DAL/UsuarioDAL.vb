@@ -369,7 +369,7 @@ Public Class UsuarioDAL
 
     Public Function TraerUsuariosParaBloqueo() As List(Of UsuarioEntidad)
         Try
-            Dim consulta As String = "Select Usuario.*, Permiso.Nombre as PermN,Idioma.Nombre as IdioN from Usuario inner join Permiso on ID_Rol=ID_Perfil inner join Idioma on Usuario.ID_Idioma=Idioma.ID_Idioma where Usuario.BL=0 and ID_Usuario <>0"
+            Dim consulta As String = "Select Usuario.*, Permiso.Nombre as PermN,Idioma.Nombre as IdioN from Usuario inner join Permiso on ID_Rol=ID_Perfil inner join Idioma on Usuario.ID_Idioma=Idioma.ID_Idioma where ID_Usuario <>0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             Dim dt As DataTable = Acceso.Lectura(Command)
             Dim ListaUsuario As List(Of UsuarioEntidad) = New List(Of UsuarioEntidad)

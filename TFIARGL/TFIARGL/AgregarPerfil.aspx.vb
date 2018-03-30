@@ -20,12 +20,12 @@ Public Class AgregarPerfil
         Dim Perfil As New Entidades.PermisoCompuestoEntidad
         Perfil.Nombre = txtnombre.Text
         Perfil = ControladorPermisos.RecorrerArbol(Nothing, Perfil, TreeView1)
-        If Perfil.Hijos.Count <> 0 Then
+        If Perfil.Hijos.Count > 0 Then
             Dim GestorPermisos As New Negocio.GestorPermisosBLL
             If GestorPermisos.Alta(Perfil) Then
-                'MessageBox.Show("Se Creó el Perfil de manera satisfactoria.", "Permisos", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                '  MessageBox.Show(Traductor.TraducirMensaje("Mensaje_37"), Traductor.TraducirMensaje("Titulo_03"), MessageBoxButtons.OK, MessageBoxIcon.Information)
-                '     ControladorPermisos.CargarPermisos(Tree)
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó el perfil " & Perfil.Nombre & " de forma correcta.", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", Perfil.ID & " ~ " & Perfil.Nombre & " ~ " & Perfil.URL)
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
                 txtnombre.Text = ""
                 alertvalid.Visible = False
                 success.Visible = True
@@ -36,6 +36,9 @@ Public Class AgregarPerfil
             End If
 
         Else
+            alertvalid.InnerText = "Debe seleccionar al menos un permiso para continuar."
+            alertvalid.Visible = True
+            success.Visible = False
             'MessageBox.Show("Debe seleccionar al menos un permiso para continuar.", "Permisos", MessageBoxButtons.OK, MessageBoxIcon.Information)
             'MessageBox.Show(Traductor.TraducirMensaje("Mensaje_38"), Traductor.TraducirMensaje("Titulo_03"), MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If

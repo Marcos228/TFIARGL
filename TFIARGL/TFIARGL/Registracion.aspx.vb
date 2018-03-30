@@ -37,11 +37,14 @@ Public Class Registracion
                 usu.FechaAlta = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 usu.Empleado = False
                 If GestorCliente.Alta(usu) Then
-                        Me.success.Visible = True
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se registró el usuario " & usu.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    Me.success.Visible = True
                     Me.alertvalid.Visible = False
                     Me.txtusuario.Text = ""
                 End If
-                Else
+            Else
                     Me.alertvalid.Visible = True
                 Me.textovalid.InnerText = "Complete los campos requeridos"
                 Me.success.Visible = False

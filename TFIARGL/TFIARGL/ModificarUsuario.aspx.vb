@@ -40,26 +40,12 @@ Public Class ModificarUsuario
         Me.lstidioma.DataBind()
     End Sub
 
-    Protected Sub btn_desbloqueo_Click(sender As Object, e As ImageClickEventArgs)
-
-    End Sub
-
-    Protected Sub btn_Bloquear_Click(sender As Object, e As ImageClickEventArgs)
-        Dim gestor As New Negocio.UsuarioBLL
-        Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(sender.commandArgument)
-
-        gestor.Bloquear(Usuario)
-    End Sub
-
-    Protected Sub btn_editar_Command(sender As Object, e As CommandEventArgs)
-
-    End Sub
-
     Private Sub gv_Usuarios_DataBound(sender As Object, e As EventArgs) Handles gv_Usuarios.DataBound
         For Each row As GridViewRow In gv_Usuarios.Rows
             Dim imagen1 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_Bloquear"), System.Web.UI.WebControls.ImageButton)
             Dim imagen2 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_desbloqueo"), System.Web.UI.WebControls.ImageButton)
             Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_editar"), System.Web.UI.WebControls.ImageButton)
+
             imagen1.CommandArgument = row.RowIndex
             imagen2.CommandArgument = row.RowIndex
             imagen3.CommandArgument = row.RowIndex
@@ -105,9 +91,13 @@ Public Class ModificarUsuario
                     Me.success.Visible = False
                 Else
                     gestor.Bloquear(Usuario)
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se bloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+
                     CargarUsuarios()
-                    Me.success.InnerText = "El Usuario se bloqueo correctamente."
-                    Me.success.Visible = True
+                        Me.success.InnerText = "El Usuario se bloqueo correctamente."
+                        Me.success.Visible = True
                     Me.alertvalid.Visible = False
                 End If
             Case "U"
@@ -117,6 +107,9 @@ Public Class ModificarUsuario
                     Me.success.Visible = False
                 Else
                     gestor.Bloquear(Usuario)
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se desbloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     CargarUsuarios()
                     Me.success.InnerText = "El Usuario se desbloqueo correctamente."
                     Me.success.Visible = True
@@ -154,6 +147,9 @@ Public Class ModificarUsuario
                 Usuario.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = lstidioma.SelectedValue}
                 Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID = lstperfil.SelectedValue}
                 If GestorCliente.Modificar(Usuario) Then
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se modificó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
                     CargarUsuarios()

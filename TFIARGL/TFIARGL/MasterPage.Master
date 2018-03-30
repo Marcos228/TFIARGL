@@ -6,22 +6,16 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Saitama - Bienvenido</title>
-    <script type="text/javascript" src="JS/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="JS/jquery-1.10.2.js"></script>
+
     <link href="CSS/bootstrap-theme.css" rel="stylesheet" type="text/css" />
-    <link href="CSS/bootstrap-theme.css.map" rel="stylesheet" type="text/css" />
     <link href="CSS/bootstrap-theme.css.map" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="/CSS/jquery-ui.css"/>
     <link href="CSS/bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="CSS/bootstrap.css.map" rel="stylesheet" type="text/css" />
     <link href="CSS/font-awesome.css" rel="stylesheet" type="text/css" />
     <link href="CSS/EstilosMaestra.css" rel="stylesheet" type="text/css" />
     <link href="CSS/MisEstilos.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="JS/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="JS/bootstrap.js"></script>
-    <script type="text/javascript" src="JS/npm.js"></script>
-
-    <script type="text/javascript" src="JS/jquery-ui.js"></script>
-    <script type="text/javascript" src="JS/dropdown.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 

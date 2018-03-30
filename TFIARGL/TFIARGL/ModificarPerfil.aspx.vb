@@ -52,6 +52,11 @@ Public Class ModificarPerfil
         If Perfil.Hijos.Count <> 0 Then
             Dim GestorPermisos As New Negocio.GestorPermisosBLL
             GestorPermisos.Modificar(Perfil)
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se modificó el perfil " & Perfil.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+
+
             'MessageBox.Show("Se Creó el Perfil de manera satisfactoria.", "Permisos", MessageBoxButtons.OK, MessageBoxIcon.Information)
             '  MessageBox.Show(Traductor.TraducirMensaje("Mensaje_37"), Traductor.TraducirMensaje("Titulo_03"), MessageBoxButtons.OK, MessageBoxIcon.Information)
             '     ControladorPermisos.CargarPermisos(Tree)

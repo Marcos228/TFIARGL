@@ -4,14 +4,13 @@
     <!-- <script type="text/javascript" src="JS/ClienteValid.js"></script>-->
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
     <div class="container-fluid">
         <br />
         <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">El Usuario se modificó correctamente.</label>
+            <label id="Label1" class="text-success">El Usuario se modificó correctamente.</label>
         </div>
 
         <div class="row">
@@ -23,30 +22,30 @@
                     <div class="panel-body FondoPanel">
                         <br />
                         <div class="form-horizontal has-success col-md-12">
-                               <div class="form-group">
-                                <div >
+                            <div class="form-group">
+                                <div>
                                     <div>
-                                        <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success "  ID="gv_Usuarios" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="10" RowStyle-Height="40px">
-                                <HeaderStyle CssClass="thead-dark"/>
+                                        <asp:GridView  CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_Usuarios" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="10" RowStyle-Height="40px">
+                                            <HeaderStyle CssClass="thead-dark" />
                                             <Columns>
-                                    <asp:BoundField DataField="ID_Usuario" HeaderText="ID" />
-                                    <asp:BoundField DataField="NombreUsu" HeaderText="Nombre Usuario" />
-                                    <asp:BoundField DataField="Idioma.Nombre" HeaderText="Idioma" />
-                                    <asp:BoundField DataField="Perfil.Nombre" HeaderText="Permiso" />
-                                    <asp:BoundField DataField="Bloqueo" HeaderText="Estado" />
-                                    <asp:BoundField DataField="Empleado" HeaderText="Empleado" />
-                                    <asp:BoundField DataField="FechaAlta" HeaderText="Fecha de Alta" DataFormatString="{0:dd-MM-yyyy HH:mm:ss}" />
-                                    <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
-                                        <ItemTemplate>
-                                            <div>
-                                                <asp:ImageButton ID="btn_Bloquear" runat="server"  CommandName="B" ImageUrl="~/Imagenes/padlock-close.png" Height="18px"/>
-                                                <asp:ImageButton ID="btn_desbloqueo" runat="server"  CommandName="U" ImageUrl="~/Imagenes/padlock-open.png" Height="18px"  />
-                                                <asp:ImageButton ID="btn_editar" runat="server" CommandName="E" ImageUrl="~/Imagenes/edit.png" Height="18px" />
-                                            </div>
-                                        </ItemTemplate>
-                                        <HeaderStyle Width="100px"></HeaderStyle>
-                                    </asp:TemplateField>
-                                </Columns>
+                                                <asp:BoundField DataField="ID_Usuario" HeaderText="ID" />
+                                                <asp:BoundField DataField="NombreUsu" HeaderText="Nombre Usuario" />
+                                                <asp:BoundField DataField="Idioma.Nombre" HeaderText="Idioma" />
+                                                <asp:BoundField DataField="Perfil.Nombre" HeaderText="Permiso" />
+                                                <asp:BoundField DataField="Bloqueo" HeaderText="Estado" />
+                                                <asp:BoundField DataField="Empleado" HeaderText="Empleado" />
+                                                <asp:BoundField DataField="FechaAlta" HeaderText="Fecha de Alta" DataFormatString="{0:dd-MM-yyyy HH:mm:ss}" />
+                                                <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                    <ItemTemplate>
+                                                        <div>
+                                                            <asp:ImageButton  ID="btn_Bloquear" runat="server" CommandName="B" ImageUrl="~/Imagenes/padlock-close.png" Height="18px"  />
+                                                            <asp:ImageButton  ID="btn_desbloqueo" runat="server" CommandName="U" ImageUrl="~/Imagenes/padlock-open.png" Height="18px"  />
+                                                            <asp:ImageButton   ID="btn_editar" runat="server" CommandName="E" ImageUrl="~/Imagenes/edit.png" Height="18px"  />
+                                                        </div>
+                                                    </ItemTemplate>
+                                                    <HeaderStyle Width="100px"></HeaderStyle>
+                                                </asp:TemplateField>
+                                            </Columns>
                                         </asp:GridView>
                                     </div>
                                 </div>
@@ -72,7 +71,7 @@
                                     </div>
                                 </div>
                             </div>
-                                                        <div id="idiomat" class="form-group" runat="server">
+                            <div id="idiomat" class="form-group" runat="server">
                                 <asp:Label ID="lblidioma" runat="server" Text="Idioma:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -86,7 +85,7 @@
                         <br />
                         <div id="botont" runat="server" class="row">
                             <div class="col-md-4 col-md-offset-4">
-                                <asp:Button ClientIDMode="Static" ID="btnModificar" name="btnModificar" runat="server" Text="Modificar" CssClass="btn btn-block btn-warning" />
+                                <asp:Button  ClientIDMode="Static" ID="btnModificar" name="btnModificar" runat="server" Text="Modificar" CssClass="btn btn-block btn-warning" />
                             </div>
                         </div>
                         <br />
