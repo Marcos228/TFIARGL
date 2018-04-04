@@ -21,7 +21,7 @@ Public Class AgregarUsuario
                 usu.Salt = PassSalt.Item(0)
                 usu.Password = PassSalt.Item(1)
                 usu.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = lstidioma.SelectedValue}
-                usu.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID = lstperfil.SelectedValue}
+                usu.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = lstperfil.SelectedValue}
                 usu.FechaAlta = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 usu.Empleado = True
                 If GestorCliente.Alta(usu) Then

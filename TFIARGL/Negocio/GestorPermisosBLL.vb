@@ -28,7 +28,7 @@ Public Class GestorPermisosBLL
         Try
             'If DigitoVerificadorBLL.VerifyAllIntegrity Then
             PermisosDAL = New GestorPermisosDAL
-            Return PermisosDAL.Baja(Perfil.ID)
+            Return PermisosDAL.Baja(Perfil.ID_Permiso)
             '    BitacoraBLL.CrearBitacora("Se eliminó el Perfil: " & Perfil.Nombre & " en el sistema.", TipoBitacora.Baja, SessionBLL.SesionActual.ObtenerUsuarioActual)
             ''Else
             '    Throw New ExceptionIntegridadUsuario
@@ -88,7 +88,7 @@ Public Class GestorPermisosBLL
             Dim Permisos As PermisoCompuestoEntidad = New PermisoCompuestoEntidad
             Permisos = (New GestorPermisosDAL).ConsultarporID(ID)
             If Not IsNothing(Permisos) Then
-                If Permisos.ID = 0 Then
+                If Permisos.ID_Permiso = 0 Then
                     Throw New ExceptionPermisoNoExiste
                 End If
                 Return Permisos

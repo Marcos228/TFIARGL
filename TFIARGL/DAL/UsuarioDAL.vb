@@ -16,7 +16,7 @@ Public Class UsuarioDAL
                 .Add(New SqlParameter("@Bloqueo", Usuario.Bloqueo))
                 .Add(New SqlParameter("@Intento", Usuario.Intento))
                 .Add(New SqlParameter("@Idioma", Usuario.Idioma.ID_Idioma))
-                .Add(New SqlParameter("@Perfil", Usuario.Perfil.ID))
+                .Add(New SqlParameter("@Perfil", Usuario.Perfil.ID_Permiso))
                 .Add(New SqlParameter("@Empleado", Usuario.Empleado))
                 .Add(New SqlParameter("@BL", False))
             End With
@@ -62,7 +62,7 @@ Public Class UsuarioDAL
                 .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
                 .Add(New SqlParameter("@NombreUsuario", Usuario.NombreUsu))
                 .Add(New SqlParameter("@Idioma", Usuario.Idioma.ID_Idioma))
-                .Add(New SqlParameter("@Perfil", Usuario.Perfil.ID))
+                .Add(New SqlParameter("@Perfil", Usuario.Perfil.ID_Permiso))
                 .Add(New SqlParameter("@BL", False))
                 .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
             End With
@@ -100,7 +100,7 @@ Public Class UsuarioDAL
     Public Function TraerUsuario(ByVal Usuario As Entidades.UsuarioEntidad) As Entidades.UsuarioEntidad
         Try
             Dim GestorPermisos As New GestorPermisosDAL
-            Usuario.Perfil = GestorPermisos.ConsultarporID(Usuario.Perfil.ID)
+            Usuario.Perfil = GestorPermisos.ConsultarporID(Usuario.Perfil.ID_Permiso)
             Dim GestorIdioma As New IdiomaDAL
             Usuario.Idioma = GestorIdioma.ConsultarPorID(Usuario.Idioma.ID_Idioma)
             Return Usuario
@@ -458,7 +458,7 @@ Public Class UsuarioDAL
             Usuario.Password = row("Password")
             Usuario.Intento = row("Intentos")
             Usuario.Bloqueo = row("Bloqueo")
-            Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID = row("ID_Perfil")}
+            Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = row("ID_Perfil")}
             Usuario.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = row("ID_Idioma")}
             Usuario.Empleado = row("Empleado")
         Catch ex As Exception

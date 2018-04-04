@@ -1,5 +1,5 @@
 ﻿Imports System.Globalization
-
+<Serializable()>
 Public Class IdiomaEntidad
     Private _cultura As CultureInfo
     Public Property Cultura() As CultureInfo

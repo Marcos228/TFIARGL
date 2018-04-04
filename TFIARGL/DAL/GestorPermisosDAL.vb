@@ -18,7 +18,7 @@ Public Class GestorPermisosDAL
                     Command = Acceso.MiComando("insert into Permiso_Permiso values (@ID_Padre, @ID_Hijo)")
                     With Command.Parameters
                         .Add(New SqlParameter("@ID_Padre", ID))
-                        .Add(New SqlParameter("@ID_Hijo", MiPermiso.ID))
+                        .Add(New SqlParameter("@ID_Hijo", MiPermiso.ID_Permiso))
                     End With
                     Acceso.Escritura(Command)
                 Next
@@ -93,17 +93,17 @@ Public Class GestorPermisosDAL
         Try
             Dim Command As SqlCommand = Acceso.MiComando("delete from permiso_permiso where ID_Rol=@ID_Padre")
             With Command.Parameters
-                .Add(New SqlParameter("@ID_Padre", perm.ID))
+                .Add(New SqlParameter("@ID_Padre", perm.ID_Permiso))
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
             For Each MiPermiso As Entidades.PermisoBaseEntidad In perm.Hijos
                 Command = Acceso.MiComando("insert into permiso_permiso values (@ID_Padre, @ID_Hijo)")
                 With Command.Parameters
-                    .Add(New SqlParameter("@ID_Padre", perm.ID))
-                    .Add(New SqlParameter("@ID_Hijo", MiPermiso.ID))
+                    .Add(New SqlParameter("@ID_Padre", perm.ID_Permiso))
+                    .Add(New SqlParameter("@ID_Hijo", MiPermiso.ID_Permiso))
                 End With
-                If Not perm.ID = MiPermiso.ID Then
+                If Not perm.ID_Permiso = MiPermiso.ID_Permiso Then
                     Acceso.Escritura(Command)
                 End If
             Next
@@ -191,11 +191,11 @@ Public Class GestorPermisosDAL
             Else
                 _permiso = New PermisoCompuestoEntidad
             End If
-            _permiso.ID = CInt(_dr.Item("ID_Rol"))
+            _permiso.ID_Permiso = CInt(_dr.Item("ID_Rol"))
             _permiso.Nombre = Convert.ToString(_dr.Item("Nombre"))
             _permiso.URL = Convert.ToString(_dr.Item("URL"))
             If _permiso.tieneHijos Then
-                Dim ListaHijos As List(Of PermisoBaseEntidad) = Me.ListarHijos(_permiso.ID)
+                Dim ListaHijos As List(Of PermisoBaseEntidad) = Me.ListarHijos(_permiso.ID_Permiso)
                 For Each hijo As PermisoBaseEntidad In ListaHijos
                     _permiso.agregarHijo(hijo)
                 Next

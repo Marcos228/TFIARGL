@@ -1,11 +1,12 @@
-﻿Public MustInherit Class PermisoBaseEntidad
-    Private _id As Integer
-    Public Property ID() As Integer
+﻿<Serializable()>
+Public MustInherit Class PermisoBaseEntidad
+    Private _id_Permiso As Integer
+    Public Property ID_Permiso() As Integer
         Get
-            Return _id
+            Return _id_Permiso
         End Get
         Set(ByVal value As Integer)
-            _id = value
+            _id_Permiso = value
         End Set
     End Property
 
@@ -27,7 +28,7 @@
             _url = value
         End Set
     End Property
- Public MustOverride Function ValidarURL(ByVal paramURL As String) As Boolean
+    Public MustOverride Function ValidarURL(ByVal paramURL As String) As Boolean
     Public MustOverride Function agregarHijo(ByVal Perm As PermisoBaseEntidad) As Boolean
     Public MustOverride Function tieneHijos() As Boolean
     Public MustOverride Function esValido(nombrePermiso As String) As Boolean

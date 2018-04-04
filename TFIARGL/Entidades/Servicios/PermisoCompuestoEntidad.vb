@@ -1,4 +1,5 @@
-﻿Public Class PermisoCompuestoEntidad
+﻿<Serializable()>
+Public Class PermisoCompuestoEntidad
     Inherits PermisoBaseEntidad
 
 

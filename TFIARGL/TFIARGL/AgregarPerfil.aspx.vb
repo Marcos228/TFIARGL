@@ -24,7 +24,7 @@ Public Class AgregarPerfil
             Dim GestorPermisos As New Negocio.GestorPermisosBLL
             If GestorPermisos.Alta(Perfil) Then
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó el perfil " & Perfil.Nombre & " de forma correcta.", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", Perfil.ID & " ~ " & Perfil.Nombre & " ~ " & Perfil.URL)
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó el perfil " & Perfil.Nombre & " de forma correcta.", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
                 txtnombre.Text = ""
                 alertvalid.Visible = False

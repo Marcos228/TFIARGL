@@ -1,4 +1,9 @@
-﻿Public Class UsuarioEntidad
+﻿Imports System.IO
+Imports System.Runtime.Serialization.Formatters.Binary
+<Serializable()>
+Public Class UsuarioEntidad
+    Implements ICloneable
+
     Private _id_usuario As Integer
     Public Property ID_Usuario() As Integer
         Get
@@ -128,5 +133,13 @@
 
     Public Overrides Function ToString() As String
         Return Me.Nombre
+    End Function
+
+    Public Function Clone() As Object Implements ICloneable.Clone
+        Dim m As New MemoryStream()
+        Dim f As New BinaryFormatter()
+        f.Serialize(m, Me)
+        m.Seek(0, SeekOrigin.Begin)
+        Return f.Deserialize(m)
     End Function
 End Class

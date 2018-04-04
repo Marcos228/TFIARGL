@@ -33,7 +33,7 @@ Public Class ModificarPerfil
         ControladorPermisos.CargarPermisos(Me.TreeView2)
         Me.TreeView1.ExpandAll()
         Dim Gestor As New Negocio.UsuarioBLL
-        Dim Lista As List(Of Entidades.UsuarioEntidad) = Gestor.TraerUsuariosPerfil(Roles(lstperfil.SelectedIndex).ID)
+        Dim Lista As List(Of Entidades.UsuarioEntidad) = Gestor.TraerUsuariosPerfil(Roles(lstperfil.SelectedIndex).ID_Permiso)
         If Lista.Count = 0 Then
             Lista.Add(New Entidades.UsuarioEntidad With {.NombreUsu = "No se encontraron usuarios con el perfil Seleccionado"})
             Me.gv_Perfiles.DataSource = Lista

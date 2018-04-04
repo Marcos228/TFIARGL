@@ -107,9 +107,9 @@ Public Class ModificarUsuario
                     Me.success.Visible = False
                 Else
                     gestor.Bloquear(Usuario)
-                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se desbloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se desbloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    'Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     CargarUsuarios()
                     Me.success.InnerText = "El Usuario se desbloqueo correctamente."
                     Me.success.Visible = True
@@ -128,7 +128,7 @@ Public Class ModificarUsuario
                 Next
 
                 For Each item As ListItem In lstperfil.Items
-                    If item.Value = Usuario.Perfil.ID Then
+                    If item.Value = Usuario.Perfil.ID_Permiso Then
                         item.Selected = True
                         Exit For
                     End If
@@ -141,15 +141,16 @@ Public Class ModificarUsuario
     Protected Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
         Dim GestorCliente As New Negocio.UsuarioBLL
         Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(Me.id_usuario.Value)
+        Dim UsuarioAnterior As Entidades.UsuarioEntidad = Usuario.Clone
         Try
             If Page.IsValid = True Then
                 Usuario.NombreUsu = txtusuario.Text
                 Usuario.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = lstidioma.SelectedValue}
-                Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID = lstperfil.SelectedValue}
+                Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = lstperfil.SelectedValue}
                 If GestorCliente.Modificar(Usuario) Then
                     Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
                     Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se modificó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac, UsuarioAnterior, Usuario)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
                     CargarUsuarios()

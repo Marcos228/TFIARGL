@@ -34,7 +34,7 @@
     Public Shared Sub ArmarArbol(lista As List(Of Entidades.PermisoBaseEntidad), ByRef arbol As TreeNode, ByRef Tree As TreeView)
         If IsNothing(arbol) Then
             For Each Permiso In lista
-                Dim nodo As TreeNode = New TreeNode With {.Value = Permiso.ID, .Text = Permiso.Nombre, .SelectAction = TreeNodeSelectAction.None}
+                Dim nodo As TreeNode = New TreeNode With {.Value = Permiso.ID_Permiso, .Text = Permiso.Nombre, .SelectAction = TreeNodeSelectAction.None}
                 Tree.Nodes.Add(nodo)
                 If Permiso.tieneHijos Then
                     Dim GrupoPermiso = DirectCast(Permiso, Entidades.PermisoCompuestoEntidad)
@@ -43,7 +43,7 @@
             Next
         Else
             For Each Permiso2 In lista
-                Dim nodosegundo = New TreeNode With {.Value = Permiso2.ID, .Text = Permiso2.Nombre, .SelectAction = TreeNodeSelectAction.None}
+                Dim nodosegundo = New TreeNode With {.Value = Permiso2.ID_Permiso, .Text = Permiso2.Nombre, .SelectAction = TreeNodeSelectAction.None}
                 arbol.ChildNodes.Add(nodosegundo)
                 If Permiso2.tieneHijos Then
                     Dim GrupoPermiso = DirectCast(Permiso2, Entidades.PermisoCompuestoEntidad)
@@ -83,7 +83,7 @@
             For Each nodo As TreeNode In Tree.Nodes
                 If nodo.Checked = True Then
                     If nodo.ChildNodes.Count > 0 Then
-                        Dim Permiso As New Entidades.PermisoCompuestoEntidad With {.ID = nodo.Value, .Nombre = nodo.Text}
+                        Dim Permiso As New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = nodo.Value, .Nombre = nodo.Text}
                         RecorrerArbol(nodo, Permiso, Tree)
                         If Not Permiso.esValido(Compuesto.Nombre) Then
                             Compuesto.agregarHijo(Permiso)
@@ -92,7 +92,7 @@
                         End If
 
                     Else
-                        Dim Permiso As New Entidades.PermisoEntidad With {.ID = nodo.Value, .Nombre = nodo.Text}
+                        Dim Permiso As New Entidades.PermisoEntidad With {.ID_Permiso = nodo.Value, .Nombre = nodo.Text}
                         If Not Permiso.esValido(Compuesto.Nombre) Then
                             Compuesto.agregarHijo(Permiso)
                         End If
@@ -105,7 +105,7 @@
             For Each nodo2 As TreeNode In arbol.ChildNodes
                 If nodo2.Checked = True Then
                     If nodo2.ChildNodes.Count <> 0 Then
-                        Dim Permiso As New Entidades.PermisoCompuestoEntidad With {.ID = nodo2.Value, .Nombre = nodo2.Text}
+                        Dim Permiso As New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = nodo2.Value, .Nombre = nodo2.Text}
                         If Not Permiso.esValido(Compuesto.Nombre) Then
                             RecorrerArbol(nodo2, Permiso, Tree)
                             Compuesto.agregarHijo(Permiso)
@@ -114,7 +114,7 @@
                             Permiso.Hijos.Clear()
                         End If
                     Else
-                        Dim Permiso As New Entidades.PermisoEntidad With {.ID = nodo2.Value, .Nombre = nodo2.Text}
+                        Dim Permiso As New Entidades.PermisoEntidad With {.ID_Permiso = nodo2.Value, .Nombre = nodo2.Text}
                         If Not Permiso.esValido(Compuesto.Nombre) Then
                             Compuesto.agregarHijo(Permiso)
                         End If
