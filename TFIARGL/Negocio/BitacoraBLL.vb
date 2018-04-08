@@ -19,12 +19,12 @@ Public Class BitacoraBLL
         'Return bitacoras
     End Function
 
-    Public Shared Sub CrearBitacora(ByRef Bita As Bitacora, Optional ByRef Objeto1 As Object = Nothing, Optional ByRef Objeto2 As Object = Nothing)
+    Public Shared Sub CrearBitacora(ByRef Bita As Bitacora, Optional ByRef ObjetoAnt As Object = Nothing, Optional ByRef ObjetoAct As Object = Nothing)
         Dim bitdal As New DAL.BitacoraDAL
-        If IsNothing(Objeto1) And IsNothing(Objeto2) Then
+        If IsNothing(ObjetoAnt) And IsNothing(ObjetoAct) Then
             bitdal.GuardarBitacora(Bita)
         Else
-            GenerarPrePostLeyenda(Bita, Objeto1, Objeto2)
+            GenerarPrePostLeyenda(Bita, ObjetoAnt, ObjetoAct)
             bitdal.GuardarBitacora(Bita)
         End If
 
@@ -83,7 +83,7 @@ Public Class BitacoraBLL
     End Sub
 
     Private Shared Sub GenerarLeyenda(ByRef bita As BitacoraAuditoria, ByVal ObjectoAnterior As Object, ByVal ObjetoActual As Object)
-        Dim parametros As New List(Of String)
+        Dim parametros As New Dictionary(Of String, String)
         Dim _type As Type = ObjectoAnterior.GetType()
         Dim properties() As PropertyInfo = _type.GetProperties()
         For Each _property As PropertyInfo In properties
@@ -93,19 +93,34 @@ Public Class BitacoraBLL
                         For Each _property2 As PropertyInfo In _property.PropertyType.GetProperties
                             Dim Objeto As Object = _property.GetValue(ObjectoAnterior, Nothing)
                             If _property2.Name.Contains("ID") Then
-                                parametros.Add(" - " & _property2.Name & ": " & _property2.GetValue(Objeto, Nothing).ToString)
+                                parametros.Add(_property2.Name, _property2.GetValue(Objeto, Nothing).ToString)
                                 Exit For
                             End If
                         Next
                     Else
-                        parametros.Add(" - " & _property.Name & ": " & _property.GetValue(ObjectoAnterior, Nothing).ToString)
+                        parametros.Add(_property.Name, _property.GetValue(ObjectoAnterior, Nothing).ToString)
+                    End If
+
+                Else
+                    Dim Objeto As Object = _property.GetValue(ObjectoAnterior, Nothing)
+                    If Not IsNothing(Objeto) Then
+                        For Each Obj As Object In Objeto
+                            Dim _typ As Type = Obj.GetType()
+                            Dim propertie() As PropertyInfo = _typ.GetProperties()
+                            For Each _property3 As PropertyInfo In propertie
+                                If _property3.Name.Contains("ID") Then
+                                    parametros.Add(_property3.Name & "_child_" & _property3.GetValue(Obj, Nothing).ToString, _property3.GetValue(Obj, Nothing).ToString)
+                                    Exit For
+                                End If
+                            Next
+                        Next
                     End If
                 End If
-            Else
-                parametros.Add(" - " & _property.Name & ": " & _property.GetValue(ObjectoAnterior, Nothing).ToString)
+                    Else
+                parametros.Add(_property.Name, _property.GetValue(ObjectoAnterior, Nothing).ToString)
             End If
         Next
-        Dim parametros2 As New List(Of String)
+        Dim parametros2 As New Dictionary(Of String, String)
         Dim _type2 As Type = ObjetoActual.GetType()
         Dim properties3() As PropertyInfo = _type.GetProperties()
         For Each _property4 As PropertyInfo In properties3
@@ -115,29 +130,54 @@ Public Class BitacoraBLL
                         For Each _property5 As PropertyInfo In _property4.PropertyType.GetProperties
                             Dim Objeto As Object = _property4.GetValue(ObjetoActual, Nothing)
                             If _property5.Name.Contains("ID") Then
-                                parametros2.Add(" - " & _property5.Name & ": " & _property5.GetValue(Objeto, Nothing).ToString)
+                                parametros2.Add(_property5.Name, _property5.GetValue(Objeto, Nothing).ToString)
                                 Exit For
                             End If
                         Next
                     Else
-                        parametros2.Add(" - " & _property4.Name & ": " & _property4.GetValue(ObjetoActual, Nothing).ToString)
+                        parametros2.Add(_property4.Name, _property4.GetValue(ObjetoActual, Nothing).ToString)
+                    End If
+                Else
+                    Dim Objeto As Object = _property4.GetValue(ObjetoActual, Nothing)
+                    If Not IsNothing(Objeto) Then
+                        For Each Obj As Object In Objeto
+                            Dim _typ As Type = Obj.GetType()
+                            Dim propertie() As PropertyInfo = _typ.GetProperties()
+                            For Each _property3 As PropertyInfo In propertie
+                                If _property3.Name.Contains("ID") Then
+                                    parametros2.Add(_property3.Name & "_child_" & _property3.GetValue(Obj, Nothing).ToString, _property3.GetValue(Obj, Nothing).ToString)
+                                    Exit For
+                                End If
+                            Next
+                        Next
                     End If
                 End If
             Else
-                parametros2.Add(" - " & _property4.Name & ": " & _property4.GetValue(ObjetoActual, Nothing).ToString)
+                parametros2.Add(_property4.Name, _property4.GetValue(ObjetoActual, Nothing).ToString)
             End If
         Next
         Dim index As Integer = 0
-        For Each Prop As String In parametros
-            If Not parametros2(index) = Prop Then
-                bita.Valor_Anterior += Prop
-                bita.Valor_Posterior += parametros2(index)
+        For Each propiedad In parametros.Keys
+            If parametros2.ContainsKey(propiedad) Then
+                If Not parametros(propiedad) = parametros2(propiedad) Then
+                    bita.Valor_Anterior += propiedad & ": " & parametros(propiedad) & " - "
+                    bita.Valor_Posterior += propiedad & ": " & parametros2(propiedad) & " - "
+                End If
+            Else
+                bita.Valor_Anterior += propiedad & ": " & parametros(propiedad) & " - "
             End If
-            index += 1
         Next
-
-        bita.Valor_Anterior = Right(bita.Valor_Anterior, bita.Valor_Anterior.Length - 3)
-        bita.Valor_Posterior = Right(bita.Valor_Posterior, bita.Valor_Posterior.Length - 3)
+        For Each propiedad In parametros2.Keys
+            If Not parametros.ContainsKey(propiedad) Then
+                bita.Valor_Posterior += propiedad & ": " & parametros2(propiedad) & " - "
+            End If
+        Next
+        If bita.Valor_Anterior.Length > 0 Then
+            bita.Valor_Anterior = Left(bita.Valor_Anterior, bita.Valor_Anterior.Length - 3)
+        End If
+        If bita.Valor_Posterior.Length > 0 Then
+            bita.Valor_Posterior = Left(bita.Valor_Posterior, bita.Valor_Posterior.Length - 3)
+        End If
     End Sub
 
     Public Function makeSimpleLog(logMsg As String, Optional ByVal cliente As Entidades.UsuarioEntidad = Nothing) As Boolean

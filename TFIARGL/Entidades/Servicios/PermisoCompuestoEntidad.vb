@@ -1,6 +1,10 @@
-﻿<Serializable()>
+﻿Imports System.IO
+Imports System.Runtime.Serialization.Formatters.Binary
+
+<Serializable()>
 Public Class PermisoCompuestoEntidad
     Inherits PermisoBaseEntidad
+    Implements ICloneable
 
 
     Private _hijos As New List(Of PermisoBaseEntidad)
@@ -48,5 +52,12 @@ Public Class PermisoCompuestoEntidad
 
         Next
         Return tieneUnValido
+    End Function
+    Public Function Clone() As Object Implements ICloneable.Clone
+        Dim m As New MemoryStream()
+        Dim f As New BinaryFormatter()
+        f.Serialize(m, Me)
+        m.Seek(0, SeekOrigin.Begin)
+        Return f.Deserialize(m)
     End Function
 End Class

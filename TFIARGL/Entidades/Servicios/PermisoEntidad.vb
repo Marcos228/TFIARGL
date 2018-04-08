@@ -1,4 +1,5 @@
-﻿Public Class PermisoEntidad
+﻿<Serializable()>
+Public Class PermisoEntidad
     Inherits PermisoBaseEntidad
 
     Public Overrides Function ValidarURL(paramURL As String) As Boolean
