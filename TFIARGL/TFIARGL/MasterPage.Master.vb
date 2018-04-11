@@ -3,14 +3,14 @@ Public Class MasterPage
     Inherits System.Web.UI.MasterPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        'If IsNothing(Current.Session("cliente")) Or IsDBNull(Current.Session("Cliente")) Then
-        '    ' CargarSinPerfil()
-        '    'Idioma Predeterminado
-        'Else
-        '    Dim Usuario As Entidades.UsuarioEntidad = TryCast(Current.Session("cliente"), Entidades.UsuarioEntidad)
-        '    'CargarPerfil(Usuario)
-        '    'TraducirPagina(Usuario)
-        'End If
+        If IsNothing(Current.Session("cliente")) Or IsDBNull(Current.Session("Cliente")) Then
+            CargarSinPerfil()
+            'Idioma Predeterminado
+        Else
+            Dim Usuario As Entidades.UsuarioEntidad = TryCast(Current.Session("cliente"), Entidades.UsuarioEntidad)
+            CargarPerfil(Usuario)
+            'TraducirPagina(Usuario)
+        End If
     End Sub
 
     Private Sub CargarSinPerfil()
@@ -27,6 +27,7 @@ Public Class MasterPage
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/AccesoRestringido.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/RecuperarPassword.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/BaseCorrupta.aspx"})
+
         UsuarioInvitado.Perfil = PermisosInvitado
         If UsuarioInvitado.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
             Response.Redirect("AccesoRestringido.aspx")
@@ -85,15 +86,20 @@ Public Class MasterPage
     Private Sub ArmarMenuCompleto()
         Me.Menu.Items.Add(New MenuItem("Home", "Home", Nothing, "/Default.aspx"))
         Me.Menu.Items.Add(New MenuItem("Administración del Sistema", "AdminSist"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Crear Usuario", "AgregarUsuario", Nothing, "/AgregarUsuario.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Copia de Seguridad", "Backup", Nothing, "/backup.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Restauración de Datos", "Restore", Nothing, "/restore.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Crear Perfil", "Permisos", Nothing, "/AgregarPerfil.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Crear Perfil", "CrearPerfil", Nothing, "/AgregarPerfil.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Modificar Perfil", "ModificarPerfil", Nothing, "/ModificarPerfil.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Eliminar Perfil", "EliminarPerfil", Nothing, "/EliminarPerfil.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Agregar Usuario", "AgregarUsuario", Nothing, "/AgregarUsuario.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Modificar Usuario", "ModificarUsuario", Nothing, "/ModificarUsuario.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Eliminar Usuario", "EliminarUsuario", Nothing, "/EliminarUsuario.aspx"))
         Me.Menu.Items.Add(New MenuItem("Empresa", "Institucional", Nothing, "/Institucional.aspx"))
         Me.Menu.Items.Add(New MenuItem("Area de Cliente", "Cliente"))
         Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Carrito", "Carrito", Nothing, "/Orders.aspx"))
         Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Mis Compras", "Compras", Nothing, "/MyOrders.aspx"))
         Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Lista de Productos", "Productos", Nothing, "/ProductList.aspx"))
+
     End Sub
 
     Private Sub Menu_MenuItemClick(sender As Object, e As MenuEventArgs) Handles Menu.MenuItemClick
