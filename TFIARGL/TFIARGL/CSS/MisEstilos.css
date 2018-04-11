@@ -1,5 +1,17 @@
-﻿
+﻿.FondoPagina {
+    background-color: #CECFCA;
+}
 
-.fondoPagina {
-    background-color: #F5FAFC;
+.FondoPanel {
+    background-color: #EEEEEE;
+}
+
+
+.TituloPanel {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.labelform {
+    font-weight: bold;
 }

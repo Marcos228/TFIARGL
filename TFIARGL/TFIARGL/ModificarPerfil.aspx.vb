@@ -47,6 +47,7 @@ Public Class ModificarPerfil
 
     Protected Sub btnmodificar_Click(sender As Object, e As EventArgs) Handles btnmodificar.Click
         Dim Perfil As Entidades.PermisoCompuestoEntidad = TryCast(Session("Roles"), List(Of Entidades.PermisoBaseEntidad))(lstperfil.SelectedIndex)
+        Dim PerfilAnterior As Entidades.PermisoCompuestoEntidad = Perfil.clone
         Perfil.Hijos.Clear()
         Perfil = ControladorPermisos.RecorrerArbol(Nothing, Perfil, TreeView2)
         If Perfil.Hijos.Count <> 0 Then
@@ -54,7 +55,7 @@ Public Class ModificarPerfil
             GestorPermisos.Modificar(Perfil)
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se modificó el perfil " & Perfil.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac, PerfilAnterior, Perfil)
 
 
             'MessageBox.Show("Se Creó el Perfil de manera satisfactoria.", "Permisos", MessageBoxButtons.OK, MessageBoxIcon.Information)
