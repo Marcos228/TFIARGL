@@ -5,7 +5,7 @@
       <div class="container-fluid">
                 <br />
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-danger">
                     <div class="panel-heading text-center">
                         <asp:Label ID="lblPanelError" runat="server" Text="Peligro" CssClass="TituloPanel"></asp:Label>
@@ -15,7 +15,7 @@
                        <asp:Label ID="FilasCorruptas" runat="server" ></asp:Label>                             
                 </h3>
                         <br/>
-                         <asp:Button ID="btnReparar" runat="server" Text="Reparar" CssClass="btn btn-block btn-warning" />
+                         <asp:Button ID="btnReparar" runat="server" Text="Realizar Restauración" CssClass="btn btn-block btn-warning" />
                     </div>
                 </div>
             </div>

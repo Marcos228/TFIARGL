@@ -98,7 +98,16 @@ Public Class DigitoVerificadorDAL
         Dim FilasCorruptas As New List(Of Entidades.FilaCorrupta)
         Dim Problematicrows As DataTable = GetCorruptRows(nombreTabla)
         For Each fila As DataRow In Problematicrows.Rows
-            FilasCorruptas.Add(New Entidades.FilaCorrupta(fila.Item(0), nombreTabla))
+            Select Case nombreTabla
+                Case "Usuario"
+                    FilasCorruptas.Add(New Entidades.FilaCorrupta(fila.Item("ID_Usuario"), nombreTabla))
+                Case "BitacoraAuditoria"
+                    FilasCorruptas.Add(New Entidades.FilaCorrupta(fila.Item("ID_Bitacora_Auditoria"), nombreTabla))
+                Case "BitacoraErrores"
+                    FilasCorruptas.Add(New Entidades.FilaCorrupta(fila.Item("ID_Bitacora_Errores"), nombreTabla))
+                Case Else
+                    FilasCorruptas.Add(New Entidades.FilaCorrupta(fila.Item(0), nombreTabla))
+            End Select
         Next
         Return FilasCorruptas
     End Function

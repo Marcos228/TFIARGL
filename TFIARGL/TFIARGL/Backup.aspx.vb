@@ -1,4 +1,5 @@
-﻿Imports System.Web.HttpContext
+﻿Imports System.IO
+Imports System.Web.HttpContext
 Public Class BackUp
     Inherits System.Web.UI.Page
     Private nombreArchivo As String
@@ -14,20 +15,20 @@ Public Class BackUp
         End If
 
         Dim gestorBK As New Negocio.BackupRestoreBLL
-        nombreArchivo = "ArgLeague_" + Now.Ticks.ToString
+        nombreArchivo = "BKP_ArgLeague_" & Now.Year & "-" & Now.Month & "-" & Now.Day & " " & Now.Hour & ";" & Now.Minute & ";" & Now.Second
         If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
+            System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó un backup de forma correcta.", Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End If
-
         ofrecerDownloadAlUsuario()
 
     End Sub
     Protected Sub ofrecerDownloadAlUsuario()
         Response.ContentType = "application/octet-stream"
         Response.WriteFile(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() + "/" + nombreArchivo + ".bak")
-        Response.AppendHeader("Content-Disposition", "attachment; filename=backup" + Now.Year.ToString + Now.Month.ToString + Now.Day.ToString + ".bak")
+        Response.AppendHeader("Content-Disposition", "attachment; filename=" & nombreArchivo + ".bak")
         Response.Flush()
     End Sub
 End Class

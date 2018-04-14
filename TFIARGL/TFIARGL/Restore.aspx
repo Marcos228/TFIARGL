@@ -18,29 +18,41 @@
                         <asp:Label ID="lblPanelError" runat="server" Text="Restauración del Sistema" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
+                               <div class="form-horizontal has-warning">
 
-                        <div class="row">
+                         <div class="form-group">
                             <div class="col-md-12">
-                                <h5 class="text-warning text-center"><strong>Solamente se podrán ingresar archivos de extension .bak previamente generados por el sistema, de lo contrario no funcionará.</strong></h5>
+                                <h5 class="text-warning text-center"><strong>Solamente se podrán ingresar archivos previamente generados por el sistema, de lo contrario no funcionará.</strong></h5>
                             </div>
                         </div>
+                                                    <div class="form-group">
+                                <asp:Label ID="lblbackupserv" runat="server" Text="Backup en Servidor:" CssClass="col-sm-3 col-sm-offset-1 control-label labelform"></asp:Label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <asp:DropDownList ID="Backups" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
+                                        <span class="input-group-addon" id="basic-addon10"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></span>
+                                    </div>
+                                </div>
+                            </div>
                         <br />
-                        <div class="row">
-                            <div class="col-md-6 col-md-offset-3">
+                       <div class="form-group">
+                              <asp:Label ID="lblbackup" runat="server" Text="Ingresar Backup:" CssClass="col-sm-3 col-sm-offset-1 control-label labelform"></asp:Label>
+                            <div class="col-md-7">
                                 <asp:FileUpload ID="FileUpload1" CssClass="btn btn-block btn-default" runat="server" />
                             </div>
                         </div>
-
+    </div>
                         <br />
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <asp:Button ID="Button1" CssClass="btn btn-block btn-warning" runat="server" Text="Realizar Restauración" />
-
+                            <div class="form-group">
+                            <div class="col-md-5 col-md-offset-1">
+                                <asp:Button ID="btnserver" CssClass="btn btn-block btn-danger" runat="server" Text="Restaurar Backup Servidor" />
                             </div>
+                                          <div class="col-md-5">
+                            <asp:Button ID="btnlocal" CssClass="btn btn-block btn-warning" runat="server" Text="Restaurar Backup Importado" />
+                            </div>
+                                </div>  
                             <br />
                         </div>
-
-                    </div>
                 </div>
             </div>
         </div>
