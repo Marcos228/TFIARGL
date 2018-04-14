@@ -7,16 +7,14 @@ Public Class BackupRestoreBLL
 
     Public Function CrearBackup(ByRef directorio As String, ByRef nombre As String, ByRef usuario As UsuarioEntidad) As Boolean
         Try
-            Me._backuprestoreentidad = New BackupRestoreEntidad(directorio, usuario, nombre)
+            Me._backuprestoreentidad = New BackupRestoreEntidad(nombre, usuario, directorio)
             Me._backuprestoredal = New BackupRestoreDAL
             If Me._backuprestoredal.RealizarBackup(Me._backuprestoreentidad) Then
-                Bitacora.makeSimpleLog("Se ha creado un backup del sistema.")
                 Return True
             Else
                 Return False
             End If
         Catch ex As Exception
-            Bitacora.makeSimpleLog("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message)
             Throw ex
         End Try
 

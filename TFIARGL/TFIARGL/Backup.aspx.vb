@@ -15,10 +15,12 @@ Public Class BackUp
 
         Dim gestorBK As New Negocio.BackupRestoreBLL
         nombreArchivo = "ArgLeague_" + Now.Ticks.ToString
-        gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente"))
-        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó un backup de forma correcta.", Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-        Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó un backup de forma correcta.", Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End If
+
         ofrecerDownloadAlUsuario()
 
     End Sub

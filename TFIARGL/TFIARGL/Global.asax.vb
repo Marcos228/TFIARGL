@@ -2,13 +2,13 @@
 Imports System.Web.HttpContext
 Public Class Global_asax
     Inherits System.Web.HttpApplication
-
+    Dim Corrupted As New List(Of Entidades.FilaCorrupta)
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
         Try
-            Dim Corrupted As List(Of Entidades.FilaCorrupta) = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
-            If (Corrupted.Count > 0) Then
-                'Algo Malo
-            End If
+
+            Corrupted = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
+            Application_BeginRequest(Nothing, Nothing)
+
         Catch ex As Exception
         End Try
     End Sub
@@ -18,6 +18,10 @@ Public Class Global_asax
     End Sub
 
     Sub Application_BeginRequest(ByVal sender As Object, ByVal e As EventArgs)
+        If (Corrupted.Count > 0) Then
+            Current.Session("FilasCorruptas") = Corrupted
+            Response.Redirect("BaseCorrupta.aspx")
+        End If
         ' Se desencadena al comienzo de cada solicitud
     End Sub
 
