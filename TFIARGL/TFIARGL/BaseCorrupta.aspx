@@ -11,7 +11,7 @@
                         <asp:Label ID="lblPanelError" runat="server" Text="Peligro" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
-                <h3 class="text-danger text-center"><strong>La base de datos se encuentra comprometida. Por favor repare la integridad para continuar.</strong>
+                <h3 class="text-danger text-center"><strong>La base de datos se encuentra comprometida. Por favor realice una restauracion de un resguardo de seguridad previo para continuar.</strong>
                        <asp:Label ID="FilasCorruptas" runat="server" ></asp:Label>                             
                 </h3>
                         <br/>

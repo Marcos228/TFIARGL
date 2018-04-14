@@ -26,30 +26,41 @@ Public Class Restore
         Dim bkre = New Entidades.BackupRestoreEntidad("")
         bkre.Nombre = Me.Backups.SelectedValue
         File.Decrypt(Me.Backups.SelectedValue)
-        If gestorBK.RealizarRestore(bkre) Then
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        Restore(bkre, True)
+        AssumingDirectControl()
+    End Sub
+    Private Sub Restore(ByRef Bkre As Entidades.BackupRestoreEntidad, ByVal Servidor As Boolean)
+        Dim gestorBK As New Negocio.BackupRestoreBLL
+        Dim nombreArchivo As String = "BKP_from_Restore_ArgLeague_" & Now.Year & "-" & Now.Month & "-" & Now.Day & " " & Now.Hour & ";" & Now.Minute & ";" & Now.Second
+        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
+            System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
+        End If
+        If gestorBK.RealizarRestore(Bkre) Then
             Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se realizó una restauracion de la base de datos.", Entidades.Tipo_Bitacora.Restore, Now, Request.UserAgent, Request.UserHostAddress, "", "")
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
             Me.success.Visible = True
             Me.alertvalid.Visible = False
         End If
-        File.Encrypt(Me.Backups.SelectedValue)
+        If Servidor Then
+            File.Encrypt(Me.Backups.SelectedValue)
+        Else
+            System.IO.File.Delete((System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\restoreUpload"))
+        End If
+        AssumingDirectControl()
+    End Sub
+
+    Private Sub AssumingDirectControl()
+        Current.Session.RemoveAll()
+        Current.Session.Abandon()
+        Response.Redirect("Default.aspx")
     End Sub
 
     Protected Sub btnlocal_Click(sender As Object, e As EventArgs) Handles btnlocal.Click
-        File.
         FileUpload1.SaveAs(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\restoreUpload")
         File.Decrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\restoreUpload")
-        Dim gestorBK As New Negocio.BackupRestoreBLL
         Dim bkre = New Entidades.BackupRestoreEntidad("")
         bkre.Nombre = System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\restoreUpload"
-        If gestorBK.RealizarRestore(bkre) Then
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se realizó una restauracion de la base de datos.", Entidades.Tipo_Bitacora.Restore, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            Negocio.BitacoraBLL.CrearBitacora(Bitac)
-            Me.success.Visible = True
-            Me.alertvalid.Visible = False
-        End If
-        System.IO.File.Delete((System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\restoreUpload"))
+        Restore(bkre, False)
     End Sub
 End Class
