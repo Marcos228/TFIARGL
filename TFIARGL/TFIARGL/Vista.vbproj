@@ -97,7 +97,7 @@
     <Content Include="AgregarUsuario.aspx" />
     <Content Include="Backup.aspx" />
     <Content Include="BaseCorrupta.aspx" />
-    <Content Include="ConsultarBitacoraAuditoria.aspx" />
+    <Content Include="BitacoraAuditoria.aspx" />
     <Content Include="CSS\bootstrap-datepicker.css" />
     <Content Include="CSS\bootstrap-datetimepicker.min.css" />
     <Content Include="CSS\bootstrap-theme.css" />
@@ -190,11 +190,11 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Clases Vista\ControladorPermisos.vb" />
-    <Compile Include="ConsultarBitacoraAuditoria.aspx.designer.vb">
-      <DependentUpon>ConsultarBitacoraAuditoria.aspx</DependentUpon>
+    <Compile Include="BitacoraAuditoria.aspx.designer.vb">
+      <DependentUpon>BitacoraAuditoria.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ConsultarBitacoraAuditoria.aspx.vb">
-      <DependentUpon>ConsultarBitacoraAuditoria.aspx</DependentUpon>
+    <Compile Include="BitacoraAuditoria.aspx.vb">
+      <DependentUpon>BitacoraAuditoria.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Default.aspx.designer.vb">

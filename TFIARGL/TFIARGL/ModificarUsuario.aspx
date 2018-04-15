@@ -29,13 +29,13 @@
                                             <HeaderStyle CssClass="thead-dark" />                                            
                                             <PagerTemplate>
                                                 <div class="col-md-4 text-left">
-                                                    <asp:Label ID="Label2" runat="server" Text="Mostrar Pagina" ></asp:Label>
+                                                    <asp:Label ID="lblmostrarpag" runat="server" Text="Mostrar Pagina" ></asp:Label>
                                                     <asp:DropDownList ID="ddlPaging" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPaging_SelectedIndexChanged" />
-                                                    <span >de</span>
+                                                     <asp:Label ID="lblde" runat="server" Text="de" ></asp:Label>
                                                     <asp:Label ID="lbltotalpages" runat="server" Text="" ></asp:Label>
                                                 </div>
                                                 <div class="col-md-4 col-md-offset-4">
-                                                    <asp:Label ID="Label3" runat="server" Text="Mostrar" ></asp:Label>
+                                                    <asp:Label ID="lblMostrar" runat="server" Text="Mostrar" ></asp:Label>
                                                     <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPageSize_SelectedPageSizeChanged">
                                                         <asp:ListItem Text="1" Value="1"></asp:ListItem>
                                                         <asp:ListItem Text="5" Value="5"></asp:ListItem>
@@ -44,8 +44,7 @@
                                                         <asp:ListItem Text="25" Value="25"></asp:ListItem>
                                                         <asp:ListItem Text="50" Value="50"></asp:ListItem>
                                                     </asp:DropDownList>
-
-                                                    <span >Registros por Pagina</span>
+                                                     <asp:Label ID="lblRegistros" runat="server" Text="Registros por Pagina" ></asp:Label>
                                                 </div>
                                             </PagerTemplate>
                                             <Columns>

@@ -7,6 +7,7 @@ Imports System.IO
 
 Public Class BitacoraBLL
     Private BitacoraDal As New DAL.BitacoraDAL
+
     Public Function listar() As List(Of Entidades.Bitacora)
         'Dim dt As DataTable = BitacoraDal.Listar
         'Dim bitacoras As New List(Of Entidades.Bitacora)
