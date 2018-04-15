@@ -41,6 +41,27 @@ Public Class ModificarUsuario
     End Sub
 
     Private Sub gv_Usuarios_DataBound(sender As Object, e As EventArgs) Handles gv_Usuarios.DataBound
+        Dim ddl As DropDownList = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+        Dim ddlpage As DropDownList = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
+        Dim txttotal As Label = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
+
+        For Each item As ListItem In ddlpage.Items
+            If item.Value = gv_Usuarios.PageSize Then
+                item.Selected = True
+            End If
+        Next
+
+        txttotal.Text = gv_Usuarios.PageCount
+        For cnt As Integer = 0 To gv_Usuarios.PageCount - 1
+            Dim curr As Integer = cnt + 1
+            Dim item As New ListItem(curr.ToString())
+            If cnt = gv_Usuarios.PageIndex Then
+                item.Selected = True
+            End If
+
+            ddl.Items.Add(item)
+
+        Next cnt
         For Each row As GridViewRow In gv_Usuarios.Rows
             Dim imagen1 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_Bloquear"), System.Web.UI.WebControls.ImageButton)
             Dim imagen2 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_desbloqueo"), System.Web.UI.WebControls.ImageButton)
@@ -61,8 +82,9 @@ Public Class ModificarUsuario
             Else
                 row.Cells(5).Text = "SI"
             End If
-
         Next
+        gv_Usuarios.BottomPagerRow.Visible = True
+        gv_Usuarios.BottomPagerRow.CssClass = "table-bottom-dark"
     End Sub
 
     Private Sub ModificarUsuario_PreRender(sender As Object, e As EventArgs) Handles Me.PreRender
@@ -81,7 +103,7 @@ Public Class ModificarUsuario
     Private Sub gv_Usuarios_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_Usuarios.RowCommand
         Ocultamiento(False)
         Dim gestor As New Negocio.UsuarioBLL
-        Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(e.CommandArgument)
+        Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(e.CommandArgument + (gv_Usuarios.PageIndex * gv_Usuarios.PageSize))
         Me.id_usuario.Value = e.CommandArgument
         Select Case e.CommandName.ToString
             Case "B"
@@ -164,4 +186,30 @@ Public Class ModificarUsuario
         Catch ex As Exception
         End Try
     End Sub
+    Protected Sub gv_Usuarios_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
+        Try
+            CargarUsuarios()
+            gv_Usuarios.PageIndex = e.NewPageIndex
+            gv_Usuarios.DataBind()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+    Protected Sub ddlPaging_SelectedIndexChanged(sender As Object, e As EventArgs)
+        Try
+            Dim ddl As DropDownList = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            gv_Usuarios.SetPageIndex(ddl.SelectedIndex)
+        Catch ex As Exception
+        End Try
+    End Sub
+    Protected Sub ddlPageSize_SelectedPageSizeChanged(sender As Object, e As EventArgs)
+        Try
+            Dim ddl As DropDownList = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
+            gv_Usuarios.PageSize = ddl.SelectedValue
+            CargarUsuarios()
+        Catch ex As Exception
+        End Try
+    End Sub
+
 End Class
