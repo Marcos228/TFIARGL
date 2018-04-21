@@ -86,8 +86,24 @@ Public Class BitacoraDAL
 
     End Function
 
-    Public Function ConsultarBitacoraAuditoria(ByRef Usuario As Entidades.UsuarioEntidad, ByVal Tipo As Entidades.Tipo_Bitacora, ByVal FechaInicio As DateTime, ByVal FechaFin As DateTime) As List(Of Entidades.BitacoraAuditoria)
-        Return New List(Of Entidades.BitacoraAuditoria)
+    Public Function ConsultarBitacoraAuditoria() As List(Of Entidades.BitacoraAuditoria)
+        Try
+            Dim consulta As String = "Select * from BitacoraAuditoria "
+            Dim Command As SqlCommand = Acceso.MiComando(consulta)
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            If dt.Rows.Count > 0 Then
+                FormatearUsuario(Usuario, dt.Rows(0))
+                Return Usuario
+            Else
+                Return Nothing
+            End If
+
+        Catch ex As Exception
+            Throw ex
+        End Try
 
     End Function
 
@@ -100,4 +116,22 @@ Public Class BitacoraDAL
         Return ""
 
     End Function
+
+    Public Sub FormatearBitacoraAuditoria(ByVal Bita As Entidades.BitacoraAuditoria, ByVal row As DataRow)
+        Try
+            Bita.Browser = row("WebBrowser")
+            Bita.Detalle = row("Detalle")
+            Bita.Fecha = row("Fecha")
+            Bita.Id_Bitacora = row("ID_Bitacora_Auditoria")
+            Bita.IP_Usuario = row("IP_Usuario")
+            Bita.Tipo_Bitacora = row("Tipo_Bitacora")
+            Bita.Valor_Anterior = row("Valor_Anterior")
+            Bita.Valor_Posterior = row("Valor_Posterior")
+            Dim usu As New Entidades.UsuarioEntidad
+            Bita.Usuario = New UsuarioDAL().BuscarUsuarioIDBitacora(row("ID_Usuario"))
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
+
 End Class

@@ -8,16 +8,8 @@ Imports System.IO
 Public Class BitacoraBLL
     Private BitacoraDal As New DAL.BitacoraDAL
 
-    Public Function listar() As List(Of Entidades.Bitacora)
-        'Dim dt As DataTable = BitacoraDal.Listar
-        'Dim bitacoras As New List(Of Entidades.Bitacora)
-        'For Each row In dt.Rows
-        '    Dim log As New Entidades.BitacoraAuditoria
-        '    log.Detalle = row.Item("Descripcion")
-        '    log.Fecha = row.Item("Fecha")
-        '    bitacoras.Add(log)
-        'Next
-        'Return bitacoras
+    Public Function listar() As List(Of Entidades.BitacoraAuditoria)
+        Return BitacoraDal.ConsultarBitacoraAuditoria
     End Function
 
     Public Shared Sub CrearBitacora(ByRef Bita As Bitacora, Optional ByRef ObjetoAnt As Object = Nothing, Optional ByRef ObjetoAct As Object = Nothing)

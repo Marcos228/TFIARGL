@@ -27,8 +27,8 @@ Public Class BackUp
     End Sub
     Protected Sub ofrecerDownloadAlUsuario()
         Response.ContentType = "application/octet-stream"
-        Response.WriteFile(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() + "/" + nombreArchivo + ".bak")
         Response.AppendHeader("Content-Disposition", "attachment; filename=" & nombreArchivo + ".bak")
+        Response.WriteFile(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() + "/" + nombreArchivo + ".bak")
         Response.Flush()
     End Sub
 End Class
