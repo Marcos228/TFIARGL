@@ -3,11 +3,7 @@ Public Class AgregarUsuario
     Inherits System.Web.UI.Page
 
     Protected Sub btnAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click
-        'Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorNegocio.VerifyAllIntegrity()
-        'If (Current.Session("FilasCorruptas").Count > 0) Then
-        '    Current.Session("cliente") = DBNull.Value
-        '    Response.Redirect("/BaseCorrupta.aspx")
-        'End If
+
 
         Dim GestorCliente As New Negocio.UsuarioBLL
         Dim usu As New Entidades.UsuarioEntidad
@@ -38,13 +34,22 @@ Public Class AgregarUsuario
             End If
 
         Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
     Private Sub AgregarUsuario_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not IsPostBack Then
-            CargarPerfiles()
-            CargarIdiomas()
+            Try
+                CargarPerfiles()
+                CargarIdiomas()
+            Catch ex As Exception
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            End Try
         End If
     End Sub
     Private Sub CargarPerfiles()

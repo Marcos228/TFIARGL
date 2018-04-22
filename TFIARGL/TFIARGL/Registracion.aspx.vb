@@ -31,8 +31,8 @@ Public Class Registracion
                 usu.Nombre = txtnombre.Text
                 usu.Apellido = txtapellido.Text
                 usu.Salt = PassSalt.Item(0)
-                    usu.Password = PassSalt.Item(1)
-                    usu.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = 1}
+                usu.Password = PassSalt.Item(1)
+                usu.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = 1}
                 usu.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = 0}
                 usu.FechaAlta = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 usu.Empleado = False
@@ -45,11 +45,14 @@ Public Class Registracion
                     Me.txtusuario.Text = ""
                 End If
             Else
-                    Me.alertvalid.Visible = True
+                Me.alertvalid.Visible = True
                 Me.textovalid.InnerText = "Complete los campos requeridos"
                 Me.success.Visible = False
             End If
         Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 

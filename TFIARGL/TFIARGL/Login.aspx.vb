@@ -44,13 +44,14 @@ Public Class Login
             Dim Bitac As New BitacoraAuditoria(clienteLogeado, "El Usuario: " & clienteLogeado.NombreUsu & " quiso ingresar al sistema con una contraseña invalida.", Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
             BitacoraBLL.CrearBitacora(Bitac)
         Catch ex As Exception
-            '  BitacoraBLL.CrearBitacoraErrores(ex.Message, Tipo_Bitacora.Errores, Current.Session("cliente"), DateTime.Now, Dns.GetHostAddresses(Dns.GetHostName).ToString, Request().UserAgent.ToUpper, ex.GetType.ToString, ex.StackTrace, Request.Url.AbsolutePath)
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
     Private Sub ConsultarporBitacoras()
         Try
-
             'para retirar las bitacoras del archivo
             If File.Exists("BitacorasAuditoria.json") Then
                 Dim Jsonarray As SerializadorJSON(Of List(Of BitacoraAuditoria)) = New SerializadorJSON(Of List(Of BitacoraAuditoria))
@@ -74,9 +75,10 @@ Public Class Login
                 File.Delete("BitacorasErrores.json")
 
             End If
-        Catch FalloConexion As InvalidOperationException
-
         Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
@@ -94,6 +96,9 @@ Public Class Login
                 Me.success.Visible = False
             End If
         Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 

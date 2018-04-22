@@ -14,7 +14,7 @@ Public Class BitacoraDAL
                 End With
             Else
                 Dim Bitacora2 As Entidades.BitacoraErrores = Bitacora
-                Command = Acceso.MiComando("insert into BitacoraErrores (Tipo_Bitacora, Fecha, Detalle, ID_Usuario, IP_Usuario, WebBrowser, URL, StackTrace,Exception) Output Inserted.ID_Bitacora_Auditoria values (@Tipo_Bitacora,@Fecha,@Descripcion,@id_usuario,@iP_usuario, @Browser,@URL,@Stack_Trace,@Exception)")
+                Command = Acceso.MiComando("insert into BitacoraErrores (Tipo_Bitacora, Fecha, Detalle, ID_Usuario, IP_Usuario, WebBrowser, URL, StackTrace,Exception) Output Inserted.ID_Bitacora_Errores values (@Tipo_Bitacora,@Fecha,@Descripcion,@id_usuario,@iP_usuario, @Browser,@URL,@Stack_Trace,@Exception)")
                 With Command.Parameters
                     .Add(New SqlParameter("@Exception", Bitacora2.Exception))
                     .Add(New SqlParameter("@Stack_Trace", Bitacora2.StackTrace))
@@ -39,7 +39,7 @@ Public Class BitacoraDAL
             If Bitacora.GetType = New Entidades.BitacoraAuditoria().GetType Then
                 Command2 = Acceso.MiComando("Update BitacoraAuditoria set DVH=@DVH where ID_Bitacora_Auditoria=@ID_Bitacora")
             Else
-                Command2 = Acceso.MiComando("Update BitacoraErrores set DVH=@DVH where ID_Bitacora_Auditoria=@ID_Bitacora")
+                Command2 = Acceso.MiComando("Update BitacoraErrores set DVH=@DVH where ID_Bitacora_Errores=@ID_Bitacora")
             End If
             With Command2.Parameters
                     .Add(New SqlParameter("@ID_Bitacora", Bitacora.Id_Bitacora))

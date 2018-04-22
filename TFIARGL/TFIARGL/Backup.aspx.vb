@@ -8,22 +8,27 @@ Public Class BackUp
     End Sub
 
     Protected Sub hacerBackup(sender As Object, e As EventArgs) Handles Button1.Click
-        Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
-        If (Current.Session("FilasCorruptas").Count > 0) Then
-            Current.Session("cliente") = DBNull.Value
-            Response.Redirect("/BaseCorrupta.aspx")
-        End If
+        Try
+            Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
+            If (Current.Session("FilasCorruptas").Count > 0) Then
+                Current.Session("cliente") = DBNull.Value
+                Response.Redirect("/BaseCorrupta.aspx")
+            End If
 
-        Dim gestorBK As New Negocio.BackupRestoreBLL
-        nombreArchivo = "BKP_ArgLeague_" & Now.Year & "-" & Now.Month & "-" & Now.Day & " " & Now.Hour & ";" & Now.Minute & ";" & Now.Second
-        If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
-            System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
+            Dim gestorBK As New Negocio.BackupRestoreBLL
+            nombreArchivo = "BKP_ArgLeague_" & Now.Year & "-" & Now.Month & "-" & Now.Day & " " & Now.Hour & ";" & Now.Minute & ";" & Now.Second
+            If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
+                System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó un backup de forma correcta.", Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            End If
+            ofrecerDownloadAlUsuario()
+        Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó un backup de forma correcta.", Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            Negocio.BitacoraBLL.CrearBitacora(Bitac)
-        End If
-        ofrecerDownloadAlUsuario()
-
+        Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+        Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
     End Sub
     Protected Sub ofrecerDownloadAlUsuario()
         Response.ContentType = "application/octet-stream"
