@@ -5,10 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Saitama - Bienvenido</title>
+    <title>ARGLeague - Bienvenido</title>
 
     <link href="CSS/bootstrap-theme.css" rel="stylesheet" type="text/css" />
-    <link href="CSS/bootstrap-theme.css.map" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="/CSS/jquery-ui.css"/>
     <link href="CSS/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="CSS/font-awesome.css" rel="stylesheet" type="text/css" />
@@ -16,6 +15,7 @@
     <link href="CSS/MisEstilos.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="JS/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="JS/bootstrap.js"></script>
+        <script type="text/javascript" src="JS/jquery-ui.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 

@@ -86,21 +86,55 @@ Public Class BitacoraDAL
 
     End Function
 
-    Public Function ConsultarBitacoraAuditoria() As List(Of Entidades.BitacoraAuditoria)
+    Public Function ConsultarBitacoraAuditoria(Optional ByVal tipoBitacora As Entidades.Tipo_Bitacora = Nothing, Optional ByVal Desde As Date = Nothing, Optional ByVal Hasta As Date = Nothing, Optional ByRef Usu As Entidades.UsuarioEntidad = Nothing) As List(Of Entidades.BitacoraAuditoria)
         Try
-            Dim consulta As String = "Select * from BitacoraAuditoria "
+            Dim consulta As String = ""
+
+
+
+            If Desde = DateTime.MinValue And Hasta = DateTime.MinValue Then
+                consulta = "Select Top 50 "
+            Else
+                consulta = "Select "
+            End If
+            consulta += " Valor_Anterior, Valor_Posterior, Detalle, Fecha, IP_Usuario, WebBrowser,Tipo_Bitacora, ID_Bitacora_Auditoria, ID_Usuario from BitacoraAuditoria where Fecha between isnull(@desde,'19000101') and isnull(@hasta,'99990101') and ID_Usuario=isnull(@Usuario,ID_Usuario) and Tipo_Bitacora=isnull(@TipoBitacora,Tipo_Bitacora) "
+
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             With Command.Parameters
-                .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
+                If Not Desde = DateTime.MinValue And Not Hasta = DateTime.MinValue Then
+                    .Add(New SqlParameter("@Desde", Desde))
+                    .Add(New SqlParameter("@Hasta", Hasta))
+                Else
+                    .Add(New SqlParameter("@Desde", DBNull.Value))
+                    .Add(New SqlParameter("@Hasta", DBNull.Value))
+                End If
+                If tipoBitacora > 0 Then
+                    .Add(New SqlParameter("@TipoBitacora", tipoBitacora))
+                Else
+                    .Add(New SqlParameter("@TipoBitacora", DBNull.Value))
+                End If
+                If Not IsNothing(Usu)  Then
+                    If Usu.ID_Usuario > 0 Then
+                        .Add(New SqlParameter("@Usuario", Usu.ID_Usuario))
+                    Else
+                        .Add(New SqlParameter("@Usuario", DBNull.Value))
+                    End If
+                Else
+                    .Add(New SqlParameter("@Usuario", DBNull.Value))
+                End If
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)
+            Dim listaBita As New List(Of Entidades.BitacoraAuditoria)
             If dt.Rows.Count > 0 Then
-                FormatearUsuario(Usuario, dt.Rows(0))
-                Return Usuario
+                For Each dr As DataRow In dt.Rows
+                    Dim Bita As New Entidades.BitacoraAuditoria
+                    FormatearBitacoraAuditoria(Bita, dr)
+                    listaBita.Add(Bita)
+                Next
+                Return listaBita
             Else
                 Return Nothing
             End If
-
         Catch ex As Exception
             Throw ex
         End Try
@@ -128,7 +162,8 @@ Public Class BitacoraDAL
             Bita.Valor_Anterior = row("Valor_Anterior")
             Bita.Valor_Posterior = row("Valor_Posterior")
             Dim usu As New Entidades.UsuarioEntidad
-            Bita.Usuario = New UsuarioDAL().BuscarUsuarioIDBitacora(row("ID_Usuario"))
+            usu.ID_Usuario = row("ID_Usuario")
+            Bita.Usuario = New UsuarioDAL().BuscarUsuarioIDBitacora(usu)
         Catch ex As Exception
             Throw ex
         End Try

@@ -8,8 +8,8 @@ Imports System.IO
 Public Class BitacoraBLL
     Private BitacoraDal As New DAL.BitacoraDAL
 
-    Public Function listar() As List(Of Entidades.BitacoraAuditoria)
-        Return BitacoraDal.ConsultarBitacoraAuditoria
+    Public Function ListarBitacorasAuditoria(Optional ByVal tipoBitacora As Tipo_Bitacora = Nothing, Optional ByVal Desde As Date = Nothing, Optional ByVal Hasta As Date = Nothing, Optional ByRef Usu As Entidades.UsuarioEntidad = Nothing) As List(Of Entidades.BitacoraAuditoria)
+        Return BitacoraDal.ConsultarBitacoraAuditoria(tipoBitacora, Desde, Hasta, Usu)
     End Function
 
     Public Shared Sub CrearBitacora(ByRef Bita As Bitacora, Optional ByRef ObjetoAnt As Object = Nothing, Optional ByRef ObjetoAct As Object = Nothing)
@@ -20,8 +20,6 @@ Public Class BitacoraBLL
             GenerarPrePostLeyenda(Bita, ObjetoAnt, ObjetoAct)
             bitdal.GuardarBitacora(Bita)
         End If
-
-
     End Sub
 
     Public Shared Sub ArchivarBitacora(ByRef Bitacora As Bitacora)

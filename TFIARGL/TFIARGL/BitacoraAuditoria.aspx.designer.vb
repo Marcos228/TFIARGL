@@ -14,6 +14,24 @@ Option Explicit On
 Partial Public Class ConsultarBitacoraAuditoria
     
     '''<summary>
+    '''Control alertvalid.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents alertvalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''Control textovalid.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
     '''Control lblPanelBackup.
     '''</summary>
     '''<remarks>
@@ -66,6 +84,42 @@ Partial Public Class ConsultarBitacoraAuditoria
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
     Protected WithEvents datepicker2 As Global.System.Web.UI.HtmlControls.HtmlInputText
+    
+    '''<summary>
+    '''Control lblusuarios.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblusuarios As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lstusuarios.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lstusuarios As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''Control lbltipos.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lbltipos As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lsttipos.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lsttipos As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
     '''Control btnFiltrar.
