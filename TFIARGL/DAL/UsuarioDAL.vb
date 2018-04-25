@@ -191,19 +191,27 @@ Public Class UsuarioDAL
 
     Public Function CambiarPassword(ByVal Usuario As Entidades.UsuarioEntidad) As Boolean
         Try
-            Dim consulta As String = "update Usuario set Password= @Password, DVH = @DVH where ID_Usuario=@ID_Usuario And BL = 0"
-            Dim Command As SqlCommand = Acceso.MiComando(consulta)
-            Dim ListaParametros As New List(Of String)
-            Acceso.AgregarParametros(Usuario, ListaParametros)
-            ListaParametros.Add(True.ToString) 'Agregado de Baja Logica
-            With Command.Parameters
-                .Add(New SqlParameter("@ID_Usuario", Usuario.ID_Usuario))
-                .Add(New SqlParameter("@Password", Usuario.Password))
-                .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
-            End With
-            Dim dt As DataTable = Acceso.Lectura(Command)
-            ActualizarDVH()
-            Return True
+            Dim consultaVerif As String = "Select ID_Usuario from Usuario where NombreUsuario=@NombreUsu And BL = 0"
+            Dim Commandverif As SqlCommand = Acceso.MiComando(consultaVerif)
+            Dim dtverif As DataTable = Acceso.Lectura(Commandverif)
+            If dtverif.Rows.Count > 0 Then
+                Dim consulta As String = "update Usuario set Password= @Password, salt= @salt, DVH = @DVH where NombreUsuario=@NombreUsu And BL = 0"
+                Dim Command As SqlCommand = Acceso.MiComando(consulta)
+                Dim ListaParametros As New List(Of String)
+                Acceso.AgregarParametros(Usuario, ListaParametros)
+                ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
+                With Command.Parameters
+                    .Add(New SqlParameter("@NombreUsu", Usuario.NombreUsu))
+                    .Add(New SqlParameter("@Salt", Usuario.Salt))
+                    .Add(New SqlParameter("@Password", Usuario.Password))
+                    .Add(New SqlParameter("@DVH", DigitoVerificadorDAL.CalcularDVH(ListaParametros)))
+                End With
+                Dim dt As DataTable = Acceso.Lectura(Command)
+                ActualizarDVH()
+                Return True
+            Else
+                Return False
+            End If
         Catch ex As Exception
             Throw ex
         End Try

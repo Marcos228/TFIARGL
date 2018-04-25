@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class RecuperarPassword
+Partial Public Class BitacoraErrores
     
     '''<summary>
     '''Control alertvalid.
@@ -32,56 +32,92 @@ Partial Public Class RecuperarPassword
     Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control success.
+    '''Control lblPanelBackup.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents lblPanelBackup As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control lblPanelError.
+    '''Control lblfecha.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelError As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblfecha As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control lblUsuario.
+    '''Control datepicker1.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblUsuario As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents datepicker1 As Global.System.Web.UI.HtmlControls.HtmlInputText
     
     '''<summary>
-    '''Control txtUsuario.
+    '''Control Fecha_Desde.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents txtUsuario As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents Fecha_Desde As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Control RtxtUsuario.
+    '''Control lblfecha2.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents RtxtUsuario As Global.System.Web.UI.WebControls.RequiredFieldValidator
+    Protected WithEvents lblfecha2 As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control btnpass.
+    '''Control datepicker2.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnpass As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents datepicker2 As Global.System.Web.UI.HtmlControls.HtmlInputText
+    
+    '''<summary>
+    '''Control lblusuarios.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblusuarios As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lstusuarios.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lstusuarios As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''Control btnFiltrar.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btnFiltrar As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''Control gv_Bitacora.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents gv_Bitacora As Global.System.Web.UI.WebControls.GridView
 End Class

@@ -81,12 +81,19 @@ Public Class UsuarioBLL
     End Function
     Public Function Alta(ByVal Usuario As UsuarioEntidad) As Boolean
         Try
-            If UsuarioDAL.Alta(Usuario) Then
-                'BitacoraBLL.CrearBitacora("Se creó el Usuario: " & Usuario.Nombre & " en el sistema.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-                Return True
+            If Me.ValidarNombre(Usuario) Then
+                If UsuarioDAL.Alta(Usuario) Then
+                    'BitacoraBLL.CrearBitacora("Se creó el Usuario: " & Usuario.Nombre & " en el sistema.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                    Return True
+                Else
+                    Return False
+                End If
             Else
-                Return False
+                Throw New ExceptionNombreEnUso
             End If
+
+        Catch NombreUso As ExceptionNombreEnUso
+            Throw NombreUso
         Catch FalloConexion As InvalidOperationException
             'Dim Bitacora As New BitacoraEntidad("No se pudo crear el Usuario: " & Usuario.Nombre & " en el sistema. Error de Conexion", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
             'BitacoraBLL.ArchivarBitacora(Bitacora)

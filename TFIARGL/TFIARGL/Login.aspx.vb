@@ -22,7 +22,7 @@ Public Class Login
                 Current.Session("cliente") = clienteLogeado
                 Me.success.Visible = True
                 Me.alertvalid.Visible = False
-                Response.Redirect("~/default.aspx")
+                Response.Redirect("~/default.aspx", False)
             Else
                 Me.alertvalid.Visible = True
                 Me.textovalid.InnerText = "Complete los campos requeridos"
@@ -64,11 +64,11 @@ Public Class Login
                 mistreamreader.Close()
                 File.Delete("BitacorasAuditoria.json")
             ElseIf File.Exists("BitacorasErrores.json") Then
-                Dim Jsonarray As SerializadorJSON(Of List(Of BitacoraErrores)) = New SerializadorJSON(Of List(Of BitacoraErrores))
+                Dim Jsonarray As SerializadorJSON(Of List(Of Entidades.BitacoraErrores)) = New SerializadorJSON(Of List(Of Entidades.BitacoraErrores))
                 Dim mistreamreader = File.Open("BitacorasErrores.json", FileMode.Open, FileAccess.Read)
-                Dim Lstabitacoras As New List(Of BitacoraErrores)
+                Dim Lstabitacoras As New List(Of Entidades.BitacoraErrores)
                 Lstabitacoras = Jsonarray.Deserializar(mistreamreader, Lstabitacoras)
-                For Each bitacora As BitacoraErrores In Lstabitacoras
+                For Each bitacora As Entidades.BitacoraErrores In Lstabitacoras
                     BitacoraBLL.CrearBitacora(bitacora)
                 Next
                 mistreamreader.Close()

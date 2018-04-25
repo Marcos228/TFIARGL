@@ -37,8 +37,8 @@ Public Class Registracion
                 usu.FechaAlta = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 usu.Empleado = False
                 If GestorCliente.Alta(usu) Then
-                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se registró el usuario " & usu.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+
+                    Dim Bitac As New Entidades.BitacoraAuditoria(usu, "Se registró el usuario " & usu.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
@@ -49,6 +49,10 @@ Public Class Registracion
                 Me.textovalid.InnerText = "Complete los campos requeridos"
                 Me.success.Visible = False
             End If
+        Catch nombreuso As Negocio.ExceptionNombreEnUso
+            Me.alertvalid.Visible = True
+            Me.textovalid.InnerText = nombreuso.Mensaje
+            Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

@@ -61,6 +61,15 @@ Public Class ExceptionPasswordIncorrecta
 
 End Class
 
+
+Public Class ExceptionNombreEnUso
+    Inherits GestorErroresBLL
+    Public Overrides Function Mensaje() As String
+        Return "El Nombre de Usuario o Correo Electronico ya se encuentra en uso"
+    End Function
+
+End Class
+
 #End Region
 
 #Region "Permiso"

@@ -32,7 +32,10 @@ Public Class AgregarUsuario
                 Me.textovalid.InnerText = "Complete los campos requeridos"
                 Me.success.Visible = False
             End If
-
+        Catch nombreuso As Negocio.ExceptionNombreEnUso
+            Me.alertvalid.Visible = True
+            Me.textovalid.InnerText = nombreuso.Mensaje
+            Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

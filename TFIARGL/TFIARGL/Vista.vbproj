@@ -97,6 +97,7 @@
     <Content Include="AgregarUsuario.aspx" />
     <Content Include="Backup.aspx" />
     <Content Include="BaseCorrupta.aspx" />
+    <Content Include="BitacoraErrores.aspx" />
     <Content Include="BitacoraAuditoria.aspx" />
     <Content Include="CSS\bootstrap-datepicker.css" />
     <Content Include="CSS\bootstrap-datetimepicker.min.css" />
@@ -121,19 +122,31 @@
     <Content Include="Global.asax" />
     <Content Include="IMAGENES\Arrow.png" />
     <Content Include="IMAGENES\banner.jpg" />
+    <Content Include="IMAGENES\blue.png" />
+    <Content Include="IMAGENES\circular-target.png" />
     <Content Include="IMAGENES\delete.png" />
     <Content Include="IMAGENES\download.png" />
     <Content Include="IMAGENES\edificio.jpg" />
     <Content Include="IMAGENES\edit.png" />
     <Content Include="IMAGENES\estadio.jpg" />
     <Content Include="IMAGENES\eventos.png" />
+    <Content Include="IMAGENES\facebook.png" />
+    <Content Include="IMAGENES\game-console.png" />
+    <Content Include="IMAGENES\gamer.png" />
+    <Content Include="IMAGENES\knight.png" />
     <Content Include="IMAGENES\minus.ico" />
     <Content Include="IMAGENES\padlock-close.png" />
     <Content Include="IMAGENES\padlock-open.png" />
     <Content Include="IMAGENES\plus.ico" />
     <Content Include="IMAGENES\recital.jpg" />
+    <Content Include="IMAGENES\red.png" />
     <Content Include="IMAGENES\Refresh.ico" />
+    <Content Include="IMAGENES\remote.png" />
     <Content Include="IMAGENES\rural.jpg" />
+    <Content Include="IMAGENES\technological.png" />
+    <Content Include="IMAGENES\twitter.png" />
+    <Content Include="IMAGENES\youtube-gaming_1200x500.jpg" />
+    <Content Include="EmailTemplates\index.html" />
     <Content Include="Institucional.aspx" />
     <Content Include="JS\bootstrap.js" />
     <Content Include="JS\bootstrap.min.js" />
@@ -187,6 +200,13 @@
     </Compile>
     <Compile Include="BaseCorrupta.aspx.vb">
       <DependentUpon>BaseCorrupta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BitacoraErrores.aspx.designer.vb">
+      <DependentUpon>BitacoraErrores.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BitacoraErrores.aspx.vb">
+      <DependentUpon>BitacoraErrores.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Clases Vista\ControladorPermisos.vb" />

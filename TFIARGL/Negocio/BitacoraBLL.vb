@@ -65,6 +65,10 @@ Public Class BitacoraBLL
 
     End Sub
 
+    Public Function ListarBitacorasErrores(tipoBitacora As Tipo_Bitacora, desde As Date, hasta As Date, usu As UsuarioEntidad) As List(Of BitacoraErrores)
+        Return BitacoraDal.ConsultarBitacoraErrores(usu, tipoBitacora, desde, hasta)
+    End Function
+
     Public Function makeLog(log As Entidades.Bitacora) As Boolean
         Return BitacoraDal.GuardarBitacora(log)
     End Function

@@ -73,6 +73,7 @@
     <Compile Include="GestorErroresBLL.vb" />
     <Compile Include="GestorPermisosBLL.vb" />
     <Compile Include="IdiomaBLL.vb" />
+    <Compile Include="MailingBLL.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
