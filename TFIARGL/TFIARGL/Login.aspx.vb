@@ -83,7 +83,7 @@ Public Class Login
     End Sub
 
     Protected Sub btnpass_Click(sender As Object, e As EventArgs) Handles btnpass.Click
-        Response.Redirect("/RecuperarPassword.aspx")
+        Response.Redirect("/RecuperarPassword.aspx", False)
     End Sub
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -103,6 +103,6 @@ Public Class Login
     End Sub
 
     Protected Sub btnregistro_Click(sender As Object, e As EventArgs) Handles btnregistro.Click
-        Response.Redirect("/Registracion.aspx")
+        Response.Redirect("/Registracion.aspx", False)
     End Sub
 End Class

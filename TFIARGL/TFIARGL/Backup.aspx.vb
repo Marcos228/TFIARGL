@@ -12,7 +12,7 @@ Public Class BackUp
             Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
             If (Current.Session("FilasCorruptas").Count > 0) Then
                 Current.Session("cliente") = DBNull.Value
-                Response.Redirect("/BaseCorrupta.aspx")
+                Response.Redirect("/BaseCorrupta.aspx", False)
             End If
 
             Dim gestorBK As New Negocio.BackupRestoreBLL

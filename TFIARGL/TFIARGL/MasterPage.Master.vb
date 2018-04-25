@@ -38,7 +38,7 @@ Public Class MasterPage
 
         UsuarioInvitado.Perfil = PermisosInvitado
         If UsuarioInvitado.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
-            Response.Redirect("AccesoRestringido.aspx")
+            Response.Redirect("AccesoRestringido.aspx", False)
         End If
     End Sub
 
@@ -85,7 +85,7 @@ Public Class MasterPage
         Else
 
             If Usuario.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
-                Response.Redirect("AccesoRestringido.aspx")
+                Response.Redirect("AccesoRestringido.aspx", False)
             End If
 
         End If
@@ -117,7 +117,7 @@ Public Class MasterPage
 
         If deslogear.SelectedItem.Text = "Logout" Then
             Current.Session("cliente") = DBNull.Value
-            Response.Redirect("/Default.aspx")
+            Response.Redirect("/Default.aspx", False)
         End If
     End Sub
 

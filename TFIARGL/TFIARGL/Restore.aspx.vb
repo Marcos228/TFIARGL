@@ -67,7 +67,7 @@ Public Class Restore
     Private Sub AssumingDirectControl()
         Current.Session.RemoveAll()
         Current.Session.Abandon()
-        Response.Redirect("Default.aspx")
+        Response.Redirect("Default.aspx", False)
     End Sub
 
     Protected Sub btnlocal_Click(sender As Object, e As EventArgs) Handles btnlocal.Click

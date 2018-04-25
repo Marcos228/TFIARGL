@@ -19,7 +19,7 @@ Public Class Global_asax
     Sub Application_BeginRequest(ByVal sender As Object, ByVal e As EventArgs)
         If (Corrupted2.Count > 0) Then
             Corrupted2.Clear()
-            Response.Redirect("BaseCorrupta.aspx")
+            Response.Redirect("BaseCorrupta.aspx", False)
         End If
         ' Se desencadena al comienzo de cada solicitud
     End Sub

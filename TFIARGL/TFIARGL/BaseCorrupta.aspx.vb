@@ -17,6 +17,6 @@ Public Class BaseCorrupta
     End Sub
 
     Protected Sub btnReparar_Click(sender As Object, e As EventArgs) Handles btnReparar.Click
-        Response.Redirect("/Restore.aspx")
+        Response.Redirect("/Restore.aspx", False)
     End Sub
 End Class

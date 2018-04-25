@@ -10,7 +10,7 @@ Public Class BitacoraErrores
                 Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
                 If (Current.Session("FilasCorruptas").Count > 0) Then
                     Current.Session("cliente") = DBNull.Value
-                    Response.Redirect("/BaseCorrupta.aspx")
+                    Response.Redirect("/BaseCorrupta.aspx", False)
                 End If
                 CargarBitacoras()
                 CargarUsuarios()
