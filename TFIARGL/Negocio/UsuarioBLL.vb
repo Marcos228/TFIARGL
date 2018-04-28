@@ -34,6 +34,44 @@ Public Class UsuarioBLL
             Throw ex
         End Try
     End Function
+
+    Public Function CreateToken(ByRef usu As Entidades.UsuarioEntidad) As String
+        Try
+            Return UsuarioDAL.CrearToken(usu, False)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Sub LimpiarTokens(ByVal Token As String)
+        Try
+            UsuarioDAL.LimpiarTokens(Token)
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+    End Sub
+
+    Public Function ACtivarUsuario(ByVal token As String) As Boolean
+        Try
+            Dim usuario As New Entidades.UsuarioEntidad
+            usuario.ID_Usuario = UsuarioDAL.GetTokenUser(token)
+            If Not IsNothing(usuario.ID_Usuario) Then
+                Return UsuarioDAL.Bloquear(UsuarioDAL.BuscarUsuarioID(usuario))
+            Else
+                Return True
+            End If
+
+        Catch FalloConexion As InvalidOperationException
+            'Dim Bitacora As New BitacoraEntidad("No se pudo bloquear el Usuario: " & Usuario.Nombre & " en el sistema. Error de Conexion", TipoBitacora.Login, SessionBLL.SesionActual.ObtenerUsuarioActual)
+            'BitacoraBLL.ArchivarBitacora(Bitacora)
+            Throw FalloConexion
+        Catch ex As Exception
+            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Throw ex
+        End Try
+    End Function
+
     Public Function ExisteUsuario(ByVal Usuario As UsuarioEntidad) As UsuarioEntidad
         Try
             Dim UsuarioRetorno As UsuarioEntidad = New UsuarioEntidad
@@ -102,7 +140,19 @@ Public Class UsuarioBLL
             'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
             Throw ex
         End Try
+    End Function
 
+    Public Function GEtToken(ByVal ID_Usuario As Integer) As String
+        Try
+            Return UsuarioDAL.GetToken(ID_Usuario)
+        Catch FalloConexion As InvalidOperationException
+            'Dim Bitacora As New BitacoraEntidad("No se pudo crear el Usuario: " & Usuario.Nombre & " en el sistema. Error de Conexion", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
+            'BitacoraBLL.ArchivarBitacora(Bitacora)
+            Throw FalloConexion
+        Catch ex As Exception
+            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Throw ex
+        End Try
     End Function
 
     Public Function Modificar(ByVal Usuario As UsuarioEntidad) As Boolean
@@ -247,14 +297,30 @@ Public Class UsuarioBLL
             Throw ex
         End Try
     End Sub
-    Public Function CambiarPassword(ByRef Usuario As UsuarioEntidad) As Boolean
+    Public Function CambiarPassword(ByRef Usuario As UsuarioEntidad, Optional ByVal token As String = Nothing) As Boolean
         Try
-            If UsuarioDAL.CambiarPassword(Usuario) Then
-                'BitacoraBLL.CrearBitacora("El Usuario: " & Usuario.Nombre & " actual cambió su contraseña.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-                Return True
+            If Not IsNothing(token) Then
+                Dim usu As New Entidades.UsuarioEntidad
+                usu.ID_Usuario = UsuarioDAL.GetTokenUser(token)
+                UsuarioDAL.BuscarUsuarioID(usu)
+                usu.Salt = Usuario.Salt
+                usu.Password = Usuario.Password
+                If UsuarioDAL.CambiarPassword(usu) Then
+                    'BitacoraBLL.CrearBitacora("El Usuario: " & Usuario.Nombre & " actual cambió su contraseña.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                    Return True
+                Else
+                    Return False
+                End If
             Else
-                Return False
+                If UsuarioDAL.CambiarPassword(Usuario) Then
+                    'BitacoraBLL.CrearBitacora("El Usuario: " & Usuario.Nombre & " actual cambió su contraseña.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                    Return True
+                Else
+                    Return False
+                End If
             End If
+
+
         Catch FalloConexion As InvalidOperationException
             'Dim Bitacora As New BitacoraEntidad("El Usuario: " & Usuario.Nombre & " no pudo cambiar su contraseña. Error de Conexion", TipoBitacora.Login, SessionBLL.SesionActual.ObtenerUsuarioActual)
             'BitacoraBLL.ArchivarBitacora(Bitacora)

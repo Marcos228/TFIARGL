@@ -117,6 +117,8 @@
     <Content Include="CSS\jquery-ui.theme.min.css" />
     <Content Include="Default.aspx" />
     <Content Include="EliminarPerfil.aspx" />
+    <Content Include="EmailTemplates\index - Copia.html" />
+    <Content Include="EmailTemplates\Recupero.html" />
     <Content Include="Fonts\fontawesome-webfont.svg" />
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -146,7 +148,7 @@
     <Content Include="IMAGENES\technological.png" />
     <Content Include="IMAGENES\twitter.png" />
     <Content Include="IMAGENES\youtube-gaming_1200x500.jpg" />
-    <Content Include="EmailTemplates\index.html" />
+    <Content Include="EmailTemplates\Registracion.html" />
     <Content Include="Institucional.aspx" />
     <Content Include="JS\bootstrap.js" />
     <Content Include="JS\bootstrap.min.js" />
@@ -162,7 +164,9 @@
     <Content Include="MyOrders.aspx" />
     <Content Include="Orders.aspx" />
     <Content Include="ProductList.aspx" />
+    <Content Include="ConfirmarRecupero.aspx" />
     <Content Include="RecuperarPassword.aspx" />
+    <Content Include="ConfirmarRegistracion.aspx" />
     <Content Include="Registracion.aspx" />
     <Content Include="Restore.aspx" />
   </ItemGroup>
@@ -309,11 +313,25 @@
       <DependentUpon>ProductList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="ConfirmarRecupero.aspx.designer.vb">
+      <DependentUpon>ConfirmarRecupero.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmarRecupero.aspx.vb">
+      <DependentUpon>ConfirmarRecupero.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="RecuperarPassword.aspx.designer.vb">
       <DependentUpon>RecuperarPassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="RecuperarPassword.aspx.vb">
       <DependentUpon>RecuperarPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmarRegistracion.aspx.designer.vb">
+      <DependentUpon>ConfirmarRegistracion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmarRegistracion.aspx.vb">
+      <DependentUpon>ConfirmarRegistracion.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Registracion.aspx.designer.vb">

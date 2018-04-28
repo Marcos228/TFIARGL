@@ -50,11 +50,12 @@
                             </div>
                         </div>
                                                 <br />
-                        <div class="row">
+                                                <div class="row">
                             <div class="col-md-4 col-md-offset-4">
-                                <asp:Button ID="btnregistro" runat="server" Text="Registrarse" CssClass="btn btn-block btn-warning" />
+                                <asp:Button ID="btnAceptar" runat="server" Text="Ingresar" CssClass="btn btn-block btn-success" />
                             </div>
                         </div>
+
                         <br />
                         <div class="row">
                             <div class="col-md-4 col-md-offset-4">
@@ -62,9 +63,9 @@
                             </div>
                         </div>
                         <br />
-                        <div class="row">
+                                                <div class="row">
                             <div class="col-md-4 col-md-offset-4">
-                                <asp:Button ID="btnAceptar" runat="server" Text="Ingresar" CssClass="btn btn-block btn-success" />
+                                <asp:Button ID="btnregistro" runat="server" Text="Registrarse" CssClass="btn btn-block btn-warning" />
                             </div>
                         </div>
                         <br />
@@ -72,5 +73,4 @@
                 </div>
             </div>
         </div>
-    </div>
 </asp:Content>

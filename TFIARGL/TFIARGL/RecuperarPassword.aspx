@@ -9,7 +9,7 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">Se cambió la contraseña correctamente. Revise su casilla de correo para visualizar su nueva contraseña</label>
+            <label  id="Label1" class="text-success">Revise su casilla de correo para continuar con la operación.</label>
         </div>
 
         <div class="row">

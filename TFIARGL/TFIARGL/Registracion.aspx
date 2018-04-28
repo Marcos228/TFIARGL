@@ -11,7 +11,7 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">Se ha registrado de forma correcta.</label>
+            <label  id="Label1" class="text-success">Para finalizar la registración ingrese a la direccion provista en el correo que acaba de ser enviado a su cuenta.</label>
         </div>
 
         <div class="row">

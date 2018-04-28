@@ -36,13 +36,14 @@ Public Class Registracion
                 usu.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = 0}
                 usu.FechaAlta = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 usu.Empleado = False
+                usu.Bloqueo = True
                 If GestorCliente.Alta(usu) Then
-
                     Dim Bitac As New Entidades.BitacoraAuditoria(usu, "Se registró el usuario " & usu.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
                     Me.txtusuario.Text = ""
+                    EnviarMailRegistro(GestorCliente.GEtToken(usu.ID_Usuario))
                 End If
             Else
                 Me.alertvalid.Visible = True
@@ -58,6 +59,12 @@ Public Class Registracion
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
+    End Sub
+
+    Private Sub EnviarMailRegistro(ByVal token As String)
+        Dim body As String = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath("EmailTemplates/registracion.html"))
+        Dim ruta As String = HttpContext.Current.Server.MapPath("Imagenes")
+        Negocio.MailingBLL.enviarMailRegistroUsuario(token, body, ruta)
     End Sub
 
     Dim invalid As Boolean = False
