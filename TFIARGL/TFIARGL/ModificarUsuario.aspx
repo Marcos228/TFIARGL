@@ -10,14 +10,14 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="Label1" class="text-success">El Usuario se modificó correctamente.</label>
+            <label id="lblsuccessmodUser" class="text-success">El Usuario se modificó correctamente.</label>
         </div>
 
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelLogin" runat="server" Text="Administración de Usuarios" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelModUser" runat="server" Text="Administración de Usuarios" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <br />
@@ -44,7 +44,7 @@
                                                         <asp:ListItem Text="25" Value="25"></asp:ListItem>
                                                         <asp:ListItem Text="50" Value="50"></asp:ListItem>
                                                     </asp:DropDownList>
-                                                     <asp:Label ID="lblRegistros" runat="server" Text="Registros por Pagina" ></asp:Label>
+                                                     <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina" ></asp:Label>
                                                 </div>
                                             </PagerTemplate>
                                             <Columns>
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                             <div id="usuariot" class="form-group" runat="server">
-                                <asp:Label ID="lblusuario" runat="server" Text="Nombre de Usuario:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                <asp:Label ID="lblusuarioname" runat="server" Text="Nombre de Usuario:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <asp:TextBox ID="txtusuario" runat="server" CssClass="form-control"></asp:TextBox>

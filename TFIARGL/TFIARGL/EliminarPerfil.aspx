@@ -13,13 +13,13 @@
 
         </div>
              <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="Label1" class="text-success">Se eliminó el Perfil correctamente.</label>
+            <label id="lblsuccessDeletePerfil" class="text-success">Se eliminó el Perfil correctamente.</label>
         </div>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-info">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelBackup" runat="server" Text="Crear Perfiles" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelDeletePerfil" runat="server" Text="Eliminar Perfiles" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <div class="form-horizontal ">
@@ -60,7 +60,7 @@
                             <br />
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4">
-                                    <asp:Button ID="btneliminar" runat="server" Text="Eliminar Perfil" CssClass="btn btn-block btn-warning" />
+                                    <asp:Button ID="btneliminarPerfil" runat="server" Text="Eliminar Perfil" CssClass="btn btn-block btn-warning" />
                                 </div>
                                 <br />
                             </div>

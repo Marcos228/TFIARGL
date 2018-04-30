@@ -66,7 +66,7 @@ Public Class ModificarPerfil
 
     End Sub
 
-    Protected Sub btnmodificar_Click(sender As Object, e As EventArgs) Handles btnmodificar.Click
+    Protected Sub btnmodificarperfil_Click(sender As Object, e As EventArgs) Handles btnmodificarperfil.Click
         Try
             Dim Perfil As Entidades.PermisoCompuestoEntidad = TryCast(Session("Roles"), List(Of Entidades.PermisoBaseEntidad))(lstperfil.SelectedIndex)
             Dim PerfilAnterior As Entidades.PermisoCompuestoEntidad = Perfil.Clone

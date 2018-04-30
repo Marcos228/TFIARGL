@@ -9,20 +9,20 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">Se Realizó la restauracion de la base de datos correctamente.</label>
+            <label  id="lblsuccessRestore" class="text-success">Se Realizó la restauracion de la base de datos correctamente.</label>
         </div>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-info">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelError" runat="server" Text="Restauración del Sistema" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelRestore" runat="server" Text="Restauración del Sistema" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                                <div class="form-horizontal has-warning">
 
                          <div class="form-group">
                             <div class="col-md-12">
-                                <h5 class="text-warning text-center"><strong>Solamente se podrán ingresar archivos previamente generados por el sistema, de lo contrario no funcionará.</strong></h5>
+                                <h5 class="text-warning text-center"><strong>  <asp:Label ID="lblinforestore" runat="server" Text="Solamente se podrán ingresar archivos previamente generados por el sistema, de lo contrario no funcionará."></asp:Label></strong></h5>
                             </div>
                         </div>
                                                     <div class="form-group">

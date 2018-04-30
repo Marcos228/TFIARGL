@@ -41,13 +41,13 @@ Partial Public Class ModificarUsuario
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelLogin.
+    '''Control lblPanelModUser.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelLogin As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelModUser As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control gv_Usuarios.
@@ -68,13 +68,13 @@ Partial Public Class ModificarUsuario
     Protected WithEvents usuariot As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblusuario.
+    '''Control lblusuarioname.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblusuario As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblusuarioname As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control txtusuario.

@@ -41,22 +41,22 @@ Partial Public Class AgregarPerfil
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelBackup.
+    '''Control lblPanelAddPerfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelBackup As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelAddPerfil As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control lblnombre.
+    '''Control lblnombreAddPerfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblnombre As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblnombreAddPerfil As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control txtnombre.
@@ -86,11 +86,11 @@ Partial Public Class AgregarPerfil
     Protected WithEvents TreeView1 As Global.System.Web.UI.WebControls.TreeView
     
     '''<summary>
-    '''Control Button1.
+    '''Control btnAddPerfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents Button1 As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnAddPerfil As Global.System.Web.UI.WebControls.Button
 End Class

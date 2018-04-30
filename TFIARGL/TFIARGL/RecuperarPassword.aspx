@@ -9,14 +9,14 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">Revise su casilla de correo para continuar con la operación.</label>
+            <label  id="lblsuccessRecPass" class="text-success">Revise su casilla de correo para continuar con la operación.</label>
         </div>
 
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-warning">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelError" runat="server" Text="Restauracion de Contraseña" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelRecuperoPass" runat="server" Text="Restauracion de Contraseña" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <div class="form-horizontal has-warning">

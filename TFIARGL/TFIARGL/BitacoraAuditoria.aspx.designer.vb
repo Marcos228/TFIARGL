@@ -23,31 +23,31 @@ Partial Public Class ConsultarBitacoraAuditoria
     Protected WithEvents alertvalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control textovalid.
+    '''Control lblBitacora404.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents lblBitacora404 As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelBackup.
+    '''Control lblPanelBitacora.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelBackup As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelBitacora As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control lblfecha.
+    '''Control lblfechadesde.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblfecha As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblfechadesde As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control datepicker1.
@@ -68,13 +68,13 @@ Partial Public Class ConsultarBitacoraAuditoria
     Protected WithEvents Fecha_Desde As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Control lblfecha2.
+    '''Control lblfechahasta.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblfecha2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblfechahasta As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control datepicker2.
@@ -86,13 +86,13 @@ Partial Public Class ConsultarBitacoraAuditoria
     Protected WithEvents datepicker2 As Global.System.Web.UI.HtmlControls.HtmlInputText
     
     '''<summary>
-    '''Control lblusuarios.
+    '''Control lblusuario.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblusuarios As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblusuario As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lstusuarios.
@@ -104,13 +104,13 @@ Partial Public Class ConsultarBitacoraAuditoria
     Protected WithEvents lstusuarios As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''Control lbltipos.
+    '''Control lbltipoBitacora.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lbltipos As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lbltipoBitacora As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lsttipos.

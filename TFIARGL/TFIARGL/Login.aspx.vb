@@ -9,7 +9,7 @@ Public Class Login
     Inherits System.Web.UI.Page
     Private GestorUsu As New UsuarioBLL
 
-    Private Sub btnAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click
+    Private Sub btnIngresar_Click(sender As Object, e As EventArgs) Handles btnIngresar.Click
         Dim Cliente As New Entidades.UsuarioEntidad
 
         Try
@@ -82,7 +82,7 @@ Public Class Login
         End Try
     End Sub
 
-    Protected Sub btnpass_Click(sender As Object, e As EventArgs) Handles btnpass.Click
+    Protected Sub btnpass_Click(sender As Object, e As EventArgs) Handles btnolvpass.Click
         Response.Redirect("/RecuperarPassword.aspx", False)
     End Sub
 
@@ -102,7 +102,7 @@ Public Class Login
         End Try
     End Sub
 
-    Protected Sub btnregistro_Click(sender As Object, e As EventArgs) Handles btnregistro.Click
+    Protected Sub btnregistrarse_Click(sender As Object, e As EventArgs) Handles btnregistrarse.Click
         Response.Redirect("/Registracion.aspx", False)
     End Sub
 End Class

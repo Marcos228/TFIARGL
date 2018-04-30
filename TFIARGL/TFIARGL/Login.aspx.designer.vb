@@ -77,13 +77,13 @@ Partial Public Class Login
     Protected WithEvents RtxtUsuario As Global.System.Web.UI.WebControls.RequiredFieldValidator
     
     '''<summary>
-    '''Control lblPassword.
+    '''Control lblpass.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPassword As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblpass As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control txtPassword.
@@ -104,29 +104,29 @@ Partial Public Class Login
     Protected WithEvents RtxtPassword As Global.System.Web.UI.WebControls.RequiredFieldValidator
     
     '''<summary>
-    '''Control btnAceptar.
+    '''Control btnIngresar.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnAceptar As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnIngresar As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''Control btnpass.
+    '''Control btnolvpass.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnpass As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnolvpass As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''Control btnregistro.
+    '''Control btnregistrarse.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnregistro As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnregistrarse As Global.System.Web.UI.WebControls.Button
 End Class

@@ -22,19 +22,19 @@
 
         </div>
              <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="Label1" class="text-success">Se Creó el Perfil correctamente.</label>
+            <label id="lblsuccessAddPerfil" class="text-success">Se Creó el Perfil correctamente.</label>
         </div>
 
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-info">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelBackup" runat="server" Text="Crear Perfiles" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelAddPerfil" runat="server" Text="Crear Perfiles" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                                                 <div class="form-horizontal ">
                             <div class="form-group">
-                                <asp:Label ID="lblnombre" runat="server" Text="Nombre de Perfil:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                <asp:Label ID="lblnombreAddPerfil" runat="server" Text="Nombre de Perfil:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <asp:TextBox ID="txtnombre" runat="server" CssClass="form-control"></asp:TextBox>
@@ -60,7 +60,7 @@
                         <br />
                         <div class="row">
                             <div class="col-md-4 col-md-offset-4">
-                                <asp:Button ID="Button1" runat="server" Text="Crear Perfil" CssClass="btn btn-block btn-warning" />
+                                <asp:Button ID="btnAddPerfil" runat="server" Text="Crear Perfil" CssClass="btn btn-block btn-warning" />
                             </div>
                             <br />
                         </div>

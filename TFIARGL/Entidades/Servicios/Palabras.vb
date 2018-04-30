@@ -28,4 +28,12 @@ Public Class Palabras
         End Set
     End Property
 
+    Public Shared Function FindValue(ByVal bk As Entidades.Palabras) As Integer
+        If bk.ID_Control = FindValue Then
+            Return bk.ID_Control
+        Else
+            Return 0
+        End If
+    End Function
+
 End Class

@@ -7,7 +7,7 @@ Public Class BackUp
 
     End Sub
 
-    Protected Sub hacerBackup(sender As Object, e As EventArgs) Handles Button1.Click
+    Protected Sub hacerBackup(sender As Object, e As EventArgs) Handles BtnBackup.Click
         Try
             Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
             If (Current.Session("FilasCorruptas").Count > 0) Then
@@ -26,8 +26,8 @@ Public Class BackUp
             ofrecerDownloadAlUsuario()
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-        Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
-        Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
     Protected Sub ofrecerDownloadAlUsuario()

@@ -41,13 +41,22 @@ Partial Public Class Restore
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelError.
+    '''Control lblPanelRestore.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelError As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelRestore As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lblinforestore.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblinforestore As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblbackupserv.

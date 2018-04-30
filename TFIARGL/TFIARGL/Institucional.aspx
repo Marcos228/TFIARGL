@@ -8,7 +8,7 @@
         <div class="row">
             <div class="panel panel-info">
                 <div class="panel-heading text-center">
-                    <asp:Label ID="lblPanelLogin" runat="server" Text="Información Sobre Nosotros" CssClass="TituloPanel"></asp:Label>
+                    <asp:Label ID="lblPanelNosotros" runat="server" Text="Información Sobre Nosotros" CssClass="TituloPanel"></asp:Label>
                 </div>
                 <div class="panel-body FondoPanel">
                     <div class="col-md-2 media" style="padding-bottom: 10px">

@@ -23,13 +23,13 @@
 
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="Label1" class="text-success">Se modificó el Perfil correctamente.</label>
+            <label id="lblsuccessModPerfil" class="text-success">Se modificó el Perfil correctamente.</label>
         </div>
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-info">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelBackup" runat="server" Text="Modificar Perfiles" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelModPerfil" runat="server" Text="Modificar Perfiles" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <div class="form-horizontal ">
@@ -47,7 +47,7 @@
                                 <div class="col-md-5 col-md-offset-1">
                                     <div class="panel panel-warning">
                                         <div class="panel-heading text-center">
-                                            <asp:Label ID="Label2" runat="server" Text="Permisos Actuales" CssClass="TituloPanel"></asp:Label>
+                                            <asp:Label ID="lblpermisosactuales" runat="server" Text="Permisos Actuales" CssClass="TituloPanel"></asp:Label>
                                         </div>
                                         <div class="panel-body FondoPanel">
                                                                                 <asp:TreeView ID="TreeView1" runat="server" ImageSet="Arrows" enabled="false">
@@ -62,7 +62,7 @@
                                 <div class="col-md-5 ">
                                     <div class="panel panel-success">
                                         <div class="panel-heading text-center">
-                                            <asp:Label ID="Label3" runat="server" Text="Nuevos Permisos" CssClass="TituloPanel"></asp:Label>
+                                            <asp:Label ID="lblnuevosPermisos" runat="server" Text="Nuevos Permisos" CssClass="TituloPanel"></asp:Label>
                                         </div>
                                         <div class="panel-body FondoPanel">
                                                                                 <asp:TreeView ID="TreeView2" runat="server" ImageSet="Arrows" ShowCheckBoxes="All">
@@ -89,7 +89,7 @@
                             <br />
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4">
-                                    <asp:Button ID="btnmodificar" runat="server" Text="Modificar Perfil" CssClass="btn btn-block btn-warning" />
+                                    <asp:Button ID="btnmodificarperfil" runat="server" Text="Modificar Perfil" CssClass="btn btn-block btn-warning" />
                                 </div>
                                 <br />
                             </div>

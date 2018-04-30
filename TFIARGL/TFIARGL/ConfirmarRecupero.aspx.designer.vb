@@ -41,13 +41,13 @@ Partial Public Class ConfirmarRecupero
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelError.
+    '''Control lblPanelRecuperoPass.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelError As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelRecuperoPass As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblpass.
@@ -77,13 +77,13 @@ Partial Public Class ConfirmarRecupero
     Protected WithEvents RequiredFieldValidator7 As Global.System.Web.UI.WebControls.RequiredFieldValidator
     
     '''<summary>
-    '''Control Label2.
+    '''Control lblpassconf.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents Label2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblpassconf As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control txtpass2.

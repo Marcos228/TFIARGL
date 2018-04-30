@@ -11,14 +11,14 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">El Usuario se creó correctamente.</label>
+            <label  id="lblSuccessAddUser" class="text-success">El Usuario se creó correctamente.</label>
         </div>
 
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelLogin" runat="server" Text="Usuarios" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelAddUser" runat="server" Text="Usuarios" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <br />
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <asp:Label ID="lblusuario" runat="server" Text="Nombre de Usuario:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                <asp:Label ID="lblusuarioname" runat="server" Text="Nombre de Usuario:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <asp:TextBox ID="txtusuario" runat="server" CssClass="form-control"></asp:TextBox>

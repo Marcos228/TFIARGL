@@ -8,10 +8,10 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-danger">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelError" runat="server" Text="Acceso Denegado" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblErrorAcceso" runat="server" Text="Acceso Denegado" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
-                <h3 class="text-danger text-center"><strong>Usted no tiene permisos para acceder a esta pagina.</strong></h3>
+                <h3 class="text-danger text-center"><strong> <asp:Label ID="lblAccesoDenegado" runat="server" Text="Usted no tiene permisos para acceder a esta pagina."></asp:Label></strong></h3>
                     </div>
                 </div>
             </div>

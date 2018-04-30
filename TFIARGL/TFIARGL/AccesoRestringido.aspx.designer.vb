@@ -12,13 +12,22 @@ Option Explicit On
 
 
 Partial Public Class AccesoRestringido
-
+    
     '''<summary>
-    '''Control lblPanelError.
+    '''Control lblErrorAcceso.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelError As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblErrorAcceso As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lblAccesoDenegado.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblAccesoDenegado As Global.System.Web.UI.WebControls.Label
 End Class

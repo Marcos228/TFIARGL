@@ -9,14 +9,14 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="Label1" class="text-success">Su contraseña ha sido cambiada con exito.</label>
+            <label  id="lblsuccessRecupero" class="text-success">Su contraseña ha sido cambiada con exito.</label>
         </div>
 
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-warning">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelError" runat="server" Text="Restauracion de Contraseña" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelRecuperoPass" runat="server" Text="Restauracion de Contraseña" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <div class="form-horizontal has-warning">
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <asp:Label ID="Label2" runat="server" Text="Confirmar Contraseña:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                <asp:Label ID="lblpassconf" runat="server" Text="Confirmar Contraseña:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <input type="password" id="txtpass2" runat="server" class="form-control" />

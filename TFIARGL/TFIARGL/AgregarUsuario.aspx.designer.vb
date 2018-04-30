@@ -41,13 +41,13 @@ Partial Public Class AgregarUsuario
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelLogin.
+    '''Control lblPanelAddUser.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelLogin As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelAddUser As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblapellido.
@@ -104,13 +104,13 @@ Partial Public Class AgregarUsuario
     Protected WithEvents RequiredFieldValidator1 As Global.System.Web.UI.WebControls.RequiredFieldValidator
     
     '''<summary>
-    '''Control lblusuario.
+    '''Control lblusuarioname.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblusuario As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblusuarioname As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control txtusuario.

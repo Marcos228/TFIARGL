@@ -147,9 +147,9 @@ Public Class ModificarUsuario
                         Me.success.Visible = False
                     Else
                         gestor.Bloquear(Usuario)
-                        'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                        'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se desbloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                        'Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se desbloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                        Negocio.BitacoraBLL.CrearBitacora(Bitac)
                         CargarUsuarios()
                         Me.success.InnerText = "El Usuario se desbloqueo correctamente."
                         Me.success.Visible = True

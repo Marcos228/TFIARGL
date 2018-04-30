@@ -41,13 +41,13 @@ Partial Public Class Registracion
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelLogin.
+    '''Control lblPanelRegistr.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelLogin As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelRegistr As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblapellido.
@@ -104,13 +104,13 @@ Partial Public Class Registracion
     Protected WithEvents RequiredFieldValidator3 As Global.System.Web.UI.WebControls.RequiredFieldValidator
     
     '''<summary>
-    '''Control lblusuario.
+    '''Control lblcorreo.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblusuario As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblcorreo As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control txtusuario.

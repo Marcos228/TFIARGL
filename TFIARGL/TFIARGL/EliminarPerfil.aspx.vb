@@ -61,7 +61,7 @@ Public Class EliminarPerfil
         End Try
     End Sub
 
-    Protected Sub btneliminar_Click(sender As Object, e As EventArgs) Handles btneliminar.Click
+    Protected Sub btneliminarPerfil_Click(sender As Object, e As EventArgs) Handles btneliminarPerfil.Click
         Try
             Dim gestorpermisos As New Negocio.GestorPermisosBLL
             Dim Roles As List(Of Entidades.PermisoBaseEntidad) = TryCast(Session("Roles"), List(Of Entidades.PermisoBaseEntidad))

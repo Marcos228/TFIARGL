@@ -41,13 +41,13 @@ Partial Public Class ModificarPerfil
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelBackup.
+    '''Control lblPanelModPerfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelBackup As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelModPerfil As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblperfil.
@@ -68,13 +68,13 @@ Partial Public Class ModificarPerfil
     Protected WithEvents lstperfil As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''Control Label2.
+    '''Control lblpermisosactuales.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents Label2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblpermisosactuales As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control TreeView1.
@@ -86,13 +86,13 @@ Partial Public Class ModificarPerfil
     Protected WithEvents TreeView1 As Global.System.Web.UI.WebControls.TreeView
     
     '''<summary>
-    '''Control Label3.
+    '''Control lblnuevosPermisos.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents Label3 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblnuevosPermisos As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control TreeView2.
@@ -113,11 +113,11 @@ Partial Public Class ModificarPerfil
     Protected WithEvents gv_Perfiles As Global.System.Web.UI.WebControls.GridView
     
     '''<summary>
-    '''Control btnmodificar.
+    '''Control btnmodificarperfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnmodificar As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnmodificarperfil As Global.System.Web.UI.WebControls.Button
 End Class

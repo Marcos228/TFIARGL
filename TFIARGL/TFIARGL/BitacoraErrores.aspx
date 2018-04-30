@@ -14,19 +14,19 @@
     <div class="container-fluid">
         <br />
         <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-warning  text-center" visible="false">
-            <label runat="server" id="textovalid" class="text-danger">No se encontraron Bitacoras para los filtros seleccionados</label>
+            <label runat="server" id="lblBitacora404" class="text-danger">No se encontraron Bitacoras para los filtros seleccionados</label>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelBackup" runat="server" Text="Bitácora" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelBitacora" runat="server" Text="Bitácora" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <br />
                         <div class="form-inline has-success">
                             <div class="col-md-3 col-md-offset-2">
-                                <asp:Label ID="lblfecha" runat="server" Text="Fecha Desde:" CssClass="control-label labelform"></asp:Label>
+                                <asp:Label ID="lblfechadesde" runat="server" Text="Fecha Desde:" CssClass="control-label labelform"></asp:Label>
                                 <div class="input-group">
                                     <input runat="server" clientidmode="Static" class="form-control" type="text" id="datepicker1" readonly="true" name="datepicker1" />
                                     <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <asp:Label ID="lblfecha2" runat="server" Text="Fecha Hasta:" CssClass="control-label labelform"></asp:Label>
+                                <asp:Label ID="lblfechahasta" runat="server" Text="Fecha Hasta:" CssClass="control-label labelform"></asp:Label>
                                 <div class="input-group">
                                     <input runat="server" clientidmode="Static" class="form-control" type="text" id="datepicker2" name="datepicker2" readonly="true" />
                                     <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <asp:Label ID="lblusuarios" runat="server" Text="Usuario:" CssClass="control-label labelform"></asp:Label>
+                                <asp:Label ID="lblusuario" runat="server" Text="Usuario:" CssClass="control-label labelform"></asp:Label>
                                 <div class="input-group">
                                     <asp:DropDownList ID="lstusuarios" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Usuario" DataTextField="NombreUsu"></asp:DropDownList>
                                     <span class="input-group-addon" id="basic-addon10"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
@@ -88,7 +88,7 @@
                                                     <asp:ListItem Text="25" Value="25"></asp:ListItem>
                                                     <asp:ListItem Text="50" Value="50"></asp:ListItem>
                                                 </asp:DropDownList>
-                                                <asp:Label ID="lblRegistros" runat="server" Text="Registros por Pagina"></asp:Label>
+                                                <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina"></asp:Label>
                                             </div>
                                         </PagerTemplate>
                                         <Columns>

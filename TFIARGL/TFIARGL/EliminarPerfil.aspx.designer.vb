@@ -41,13 +41,13 @@ Partial Public Class EliminarPerfil
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelBackup.
+    '''Control lblPanelDeletePerfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelBackup As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelDeletePerfil As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblperfil.
@@ -86,11 +86,11 @@ Partial Public Class EliminarPerfil
     Protected WithEvents gv_Perfiles As Global.System.Web.UI.WebControls.GridView
     
     '''<summary>
-    '''Control btneliminar.
+    '''Control btneliminarPerfil.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btneliminar As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btneliminarPerfil As Global.System.Web.UI.WebControls.Button
 End Class

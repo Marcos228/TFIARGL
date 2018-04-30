@@ -14,13 +14,22 @@ Option Explicit On
 Partial Public Class BaseCorrupta
     
     '''<summary>
-    '''Control lblPanelError.
+    '''Control lblErrorCorrupta.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelError As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblErrorCorrupta As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lblCorruptaInfo.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblCorruptaInfo As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control FilasCorruptas.

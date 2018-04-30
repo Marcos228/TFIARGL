@@ -16,15 +16,15 @@
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
                     <div class="item active">
-                        <img src="Imagenes/estadio.jpg" alt="Primera Slide" />
+                        <img src="Imagenes/estadio.jpg" />
                     </div>
 
                     <div class="item">
-                        <img src="Imagenes/recital.jpg" alt="Segunda Slide"/>
+                        <img src="Imagenes/recital.jpeg" />
                     </div>
 
                     <div class="item">
-                        <img src="Imagenes/rural.jpg" alt="Tercera Slide" />
+                        <img src="Imagenes/rural.jpg" />
                     </div>
                 </div>
 

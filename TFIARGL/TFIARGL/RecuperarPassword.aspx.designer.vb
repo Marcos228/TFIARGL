@@ -41,13 +41,13 @@ Partial Public Class RecuperarPassword
     Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelError.
+    '''Control lblPanelRecuperoPass.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelError As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelRecuperoPass As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lblUsuario.
