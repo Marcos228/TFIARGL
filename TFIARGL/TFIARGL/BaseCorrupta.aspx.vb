@@ -4,8 +4,9 @@ Public Class BaseCorrupta
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             For Each corruptedrow As Entidades.FilaCorrupta In Global_asax.Corrupted
-                Me.FilasCorruptas.Text += "</br>" + "ID: " + corruptedrow.ID + " Tabla de Fila Corrupta: " + corruptedrow.NombreTabla
+                Me.FilasCorruptas.Text += "</br>" + "ID: " + corruptedrow.ID + IdiomaActual.Palabras.Find(Function(p) p.Codigo = "TablaCorrupta1").Traduccion + corruptedrow.NombreTabla
             Next
             Global_asax.Corrupted.Clear()
         Catch ex As Exception

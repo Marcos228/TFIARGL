@@ -8,6 +8,7 @@ Public Class Registracion
         Dim GestorCliente As New Negocio.UsuarioBLL
         Dim usu As New Entidades.UsuarioEntidad
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             If Page.IsValid = True Then
 
                 If IsValidEmail(txtusuario.Text) Then
@@ -15,14 +16,14 @@ Public Class Registracion
 
                 Else
                     Me.alertvalid.Visible = True
-                    Me.textovalid.InnerText = "Debe ingresar un correo electronico valido."
+                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "RegistrError1").Traduccion
                     Me.success.Visible = False
                     Return
                 End If
 
                 If Me.txtPasswordConf.Value <> Me.txtpass.Value Then
                     Me.alertvalid.Visible = True
-                    Me.textovalid.InnerText = "Las contraseñas no coinciden."
+                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "RecuperoPassError2").Traduccion
                     Me.success.Visible = False
                     Return
                 End If
@@ -38,7 +39,7 @@ Public Class Registracion
                 usu.Empleado = False
                 usu.Bloqueo = True
                 If GestorCliente.Alta(usu) Then
-                    Dim Bitac As New Entidades.BitacoraAuditoria(usu, "Se registró el usuario " & usu.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(usu, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraRegistrSuccess1").Traduccion & usu.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
@@ -47,12 +48,12 @@ Public Class Registracion
                 End If
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = "Complete los campos requeridos"
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
         Catch nombreuso As Negocio.ExceptionNombreEnUso
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = nombreuso.Mensaje
+            Me.textovalid.InnerText = nombreuso.Mensaje(Current.Session("Idioma"))
             Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")

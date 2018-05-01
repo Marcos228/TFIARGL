@@ -11,13 +11,13 @@ Public Class Login
 
     Private Sub btnIngresar_Click(sender As Object, e As EventArgs) Handles btnIngresar.Click
         Dim Cliente As New Entidades.UsuarioEntidad
-
+        Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
         Try
             If Page.IsValid = True Then
                 Cliente.NombreUsu = txtUsuario.Text
                 Cliente.Password = txtPassword.Text
                 Dim clienteLogeado = GestorUsu.ExisteUsuario(Cliente)
-                Dim Bitac As New BitacoraAuditoria(clienteLogeado, "El Usuario: " & clienteLogeado.NombreUsu & " ingresó al sistema de forma correcta.", Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Dim Bitac As New BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess1").Traduccion & clienteLogeado.NombreUsu & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess2").Traduccion, Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 BitacoraBLL.CrearBitacora(Bitac)
                 Current.Session("cliente") = clienteLogeado
                 Me.success.Visible = True
@@ -25,23 +25,23 @@ Public Class Login
                 Response.Redirect("~/default.aspx", False)
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = "Complete los campos requeridos"
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
         Catch UsuarioBloqueado As Negocio.ExceptionUsuarioBloqueado
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = UsuarioBloqueado.Mensaje
+            Me.textovalid.InnerText = UsuarioBloqueado.Mensaje(Current.Session("Idioma"))
             Me.success.Visible = False
         Catch UsuarioNoExiste As Negocio.ExceptionUsuarioNoExiste
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = UsuarioNoExiste.Mensaje
+            Me.textovalid.InnerText = UsuarioNoExiste.Mensaje(Current.Session("Idioma"))
             Me.success.Visible = False
         Catch Password As Negocio.ExceptionPasswordIncorrecta
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = Password.Mensaje
+            Me.textovalid.InnerText = Password.Mensaje(Current.Session("Idioma"))
             Me.success.Visible = False
             Dim clienteLogeado As UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New BitacoraAuditoria(clienteLogeado, "El Usuario: " & clienteLogeado.NombreUsu & " quiso ingresar al sistema con una contraseña invalida.", Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Dim Bitac As New BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess1").Traduccion & clienteLogeado.NombreUsu & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess3").Traduccion, Tipo_Bitacora.Login, Now, Request.UserAgent, Request.UserHostAddress, "", "")
             BitacoraBLL.CrearBitacora(Bitac)
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
@@ -91,8 +91,9 @@ Public Class Login
             If Negocio.UsuarioBLL.ProbarConectividad Then
                 ConsultarporBitacoras()
             Else
+                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = "Error de Conexion a la Base de Datos Comuniquese con un administrador del sistema."
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ErrorConexionBase").Traduccion
                 Me.success.Visible = False
             End If
         Catch ex As Exception

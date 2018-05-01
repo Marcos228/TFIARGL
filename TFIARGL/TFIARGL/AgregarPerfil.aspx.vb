@@ -28,7 +28,7 @@ Public Class AgregarPerfil
 
     Private Sub btnAddPerfil_Click(sender As Object, e As EventArgs) Handles btnAddPerfil.Click
         Try
-
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             Dim Perfil As New Entidades.PermisoCompuestoEntidad
             Perfil.Nombre = txtnombre.Text
             Perfil = ControladorPermisos.RecorrerArbol(Nothing, Perfil, TreeView1)
@@ -36,19 +36,20 @@ Public Class AgregarPerfil
                 Dim GestorPermisos As New Negocio.GestorPermisosBLL
                 If GestorPermisos.Alta(Perfil) Then
                     Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó el perfil " & Perfil.Nombre & " de forma correcta.", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddPerfilSuccess1").Traduccion & Perfil.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     txtnombre.Text = ""
                     alertvalid.Visible = False
                     success.Visible = True
                 Else
-                    alertvalid.InnerText = "El nombre del perfil ya se encuentra en uso, por favor ingrese uno distinto."
+                    alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddPerfilError1").Traduccion
                     alertvalid.Visible = True
                     success.Visible = False
                 End If
 
             Else
-                alertvalid.InnerText = "Debe seleccionar al menos un permiso para continuar."
+                alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddPerfilError2").Traduccion
                 alertvalid.Visible = True
                 success.Visible = False
                 'MessageBox.Show("Debe seleccionar al menos un permiso para continuar.", "Permisos", MessageBoxButtons.OK, MessageBoxIcon.Information)

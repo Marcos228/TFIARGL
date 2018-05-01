@@ -5,8 +5,9 @@ Public Class MasterPage
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         If IsNothing(Current.Session("cliente")) Or IsDBNull(Current.Session("Cliente")) Then
-            CargarSinPerfil()
-            'Idioma Predeterminado
+            Dim UsuarioInvitado As New Entidades.UsuarioEntidad
+            CargarSinPerfilIdioma(UsuarioInvitado)
+            TraducirPagina(UsuarioInvitado)
         Else
             Try
                 Dim Usuario As Entidades.UsuarioEntidad = TryCast(Current.Session("cliente"), Entidades.UsuarioEntidad)
@@ -20,13 +21,12 @@ Public Class MasterPage
         End If
     End Sub
 
-    Private Sub CargarSinPerfil()
+    Private Sub CargarSinPerfilIdioma(ByRef UsuarioInvitado As Entidades.UsuarioEntidad)
         If Me.Menu.Items.Count = 0 Then
             Me.Menu.Items.Add(New MenuItem("Home", "Home", Nothing, "/Default.aspx"))
             Me.Menu.Items.Add(New MenuItem("Empresa", "Institucional", Nothing, "/Institucional.aspx"))
             Me.Menu.Items.Add(New MenuItem("Login", "Login", Nothing, "/Login.aspx"))
         End If
-        Dim UsuarioInvitado As New Entidades.UsuarioEntidad
         Dim PermisosInvitado As New Entidades.PermisoCompuestoEntidad
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/Default.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/Institucional.aspx"})
@@ -39,6 +39,9 @@ Public Class MasterPage
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/ConfirmarRecupero.aspx"})
 
         UsuarioInvitado.Perfil = PermisosInvitado
+        Dim GestorUsuario As New Negocio.IdiomaBLL
+        UsuarioInvitado.Idioma = GestorUsuario.ConsultarPorCultura(Request.UserLanguages(0))
+
         If UsuarioInvitado.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
             Response.Redirect("AccesoRestringido.aspx", False)
         End If
@@ -104,6 +107,7 @@ Public Class MasterPage
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Agregar Usuario", "AgregarUsuario", Nothing, "/AgregarUsuario.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Modificar Usuario", "ModificarUsuario", Nothing, "/ModificarUsuario.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Eliminar Usuario", "EliminarUsuario", Nothing, "/EliminarUsuario.aspx"))
+        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Crear Idioma", "AgregarIdioma", Nothing, "/AgregarIdioma.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Visualizar Bitacora Auditoria", "BitacoraAuditoria", Nothing, "/BitacoraAuditoria.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Visualizar Bitacora Errores", "BitacoraErrores", Nothing, "/BitacoraErrores.aspx"))
         Me.Menu.Items.Add(New MenuItem("Empresa", "Institucional", Nothing, "/Institucional.aspx"))
@@ -128,7 +132,7 @@ Public Class MasterPage
             Dim MiIdioma As New Entidades.IdiomaEntidad
             MiIdioma = Usuario.Idioma
             Dim MiPagina As String = Right(Request.Path, Len(Request.Path) - 1)
-            Session("Idioma") = MiIdioma
+            Current.Session("Idioma") = MiIdioma
             Me.traducirMenu()
             Me.lblcopyright.Text = MiIdioma.Palabras.Find(Function(p) p.Codigo = "lblcopyright").Traduccion
 
@@ -162,7 +166,7 @@ Public Class MasterPage
 
     Private Sub traducir(ByVal _menuitem As MenuItem)
         Try
-            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Session("Idioma"), Entidades.IdiomaEntidad).Palabras
+            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _menuitem.Value)
             _menuitem.Text = PalabraAEncontrar.Traduccion
         Catch ex As Exception
@@ -174,7 +178,7 @@ Public Class MasterPage
 
     Private Sub traducir(ByVal _button As Button)
         Try
-            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Session("Idioma"), Entidades.IdiomaEntidad).Palabras
+            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _button.ID)
             _button.Text = PalabraAEncontrar.Traduccion
 
@@ -188,10 +192,11 @@ Public Class MasterPage
 
     Private Sub traducir(ByVal _label As Label)
         Try
-            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Session("Idioma"), Entidades.IdiomaEntidad).Palabras
+            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _label.ID)
-            _label.Text = PalabraAEncontrar.Traduccion
-
+            If Not IsNothing(PalabraAEncontrar) Then
+                _label.Text = PalabraAEncontrar.Traduccion
+            End If
         Catch ex As System.Data.SqlClient.SqlException
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")

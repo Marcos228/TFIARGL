@@ -1,27 +1,33 @@
 ﻿Imports Entidades
 Imports DAL
+Imports System.Globalization
+
 Public Class IdiomaBLL
     Private _idiomadal As IdiomaDAL
     Private _idiomaentidad As IdiomaEntidad
 
     Public Function AltaIdioma(ByRef Idioma As IdiomaEntidad) As Boolean
         Try
-            If (New IdiomaDAL).GuardarIdioma(Idioma) Then
-                'BitacoraBLL.CrearBitacora("Se creó el Idioma: " & Idioma.Nombre & " en el sistema.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-                Return True
+            Dim gestor As New IdiomaDAL
+            If gestor.ConsultarNombre(Idioma.Nombre) Then
+                If (New IdiomaDAL).GuardarIdioma(Idioma) Then
+                    'BitacoraBLL.CrearBitacora("Se creó el Idioma: " & Idioma.Nombre & " en el sistema.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                    Return True
+                Else
+                    Return False
+                End If
             Else
-                Return False
+                Throw New ExceptionNombreEnUso
             End If
-        Catch FalloConexion As InvalidOperationException
-            'Dim Bitacora As New BitacoraEntidad("No se pudo crear el Idioma: " & Idioma.Nombre & " en el sistema. Error de Conexion", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-            'BitacoraBLL.ArchivarBitacora(Bitacora)
-            Throw FalloConexion
+
+        Catch NombreUso As ExceptionNombreEnUso
+            Throw NombreUso
         Catch ex As Exception
             'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
             Throw ex
         End Try
     End Function
-    Public Function ModificarIdioma(ByRef Idioma As IdiomaEntidad, ByVal NombreIdioma As String) As Boolean
+    Public Function ModificarIdioma(ByRef Idioma As IdiomaEntidad) As Boolean
         Try
             If (New IdiomaDAL).ModificarIdioma(Idioma) Then
                 'BitacoraBLL.CrearBitacora("Se modificó el Idioma: " & NombreIdioma & " en el sistema.", TipoBitacora.Modificación, SessionBLL.SesionActual.ObtenerUsuarioActual)
@@ -45,9 +51,9 @@ Public Class IdiomaBLL
             If (New IdiomaDAL).EliminarIdioma(Idioma) Then
                 'BitacoraBLL.CrearBitacora("Se eliminó el Idioma: " & Idioma.Nombre & " en el sistema.", TipoBitacora.Baja, SessionBLL.SesionActual.ObtenerUsuarioActual)
                 Return True
-                Else
-                    Return False
-                End If
+            Else
+                Return False
+            End If
             'Else
             '    Throw New ExceptionIntegridadUsuario
             'End If
@@ -93,18 +99,13 @@ Public Class IdiomaBLL
         End Try
     End Function
 
-    Public Function ConsultarIdiomasEditables(ByRef Usuario As UsuarioEntidad) As List(Of IdiomaEntidad)
+    Public Function ConsultarIdiomasEditables() As List(Of IdiomaEntidad)
         Try
             Dim IdiomasEditables As List(Of IdiomaEntidad) = New List(Of IdiomaEntidad)
             IdiomasEditables = (New IdiomaDAL).ConsultarIdiomasEditables
-            Dim listaretorno As List(Of IdiomaEntidad) = New List(Of IdiomaEntidad)
-            For Each idioma In IdiomasEditables
-                If idioma.ID_Idioma <> Usuario.Idioma.ID_Idioma Then
-                    listaretorno.Add(idioma)
-                End If
-            Next
-            If (listaretorno.Count > 0) Then
-                Return listaretorno
+
+            If (IdiomasEditables.Count > 0) Then
+                Return IdiomasEditables
             Else
                 Throw New ExceptionNoHayIdiomasEditables
             End If
@@ -133,6 +134,20 @@ Public Class IdiomaBLL
     Public Function ConsultarPorID(ByRef ID_Idioma As Integer) As IdiomaEntidad
         Try
             Return (New IdiomaDAL).ConsultarPorID(ID_Idioma)
+        Catch FalloConexion As InvalidOperationException
+            Throw FalloConexion
+        Catch ex As Exception
+            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Throw ex
+        End Try
+    End Function
+    Public Function ConsultarPorCultura(ByRef Cultura As String) As IdiomaEntidad
+        Try
+            If IsNothing(CultureInfo.GetCultureInfo(Cultura)) Then
+                Return (New IdiomaDAL).ConsultarPorID(1)
+            Else
+                Return (New IdiomaDAL).ConsultarPorCultura(CultureInfo.GetCultureInfo(Cultura))
+            End If
         Catch FalloConexion As InvalidOperationException
             Throw FalloConexion
         Catch ex As Exception

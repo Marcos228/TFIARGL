@@ -1,20 +1,22 @@
-﻿Public MustInherit Class GestorErroresBLL
+﻿Imports Entidades
+
+Public MustInherit Class GestorErroresBLL
     Inherits Exception
-    Public MustOverride Function Mensaje() As String
+    Public MustOverride Function Mensaje(ByRef Idioma As Entidades.IdiomaEntidad) As String
 End Class
 
 Public Class ExceptionFalloConectividad
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
-        Return "Error de Conexion a la Base de Datos Comuniquese con un administrador del sistema."
-    End Function
 
+    Public Overrides Function Mensaje(ByRef Idioma As IdiomaEntidad) As String
+        Return Idioma.Palabras.Find(Function(p) p.Codigo = "ErrorConexionBase").Traduccion
+    End Function
 End Class
 
 #Region "Integridad"
 Public Class ExceptionIntegridadUsuario
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 
@@ -22,14 +24,14 @@ End Class
 
 Public Class ExceptionIntegridadBitacora
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 
 End Class
 Public Class ExceptionIntegridadEvento
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 
@@ -39,24 +41,23 @@ End Class
 #Region "Usuario"
 Public Class ExceptionUsuarioNoExiste
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
-        Return "El Usuario no existe"
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
+        Return idioma.Palabras.Find(Function(p) p.Codigo = "ExceptionLoginIncorrecto").Traduccion
     End Function
 
 End Class
 
 Public Class ExceptionUsuarioBloqueado
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
-        Return "El usuario se encuentra bloqueado"
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
+        Return idioma.Palabras.Find(Function(p) p.Codigo = " ExceptionUsuarioBloqueado").Traduccion
     End Function
-
 End Class
 
 Public Class ExceptionPasswordIncorrecta
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
-        Return "La Contraseña ingresada es incorrecta."
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
+        Return idioma.Palabras.Find(Function(p) p.Codigo = "ExceptionLoginIncorrecto").Traduccion
     End Function
 
 End Class
@@ -64,8 +65,8 @@ End Class
 
 Public Class ExceptionNombreEnUso
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
-        Return "El Nombre de Usuario o Correo Electronico ya se encuentra en uso"
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
+        Return idioma.Palabras.Find(Function(p) p.Codigo = "ExceptionNombreEnUso").Traduccion
     End Function
 
 End Class
@@ -75,7 +76,7 @@ End Class
 #Region "Permiso"
 Public Class ExceptionPermisoNoExiste
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 
@@ -83,7 +84,7 @@ End Class
 
 Public Class ExceptionNoHayPerfiles
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 
@@ -94,7 +95,7 @@ End Class
 #Region "Idioma"
 Public Class ExceptionNoHayIdiomasEditables
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 
@@ -105,7 +106,7 @@ End Class
 #Region "Bitacora"
 Public Class ExceptionNoHayBitacoras
     Inherits GestorErroresBLL
-    Public Overrides Function Mensaje() As String
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
         Return ""
     End Function
 

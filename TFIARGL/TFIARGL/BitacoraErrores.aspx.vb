@@ -23,9 +23,10 @@ Public Class BitacoraErrores
         End If
     End Sub
     Private Sub CargarUsuarios()
+        Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
         Dim lista As New List(Of Entidades.UsuarioEntidad)
         Dim Gestor As New Negocio.UsuarioBLL
-        lista.Add(New Entidades.UsuarioEntidad With {.ID_Usuario = -1, .NombreUsu = "Todos"})
+        lista.Add(New Entidades.UsuarioEntidad With {.ID_Usuario = -1, .NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MensajeTodos").Traduccion})
         lista.AddRange(Gestor.TraerUsuariosParaBloqueo)
         Me.lstusuarios.DataSource = lista
         Me.lstusuarios.DataBind()
@@ -56,11 +57,8 @@ Public Class BitacoraErrores
                 Dim ddlpage As DropDownList = CType(gv_Bitacora.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
                 Dim txttotal As Label = CType(gv_Bitacora.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
 
-                For Each item As ListItem In ddlpage.Items
-                    If item.Value = gv_Bitacora.PageSize Then
-                        item.Selected = True
-                    End If
-                Next
+                ddlpage.ClearSelection()
+                ddlpage.Items.FindByValue(gv_Bitacora.PageSize).Selected = True
 
                 txttotal.Text = gv_Bitacora.PageCount
                 For cnt As Integer = 0 To gv_Bitacora.PageCount - 1
@@ -73,6 +71,19 @@ Public Class BitacoraErrores
                     ddl.Items.Add(item)
 
                 Next cnt
+
+                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                With gv_Bitacora
+                    .Columns(0).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                    .Columns(1).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderDetalle").Traduccion
+                    .Columns(2).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
+                    .Columns(3).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderUsuario").Traduccion
+                    .Columns(4).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderIPUsuario").Traduccion
+                    .Columns(5).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoBitacora").Traduccion
+                    .Columns(6).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderURL").Traduccion
+                    .Columns(7).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderException").Traduccion
+                    .Columns(8).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderStackTrace").Traduccion
+                End With
 
                 gv_Bitacora.BottomPagerRow.Visible = True
                 gv_Bitacora.BottomPagerRow.CssClass = "table-bottom-dark"

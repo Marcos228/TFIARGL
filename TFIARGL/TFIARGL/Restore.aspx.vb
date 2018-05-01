@@ -41,11 +41,13 @@ Public Class Restore
             Dim gestorBK As New Negocio.BackupRestoreBLL
             Dim nombreArchivo As String = "BKP_from_Restore_ArgLeague_" & Now.Year & "-" & Now.Month & "-" & Now.Day & " " & Now.Hour & ";" & Now.Minute & ";" & Now.Second
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+
             If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
                 System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
             End If
             If gestorBK.RealizarRestore(Bkre) Then
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se realizó una restauracion de la base de datos.", Entidades.Tipo_Bitacora.Restore, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraRestoreSuccess").Traduccion, Entidades.Tipo_Bitacora.Restore, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
                 Me.success.Visible = True
                 Me.alertvalid.Visible = False

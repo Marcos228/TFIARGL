@@ -2,8 +2,6 @@
 Public Class ModificarUsuario
     Inherits System.Web.UI.Page
 
-
-
     Private Sub CargarUsuarios()
         Dim lista As List(Of Entidades.UsuarioEntidad)
         Dim Gestor As New Negocio.UsuarioBLL
@@ -53,13 +51,11 @@ Public Class ModificarUsuario
             Dim ddlpage As DropDownList = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_Usuarios.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
 
-            For Each item As ListItem In ddlpage.Items
-                If item.Value = gv_Usuarios.PageSize Then
-                    item.Selected = True
-                End If
-            Next
+            ddlpage.ClearSelection()
+            ddlpage.Items.FindByValue(gv_Usuarios.PageSize).Selected = True
 
             txttotal.Text = gv_Usuarios.PageCount
+
             For cnt As Integer = 0 To gv_Usuarios.PageCount - 1
                 Dim curr As Integer = cnt + 1
                 Dim item As New ListItem(curr.ToString())
@@ -70,6 +66,7 @@ Public Class ModificarUsuario
                 ddl.Items.Add(item)
 
             Next cnt
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             For Each row As GridViewRow In gv_Usuarios.Rows
                 Dim imagen1 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_Bloquear"), System.Web.UI.WebControls.ImageButton)
                 Dim imagen2 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_desbloqueo"), System.Web.UI.WebControls.ImageButton)
@@ -79,16 +76,17 @@ Public Class ModificarUsuario
                 imagen2.CommandArgument = row.RowIndex
                 imagen3.CommandArgument = row.RowIndex
 
+
                 If row.Cells(4).Text = "False" Then
-                    row.Cells(4).Text = "No Bloqueado"
+                    row.Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MsjNoBloqueado").Traduccion
                 Else
-                    row.Cells(4).Text = "Bloqueado"
+                    row.Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MsjBloqueado").Traduccion
                 End If
                 If row.Cells(5).Text = "False" Then
-                    row.Cells(5).Text = "NO"
+                    row.Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MsjNo").Traduccion
                     imagen3.Visible = False
                 Else
-                    row.Cells(5).Text = "SI"
+                    row.Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MsjSi").Traduccion
                 End If
             Next
             gv_Usuarios.BottomPagerRow.Visible = True
@@ -123,35 +121,36 @@ Public Class ModificarUsuario
             Dim gestor As New Negocio.UsuarioBLL
             Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(e.CommandArgument + (gv_Usuarios.PageIndex * gv_Usuarios.PageSize))
             Me.id_usuario.Value = e.CommandArgument
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             Select Case e.CommandName.ToString
                 Case "B"
                     If Usuario.Bloqueo = True Then
                         Me.alertvalid.Visible = True
-                        Me.alertvalid.InnerText = "El usuario ya se encuentra bloqueado."
+                        Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ModUserError1").Traduccion
                         Me.success.Visible = False
                     Else
                         gestor.Bloquear(Usuario)
                         Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se bloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraModUserSuccess1").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                         Negocio.BitacoraBLL.CrearBitacora(Bitac)
 
                         CargarUsuarios()
-                        Me.success.InnerText = "El Usuario se bloqueo correctamente."
+                        Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ModUserSuccess1").Traduccion
                         Me.success.Visible = True
                         Me.alertvalid.Visible = False
                     End If
                 Case "U"
                     If Usuario.Bloqueo = False Then
                         Me.alertvalid.Visible = True
-                        Me.alertvalid.InnerText = "El usuario no se encuentra bloqueado."
+                        Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ModUserError2").Traduccion
                         Me.success.Visible = False
                     Else
                         gestor.Bloquear(Usuario)
                         Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se desbloqueó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraModUserSuccess2").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                         Negocio.BitacoraBLL.CrearBitacora(Bitac)
                         CargarUsuarios()
-                        Me.success.InnerText = "El Usuario se desbloqueo correctamente."
+                        Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ModUserSuccess2").Traduccion
                         Me.success.Visible = True
                         Me.alertvalid.Visible = False
                     End If
@@ -160,19 +159,11 @@ Public Class ModificarUsuario
                     txtusuario.Text = Usuario.NombreUsu
                     lstidioma.ClearSelection()
                     lstperfil.ClearSelection()
-                    For Each item As ListItem In lstidioma.Items
-                        If item.Value = Usuario.Idioma.ID_Idioma Then
-                            item.Selected = True
-                            Exit For
-                        End If
-                    Next
 
-                    For Each item As ListItem In lstperfil.Items
-                        If item.Value = Usuario.Perfil.ID_Permiso Then
-                            item.Selected = True
-                            Exit For
-                        End If
-                    Next
+                    lstidioma.Items.FindByValue(Usuario.Idioma.ID_Idioma).Selected = True
+
+                    lstperfil.Items.FindByValue(Usuario.Perfil.ID_Permiso).Selected = True
+
                     Ocultamiento(True)
             End Select
         Catch ex As Exception
@@ -187,13 +178,14 @@ Public Class ModificarUsuario
         Try
             Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(Me.id_usuario.Value)
             Dim UsuarioAnterior As Entidades.UsuarioEntidad = Usuario.Clone
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             If Page.IsValid = True Then
                 Usuario.NombreUsu = txtusuario.Text
                 Usuario.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = lstidioma.SelectedValue}
                 Usuario.Perfil = New Entidades.PermisoCompuestoEntidad With {.ID_Permiso = lstperfil.SelectedValue}
                 If GestorCliente.Modificar(Usuario) Then
                     Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se modificó el usuario " & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraModUserSuccess3").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac, UsuarioAnterior, Usuario)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
@@ -202,7 +194,7 @@ Public Class ModificarUsuario
                 End If
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = "Complete los campos requeridos"
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
         Catch ex As Exception

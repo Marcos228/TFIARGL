@@ -40,6 +40,7 @@ Public Class EliminarPerfil
 
     Private Sub lstperfil_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstperfil.SelectedIndexChanged
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             Dim Roles As List(Of Entidades.PermisoBaseEntidad) = TryCast(Session("Roles"), List(Of Entidades.PermisoBaseEntidad))
             ControladorPermisos.CargarPermisos(Me.TreeView1, Roles(lstperfil.SelectedIndex))
             Me.TreeView1.ExpandAll()
@@ -47,7 +48,7 @@ Public Class EliminarPerfil
             Dim Gestor As New Negocio.UsuarioBLL
             Dim Lista As List(Of Entidades.UsuarioEntidad) = Gestor.TraerUsuariosPerfil(Roles(lstperfil.SelectedIndex).ID_Permiso)
             If Lista.Count = 0 Then
-                Lista.Add(New Entidades.UsuarioEntidad With {.NombreUsu = "No se encontraron usuarios con el perfil Seleccionado"})
+                Lista.Add(New Entidades.UsuarioEntidad With {.NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "UsuariosPerfil404").Traduccion})
                 Me.gv_Perfiles.DataSource = Lista
                 Me.gv_Perfiles.DataBind()
             Else
@@ -64,14 +65,15 @@ Public Class EliminarPerfil
     Protected Sub btneliminarPerfil_Click(sender As Object, e As EventArgs) Handles btneliminarPerfil.Click
         Try
             Dim gestorpermisos As New Negocio.GestorPermisosBLL
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             Dim Roles As List(Of Entidades.PermisoBaseEntidad) = TryCast(Session("Roles"), List(Of Entidades.PermisoBaseEntidad))
             If Not gestorpermisos.Baja(Roles(lstperfil.SelectedIndex)) Then
-                alertvalid.InnerText = "No se puede eliminar el perfil debido a que tiene un usuario asociado"
+                alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DeletePerfilError1").Traduccion
                 alertvalid.Visible = True
                 success.Visible = False
             Else
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se eliminó el perfil " & Roles(lstperfil.SelectedIndex).Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDeletePefilSuccess1").Traduccion & Roles(lstperfil.SelectedIndex).Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
 
                 alertvalid.Visible = False

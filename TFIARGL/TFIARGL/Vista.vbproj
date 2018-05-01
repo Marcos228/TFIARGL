@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
+    <Content Include="ModificarIdioma.aspx" />
     <Content Include="AgregarPerfil.aspx" />
     <Content Include="AgregarUsuario.aspx" />
     <Content Include="Backup.aspx" />
@@ -160,6 +161,7 @@
     <Content Include="JS\npm.js" />
     <Content Include="Login.aspx" />
     <Content Include="ModificarPerfil.aspx" />
+    <Content Include="AgregarIdioma.aspx" />
     <Content Include="ModificarUsuario.aspx" />
     <Content Include="MyOrders.aspx" />
     <Content Include="Orders.aspx" />
@@ -176,6 +178,13 @@
     </Compile>
     <Compile Include="AccesoRestringido.aspx.vb">
       <DependentUpon>AccesoRestringido.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ModificarIdioma.aspx.designer.vb">
+      <DependentUpon>ModificarIdioma.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ModificarIdioma.aspx.vb">
+      <DependentUpon>ModificarIdioma.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="AgregarPerfil.aspx.designer.vb">
@@ -264,6 +273,13 @@
     </Compile>
     <Compile Include="ModificarPerfil.aspx.vb">
       <DependentUpon>ModificarPerfil.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AgregarIdioma.aspx.designer.vb">
+      <DependentUpon>AgregarIdioma.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AgregarIdioma.aspx.vb">
+      <DependentUpon>AgregarIdioma.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ModificarUsuario.aspx.designer.vb">

@@ -6,6 +6,7 @@ Public Class RecuperarPassword
 
     Protected Sub btnpass_Click(sender As Object, e As EventArgs) Handles btnpass.Click
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             If Page.IsValid = True Then
                 Dim GestorCliente As New Negocio.UsuarioBLL
                 Dim usu As New Entidades.UsuarioEntidad With {.NombreUsu = txtUsuario.Text}
@@ -14,7 +15,7 @@ Public Class RecuperarPassword
                 Me.alertvalid.Visible = False
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = "Complete los campos requeridos"
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
         Catch ex As Exception

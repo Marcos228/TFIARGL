@@ -1,5 +1,11 @@
 ﻿
+Imports System.IO
+Imports System.Runtime.Serialization.Formatters.Binary
+
+<Serializable()>
 Public Class Palabras
+    Implements ICloneable
+
     Private _id_control As Integer
     Public Property ID_Control() As Integer
         Get
@@ -36,4 +42,20 @@ Public Class Palabras
         End If
     End Function
 
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If TryCast(obj, Palabras).ID_Control = Me.ID_Control Then
+            Return True
+        Else
+            Return False
+        End If
+
+    End Function
+
+    Public Function Clone() As Object Implements ICloneable.Clone
+        Dim m As New MemoryStream()
+        Dim f As New BinaryFormatter()
+        f.Serialize(m, Me)
+        m.Seek(0, SeekOrigin.Begin)
+        Return f.Deserialize(m)
+    End Function
 End Class

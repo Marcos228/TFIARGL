@@ -6,6 +6,7 @@ Public Class ConfirmarRecupero
 
     Protected Sub btnpass_Click(sender As Object, e As EventArgs) Handles btnpass.Click
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             If Page.IsValid = True Then
                 If txtpass.Value = txtpass2.Value Then
                     Dim GestorCliente As New Negocio.UsuarioBLL
@@ -20,12 +21,12 @@ Public Class ConfirmarRecupero
                         GestorCliente.LimpiarTokens(Request.QueryString("tok"))
                     Else
                         Me.alertvalid.Visible = True
-                        Me.textovalid.InnerText = "El tiempo permitido para cambiar la contraseña ha expirado. Por favor vuelva a realizar todo el procedimiento."
+                        Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "RecuperoPassError1").Traduccion
                         Me.success.Visible = False
                     End If
                 Else
                     Me.alertvalid.Visible = True
-                    Me.textovalid.InnerText = "Las contraseñas ingresadas no son iguales."
+                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "RecuperoPassError2").Traduccion
                     Me.success.Visible = False
                 End If
             End If

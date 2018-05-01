@@ -4,10 +4,10 @@ Public Class AgregarUsuario
 
     Protected Sub btnAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click
 
-
         Dim GestorCliente As New Negocio.UsuarioBLL
         Dim usu As New Entidades.UsuarioEntidad
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             If Page.IsValid = True Then
                 usu.NombreUsu = txtusuario.Text
                 usu.Nombre = txtnombre.Text
@@ -22,19 +22,19 @@ Public Class AgregarUsuario
                 usu.Empleado = True
                 If GestorCliente.Alta(usu) Then
                     Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó el usuario " & usu.Nombre & " de forma correcta.", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddUserSuccess1").Traduccion & usu.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
                 End If
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = "Complete los campos requeridos"
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
         Catch nombreuso As Negocio.ExceptionNombreEnUso
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = nombreuso.Mensaje
+            Me.textovalid.InnerText = nombreuso.Mensaje(Current.Session("Idioma"))
             Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")

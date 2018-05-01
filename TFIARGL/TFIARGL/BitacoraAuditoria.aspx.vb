@@ -12,9 +12,10 @@ Public Class ConsultarBitacoraAuditoria
                     Current.Session("cliente") = DBNull.Value
                     Response.Redirect("/BaseCorrupta.aspx", False)
                 End If
+                      Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
                 CargarBitacoras()
-                CargarUsuarios()
-                CargarTipos()
+                CargarUsuarios(IdiomaActual)
+                CargarTipos(IdiomaActual)
             Catch ex As Exception
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
                 Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -23,21 +24,21 @@ Public Class ConsultarBitacoraAuditoria
 
         End If
     End Sub
-    Private Sub CargarTipos()
+    Private Sub CargarTipos(ByRef Idioma As Entidades.IdiomaEntidad)
         Dim tipo As New Entidades.Tipo_Bitacora
         Dim itemValues As Array = System.Enum.GetValues(tipo.GetType)
         Dim itemNames As Array = System.Enum.GetNames(tipo.GetType)
-        Me.lsttipos.Items.Add(New ListItem("Todos", -1))
+        Me.lsttipos.Items.Add(New ListItem(Idioma.Palabras.Find(Function(p) p.Codigo = "MensajeTodos").Traduccion, -1))
         For i As Integer = 0 To itemNames.Length - 1
             Dim item As New ListItem(itemNames(i), itemValues(i))
             Me.lsttipos.Items.Add(item)
         Next
 
     End Sub
-    Private Sub CargarUsuarios()
+    Private Sub CargarUsuarios(ByRef Idioma As Entidades.IdiomaEntidad)
         Dim lista As New List(Of Entidades.UsuarioEntidad)
         Dim Gestor As New Negocio.UsuarioBLL
-        lista.Add(New Entidades.UsuarioEntidad With {.ID_Usuario = -1, .NombreUsu = "Todos"})
+        lista.Add(New Entidades.UsuarioEntidad With {.ID_Usuario = -1, .NombreUsu = Idioma.Palabras.Find(Function(p) p.Codigo = "MensajeTodos").Traduccion})
         lista.AddRange(Gestor.TraerUsuariosParaBloqueo)
         Me.lstusuarios.DataSource = lista
         Me.lstusuarios.DataBind()
@@ -55,24 +56,20 @@ Public Class ConsultarBitacoraAuditoria
             Me.gv_Bitacora.DataSource = lista
             Me.gv_Bitacora.DataBind()
         End If
-
-
     End Sub
+
+
 
     Private Sub gv_Bitacora_DataBound(sender As Object, e As EventArgs) Handles gv_Bitacora.DataBound
         Try
+
             If Not IsNothing(gv_Bitacora.DataSource) Then
-
-
                 Dim ddl As DropDownList = CType(gv_Bitacora.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
                 Dim ddlpage As DropDownList = CType(gv_Bitacora.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
                 Dim txttotal As Label = CType(gv_Bitacora.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
 
-                For Each item As ListItem In ddlpage.Items
-                    If item.Value = gv_Bitacora.PageSize Then
-                        item.Selected = True
-                    End If
-                Next
+                ddlpage.ClearSelection()
+                ddlpage.Items.FindByValue(gv_Bitacora.PageSize).Selected = True
 
                 txttotal.Text = gv_Bitacora.PageCount
                 For cnt As Integer = 0 To gv_Bitacora.PageCount - 1
@@ -81,16 +78,26 @@ Public Class ConsultarBitacoraAuditoria
                     If cnt = gv_Bitacora.PageIndex Then
                         item.Selected = True
                     End If
-
                     ddl.Items.Add(item)
-
                 Next cnt
+                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+
+                With gv_Bitacora
+                    .Columns(0).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                    .Columns(1).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderDetalle").Traduccion
+                    .Columns(2).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
+                    .Columns(3).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderUsuario").Traduccion
+                    .Columns(4).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderIPUsuario").Traduccion
+                    .Columns(5).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoBitacora").Traduccion
+                    .Columns(6).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderValorAnterior").Traduccion
+                    .Columns(7).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderValorPosterior").Traduccion
+                End With
 
                 gv_Bitacora.BottomPagerRow.Visible = True
                 gv_Bitacora.BottomPagerRow.CssClass = "table-bottom-dark"
             End If
         Catch ex As Exception
-        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
         Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
         Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try

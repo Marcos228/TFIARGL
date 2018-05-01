@@ -6,15 +6,14 @@ Public Class IdiomaDAL
     Public Function GuardarIdioma(ByRef Idioma As IdiomaEntidad) As Boolean
         Try
             Idioma.ID_Idioma = Acceso.TraerID("ID_Idioma", "Idioma")
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Idioma values (@ID_Idioma, @Nombre, @Editable, @Cultura , @BL)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Idioma (Nombre, Editable, Cultura, BL) OUTPUT INSERTED.ID_Idioma values (@Nombre, @Editable, @Cultura , @BL)")
             With Command.Parameters
-                .Add(New SqlParameter("@ID_Idioma", Idioma.ID_Idioma))
                 .Add(New SqlParameter("@Nombre", Idioma.Nombre))
                 .Add(New SqlParameter("@Editable", Idioma.Editable))
                 .Add(New SqlParameter("@Cultura", Idioma.Cultura.Name))
                 .Add(New SqlParameter("@BL", False))
             End With
-            Acceso.Escritura(Command)
+            Dim ID_idioma As Integer = Acceso.Scalar(Command)
             Command.Dispose()
             Dim Micomando As SqlCommand
             Dim ComandoStr As String = "insert into Traduccion values (@ID_Control, @ID_Idioma, @Palabra)"
@@ -22,7 +21,7 @@ Public Class IdiomaDAL
                 Micomando = Acceso.MiComando(ComandoStr)
                 With Micomando.Parameters
                     .Add(New SqlParameter("@ID_Control", MiPalabra.ID_Control))
-                    .Add(New SqlParameter("@ID_Idioma", Idioma.ID_Idioma))
+                    .Add(New SqlParameter("@ID_Idioma", ID_idioma))
                     .Add(New SqlParameter("@Palabra", MiPalabra.Traduccion))
 
                 End With
@@ -35,10 +34,9 @@ Public Class IdiomaDAL
     End Function
     Public Function ModificarIdioma(ByRef Idioma As IdiomaEntidad) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Update Idioma set Nombre=@Nombre, Cultura=@Cultura where ID_Idioma = @ID_Idioma")
+            Dim Command As SqlCommand = Acceso.MiComando("Update Idioma set Cultura=@Cultura where ID_Idioma = @ID_Idioma")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Idioma", Idioma.ID_Idioma))
-                .Add(New SqlParameter("@Nombre", Idioma.Nombre))
                 .Add(New SqlParameter("@Cultura", Idioma.Cultura.Name))
             End With
             Acceso.Escritura(Command)
@@ -173,6 +171,25 @@ Public Class IdiomaDAL
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Select * from Idioma where ID_Idioma=@IDIdioma and bl= 0")
             Command.Parameters.Add(New SqlParameter("@IDIdioma", ID_Idioma))
+            Dim _dt As DataTable = Acceso.Lectura(Command)
+            Dim Miidioma As IdiomaEntidad = New IdiomaEntidad
+            For Each row As DataRow In _dt.Rows
+                Miidioma.ID_Idioma = row("ID_Idioma")
+                Miidioma.Nombre = row("Nombre")
+                Miidioma.Editable = row("Editable")
+                Miidioma.Cultura = CultureInfo.GetCultureInfo(row("Cultura"))
+                Miidioma.Palabras = Me.TraerPalabras(Miidioma.ID_Idioma)
+            Next
+            Return Miidioma
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function ConsultarPorCultura(cultura As CultureInfo) As IdiomaEntidad
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select Top 1 * from Idioma where Cultura=@Cultura and bl= 0")
+            Command.Parameters.Add(New SqlParameter("@Cultura", cultura.Name))
             Dim _dt As DataTable = Acceso.Lectura(Command)
             Dim Miidioma As IdiomaEntidad = New IdiomaEntidad
             For Each row As DataRow In _dt.Rows

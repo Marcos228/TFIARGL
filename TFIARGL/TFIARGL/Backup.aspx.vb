@@ -9,6 +9,7 @@ Public Class BackUp
 
     Protected Sub hacerBackup(sender As Object, e As EventArgs) Handles BtnBackup.Click
         Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
             Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
             If (Current.Session("FilasCorruptas").Count > 0) Then
                 Current.Session("cliente") = DBNull.Value
@@ -20,7 +21,7 @@ Public Class BackUp
             If gestorBK.CrearBackup("", nombreArchivo, Current.Session("cliente")) Then
                 System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, "Se creó un backup de forma correcta.", Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraBackupSuccess").Traduccion, Entidades.Tipo_Bitacora.Backup, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
             End If
             ofrecerDownloadAlUsuario()
