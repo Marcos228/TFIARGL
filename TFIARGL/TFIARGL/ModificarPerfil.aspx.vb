@@ -54,9 +54,13 @@ Public Class ModificarPerfil
                 Lista.Add(New Entidades.UsuarioEntidad With {.NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "UsuariosPerfil404").Traduccion})
                 Me.gv_Perfiles.DataSource = Lista
                 Me.gv_Perfiles.DataBind()
+                Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                gv_Perfiles.HeaderRow.Cells(0).Text = idiomabitacora.Palabras.Find(Function(p) p.Codigo = "HeaderUsuariosSeleccionados").Traduccion
             Else
                 Me.gv_Perfiles.DataSource = Lista
                 Me.gv_Perfiles.DataBind()
+                Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                gv_Perfiles.HeaderRow.Cells(0).Text = idiomabitacora.Palabras.Find(Function(p) p.Codigo = "HeaderUsuariosSeleccionados").Traduccion
             End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")

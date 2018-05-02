@@ -5,7 +5,7 @@ Public Class ModificarUsuario
     Private Sub CargarUsuarios()
         Dim lista As List(Of Entidades.UsuarioEntidad)
         Dim Gestor As New Negocio.UsuarioBLL
-        lista = Gestor.TraerUsuariosParaBloqueo
+        lista = Gestor.TraerUsuariosParaBloqueo(Current.Session("cliente"))
         Session("Usuarios") = lista
         Me.gv_Usuarios.DataSource = lista
         Me.gv_Usuarios.DataBind()
@@ -89,6 +89,18 @@ Public Class ModificarUsuario
                     row.Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MsjSi").Traduccion
                 End If
             Next
+
+            With gv_Usuarios.HeaderRow
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombreUsuario").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderIdioma").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPermiso").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderBloqueo").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderEmpleado").Traduccion
+                .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaAlta").Traduccion
+                .Cells(7).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+            End With
+
             gv_Usuarios.BottomPagerRow.Visible = True
             gv_Usuarios.BottomPagerRow.CssClass = "table-bottom-dark"
         Catch ex As Exception
@@ -113,6 +125,7 @@ Public Class ModificarUsuario
         Me.perfilt.Visible = bi
         Me.idiomat.Visible = bi
         Me.botont.Visible = bi
+        Me.botont2.Visible = bi
     End Sub
 
     Private Sub gv_Usuarios_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_Usuarios.RowCommand
@@ -237,4 +250,25 @@ Public Class ModificarUsuario
         End Try
     End Sub
 
+    Protected Sub btneliminar_Click(sender As Object, e As EventArgs) Handles btneliminar.Click
+        Dim GestorCliente As New Negocio.UsuarioBLL
+        Try
+            Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(Me.id_usuario.Value)
+            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            If GestorCliente.Eliminar(Usuario) Then
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                Me.success.Visible = True
+                Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
+                Me.alertvalid.Visible = False
+                CargarUsuarios()
+                Ocultamiento(False)
+            End If
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
 End Class

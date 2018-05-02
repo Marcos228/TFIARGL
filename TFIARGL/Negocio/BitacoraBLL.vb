@@ -78,6 +78,9 @@ Public Class BitacoraBLL
     End Sub
 
     Private Shared Sub GenerarLeyenda(ByRef bita As BitacoraAuditoria, ByVal ObjectoAnterior As Object, ByVal ObjetoActual As Object)
+        Dim ParamtrosValorables As New Dictionary(Of String, String)
+        ParamtrosValorables.Add("Traduccion", 1)
+
         Dim parametros As New Dictionary(Of String, String)
         Dim _type As Type = ObjectoAnterior.GetType()
         Dim properties() As PropertyInfo = _type.GetProperties()
@@ -102,16 +105,20 @@ Public Class BitacoraBLL
                         For Each Obj As Object In Objeto
                             Dim _typ As Type = Obj.GetType()
                             Dim propertie() As PropertyInfo = _typ.GetProperties()
+                            Dim Valor As String = Nothing
                             For Each _property3 As PropertyInfo In propertie
+                                If ParamtrosValorables.ContainsKey(_property3.Name) Then
+                                    Valor = _property3.GetValue(Obj, Nothing).ToString()
+                                End If
                                 If _property3.Name.Contains("ID") Then
-                                    parametros.Add(_property3.Name & "_child_" & _property3.GetValue(Obj, Nothing).ToString, _property3.GetValue(Obj, Nothing).ToString)
+                                    parametros.Add(_property3.Name & "_child_" & _property3.GetValue(Obj, Nothing).ToString, IIf(IsNothing(Valor), _property3.GetValue(Obj, Nothing).ToString, Valor))
                                     Exit For
                                 End If
                             Next
                         Next
                     End If
                 End If
-                    Else
+            Else
                 parametros.Add(_property.Name, _property.GetValue(ObjectoAnterior, Nothing).ToString)
             End If
         Next
@@ -138,9 +145,13 @@ Public Class BitacoraBLL
                         For Each Obj As Object In Objeto
                             Dim _typ As Type = Obj.GetType()
                             Dim propertie() As PropertyInfo = _typ.GetProperties()
+                            Dim Valor As String = Nothing
                             For Each _property3 As PropertyInfo In propertie
+                                If ParamtrosValorables.ContainsKey(_property3.Name) Then
+                                    Valor = _property3.GetValue(Obj, Nothing).ToString()
+                                End If
                                 If _property3.Name.Contains("ID") Then
-                                    parametros2.Add(_property3.Name & "_child_" & _property3.GetValue(Obj, Nothing).ToString, _property3.GetValue(Obj, Nothing).ToString)
+                                    parametros2.Add(_property3.Name & "_child_" & _property3.GetValue(Obj, Nothing).ToString, IIf(IsNothing(Valor), _property3.GetValue(Obj, Nothing).ToString, Valor))
                                     Exit For
                                 End If
                             Next

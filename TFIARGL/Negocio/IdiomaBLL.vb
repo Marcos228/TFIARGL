@@ -10,14 +10,10 @@ Public Class IdiomaBLL
         Try
             Dim gestor As New IdiomaDAL
             If gestor.ConsultarNombre(Idioma.Nombre) Then
-                If (New IdiomaDAL).GuardarIdioma(Idioma) Then
-                    'BitacoraBLL.CrearBitacora("Se creó el Idioma: " & Idioma.Nombre & " en el sistema.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-                    Return True
-                Else
-                    Return False
-                End If
+                Return (New IdiomaDAL).GuardarIdioma(Idioma)
+
             Else
-                Throw New ExceptionNombreEnUso
+                Return False
             End If
 
         Catch NombreUso As ExceptionNombreEnUso

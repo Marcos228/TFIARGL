@@ -26,25 +26,25 @@
                                 <div>
                                     <div>
                                         <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_Usuarios" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_Usuarios_PageIndexChanging" RowStyle-Height="40px">
-                                            <HeaderStyle CssClass="thead-dark" />                                            
+                                            <HeaderStyle CssClass="thead-dark" />
                                             <PagerTemplate>
                                                 <div class="col-md-4 text-left">
-                                                    <asp:Label ID="lblmostrarpag" runat="server" Text="Mostrar Pagina" ></asp:Label>
+                                                    <asp:Label ID="lblmostrarpag" runat="server" Text="Mostrar Pagina"></asp:Label>
                                                     <asp:DropDownList ID="ddlPaging" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPaging_SelectedIndexChanged" />
-                                                     <asp:Label ID="lblde" runat="server" Text="de" ></asp:Label>
-                                                    <asp:Label ID="lbltotalpages" runat="server" Text="" ></asp:Label>
+                                                    <asp:Label ID="lblde" runat="server" Text="de"></asp:Label>
+                                                    <asp:Label ID="lbltotalpages" runat="server" Text=""></asp:Label>
                                                 </div>
                                                 <div class="col-md-4 col-md-offset-4">
-                                                    <asp:Label ID="lblMostrar" runat="server" Text="Mostrar" ></asp:Label>
+                                                    <asp:Label ID="lblMostrar" runat="server" Text="Mostrar"></asp:Label>
                                                     <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPageSize_SelectedPageSizeChanged">
                                                         <asp:ListItem Text="1" Value="1"></asp:ListItem>
                                                         <asp:ListItem Text="5" Value="5"></asp:ListItem>
-                                                        <asp:ListItem Text="10" Value="10" ></asp:ListItem>
+                                                        <asp:ListItem Text="10" Value="10"></asp:ListItem>
                                                         <asp:ListItem Text="20" Value="20"></asp:ListItem>
                                                         <asp:ListItem Text="25" Value="25"></asp:ListItem>
                                                         <asp:ListItem Text="50" Value="50"></asp:ListItem>
                                                     </asp:DropDownList>
-                                                     <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina" ></asp:Label>
+                                                    <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina"></asp:Label>
                                                 </div>
                                             </PagerTemplate>
                                             <Columns>
@@ -103,12 +103,19 @@
                         </div>
                         <br />
                         <br />
-                        <div id="botont" runat="server" class="row">
+
+                        <div id="botont2" runat="server" class="row">
                             <div class="col-md-4 col-md-offset-4">
+                                <asp:Button ClientIDMode="Static" ID="btneliminar" name="btneliminar" runat="server" Text="Eliminar" CssClass="btn btn-block btn-danger" />
+                            </div>
+                        </div>
+
+                        <br />
+                        <div id="botont" runat="server" class="row">
+                            <div class="col-md-6 col-md-offset-3">
                                 <asp:Button ClientIDMode="Static" ID="btnModificar" name="btnModificar" runat="server" Text="Modificar" CssClass="btn btn-block btn-warning" />
                             </div>
                         </div>
-                        <br />
                     </div>
                 </div>
             </div>

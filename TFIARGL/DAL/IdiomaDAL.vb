@@ -5,7 +5,6 @@ Public Class IdiomaDAL
 
     Public Function GuardarIdioma(ByRef Idioma As IdiomaEntidad) As Boolean
         Try
-            Idioma.ID_Idioma = Acceso.TraerID("ID_Idioma", "Idioma")
             Dim Command As SqlCommand = Acceso.MiComando("insert into Idioma (Nombre, Editable, Cultura, BL) OUTPUT INSERTED.ID_Idioma values (@Nombre, @Editable, @Cultura , @BL)")
             With Command.Parameters
                 .Add(New SqlParameter("@Nombre", Idioma.Nombre))
@@ -13,7 +12,7 @@ Public Class IdiomaDAL
                 .Add(New SqlParameter("@Cultura", Idioma.Cultura.Name))
                 .Add(New SqlParameter("@BL", False))
             End With
-            Dim ID_idioma As Integer = Acceso.Scalar(Command)
+            Idioma.ID_Idioma = Acceso.Scalar(Command)
             Command.Dispose()
             Dim Micomando As SqlCommand
             Dim ComandoStr As String = "insert into Traduccion values (@ID_Control, @ID_Idioma, @Palabra)"
@@ -21,7 +20,7 @@ Public Class IdiomaDAL
                 Micomando = Acceso.MiComando(ComandoStr)
                 With Micomando.Parameters
                     .Add(New SqlParameter("@ID_Control", MiPalabra.ID_Control))
-                    .Add(New SqlParameter("@ID_Idioma", ID_idioma))
+                    .Add(New SqlParameter("@ID_Idioma", Idioma.ID_Idioma))
                     .Add(New SqlParameter("@Palabra", MiPalabra.Traduccion))
 
                 End With
@@ -65,16 +64,24 @@ Public Class IdiomaDAL
 
     Public Function EliminarIdioma(ByRef Idioma As IdiomaEntidad) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Update Idioma set BL=@BL where ID_Idioma = @ID_Idioma;Update Usuario set idioma = 1 where idioma = @ID_Idioma")
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Usuario from Usuario where ID_idioma = @ID_Idioma")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Idioma", Idioma.ID_Idioma))
-                .Add(New SqlParameter("@BL", True))
             End With
-            Acceso.Escritura(Command)
+            Dim dt_usu As DataTable = Acceso.Lectura(Command)
             Command.Dispose()
-            Dim gestorusu As UsuarioDAL = New UsuarioDAL
-            gestorusu.IdiomaEliminadoActualizacion()
-            Return True
+            If dt_usu.Rows.Count = 0 Then
+                Dim CommandDel As SqlCommand = Acceso.MiComando("Update Idioma set BL=@BL where ID_Idioma = @ID_Idioma")
+                With CommandDel.Parameters
+                    .Add(New SqlParameter("@ID_Idioma", Idioma.ID_Idioma))
+                    .Add(New SqlParameter("@BL", True))
+                End With
+                Acceso.Escritura(CommandDel)
+                CommandDel.Dispose()
+                Return True
+            Else
+                Return False
+            End If
         Catch ex As Exception
             Throw ex
         End Try
@@ -82,7 +89,7 @@ Public Class IdiomaDAL
 
     Public Function SeleccionarIdioma(ByRef Usuario As UsuarioEntidad, ByRef ID_Idioma As Integer) As IdiomaEntidad
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Update Usuario SET Idioma=@ID_Idioma, DVH=@DVH where ID_Usuario=@ID_Usuario")
+            Dim Command As SqlCommand = Acceso.MiComando("Update Usuario SET ID_Idioma=@ID_Idioma, DVH=@DVH where ID_Usuario=@ID_Usuario")
             Dim ListaParametros As New List(Of String)
             Acceso.AgregarParametros(Usuario, ListaParametros)
             ListaParametros.Add(False.ToString) 'Agregado de Baja Logica

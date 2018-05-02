@@ -138,23 +138,17 @@ Public Class ModificarIdioma
                         clienteLogeado.Idioma = GestorIdioma.ConsultarPorID(IdiomaActual.ID_Idioma)
                     End If
                     Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, idiomabitacora.Palabras.Find(Function(p) p.Codigo = "BitacoraAddIdiomaSuccess").Traduccion & IdiomaActual.Nombre & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, idiomabitacora.Palabras.Find(Function(p) p.Codigo = "BitacoraModIdiomaSuccess").Traduccion & IdiomaActual.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac, IdiomaAnterior, IdiomaActual)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
                     Response.Redirect("/ModificarIdioma.aspx", False)
-                Else
-                    Me.alertvalid.Visible = True
-                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
-                    Me.success.Visible = False
                 End If
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddIdiomalError1").Traduccion
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
-        Catch NombreUso As Negocio.ExceptionNombreEnUso
-
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

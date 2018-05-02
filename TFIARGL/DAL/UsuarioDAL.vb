@@ -108,6 +108,8 @@ Public Class UsuarioDAL
         DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
     End Sub
 
+
+
     Public Function Modificar(ByRef Usuario As UsuarioEntidad) As Boolean
         Try
             Dim Command As SqlCommand = Acceso.MiComando("update Usuario set NombreUsuario=@NombreUsuario, ID_Idioma=@Idioma, ID_Perfil=@Perfil, DVH=@DVH where ID_Usuario=@ID_Usuario and BL=@BL")
@@ -168,9 +170,7 @@ Public Class UsuarioDAL
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
-
             ActualizarDVH()
-
             Return True
         Catch ex As Exception
             Throw ex
@@ -408,9 +408,27 @@ Public Class UsuarioDAL
             Throw ex
         End Try
     End Sub
+    Public Function TraerUsuariosIdioma(ByVal id_idioma As Integer) As List(Of UsuarioEntidad)
+        Try
+            Dim consulta As String = "Select * from Usuario where Bloqueo=0 and BL=0 and ID_Usuario <> 0 and ID_Idioma=@ID_Idioma"
+            Dim Command As SqlCommand = Acceso.MiComando(consulta)
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Idioma", id_idioma))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Dim ListaUsuario As List(Of UsuarioEntidad) = New List(Of UsuarioEntidad)
+            For Each row As DataRow In dt.Rows
+                Dim Usuario As UsuarioEntidad = New UsuarioEntidad
+                FormatearUsuario(Usuario, row)
+                ListaUsuario.Add(Usuario)
+            Next
+            Return ListaUsuario
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
-
-    Public Function TraerUsuariosPerfil(ByRef ID_Perfil As Int16) As List(Of UsuarioEntidad)
+    Public Function TraerUsuariosPerfil(ByRef ID_Perfil As Integer) As List(Of UsuarioEntidad)
         Try
             Dim consulta As String = "Select * from Usuario where Bloqueo=0 and BL=0 and ID_Usuario <> 0 and ID_Perfil=@ID_Perfil"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
@@ -440,7 +458,6 @@ Public Class UsuarioDAL
             For Each row As DataRow In dt.Rows
                 Dim Usuario As UsuarioEntidad = New UsuarioEntidad
                 FormatearUsuario(Usuario, row)
-                Usuario.Password = row.Item(2)
                 ListaUsuario.Add(Usuario)
             Next
             Return ListaUsuario
@@ -449,10 +466,13 @@ Public Class UsuarioDAL
         End Try
     End Function
 
-    Public Function TraerUsuariosParaBloqueo() As List(Of UsuarioEntidad)
+    Public Function TraerUsuariosParaBloqueo(ByRef Usuari As Entidades.UsuarioEntidad) As List(Of UsuarioEntidad)
         Try
-            Dim consulta As String = "Select Usuario.*, Permiso.Nombre as PermN,Idioma.Nombre as IdioN from Usuario inner join Permiso on ID_Rol=ID_Perfil inner join Idioma on Usuario.ID_Idioma=Idioma.ID_Idioma where ID_Usuario <>0"
+            Dim consulta As String = "Select Usuario.*, Permiso.Nombre as PermN,Idioma.Nombre as IdioN from Usuario inner join Permiso on ID_Rol=ID_Perfil inner join Idioma on Usuario.ID_Idioma=Idioma.ID_Idioma where ID_Usuario <>0 and ID_Usuario <>@ID_Usuario and Usuario.BL=0"
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Usuario", Usuari.ID_Usuario))
+            End With
             Dim dt As DataTable = Acceso.Lectura(Command)
             Dim ListaUsuario As List(Of UsuarioEntidad) = New List(Of UsuarioEntidad)
             For Each row As DataRow In dt.Rows

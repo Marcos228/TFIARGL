@@ -5,16 +5,6 @@ Imports System.Runtime.Serialization.Formatters.Binary
 <Serializable()>
 Public Class Palabras
     Implements ICloneable
-
-    Private _id_control As Integer
-    Public Property ID_Control() As Integer
-        Get
-            Return _id_control
-        End Get
-        Set(ByVal value As Integer)
-            _id_control = value
-        End Set
-    End Property
     Private _traduccion As String
     Public Property Traduccion() As String
         Get
@@ -22,6 +12,15 @@ Public Class Palabras
         End Get
         Set(ByVal value As String)
             _traduccion = value
+        End Set
+    End Property
+    Private _id_control As Integer
+    Public Property ID_Control() As Integer
+        Get
+            Return _id_control
+        End Get
+        Set(ByVal value As Integer)
+            _id_control = value
         End Set
     End Property
     Private _codigo As String

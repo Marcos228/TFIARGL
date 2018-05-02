@@ -97,7 +97,7 @@ Public Class BitacoraDAL
             Else
                 consulta = "Select "
             End If
-            consulta += " Valor_Anterior, Valor_Posterior, Detalle, Fecha, IP_Usuario, WebBrowser,Tipo_Bitacora, ID_Bitacora_Auditoria, ID_Usuario from BitacoraAuditoria where Fecha between isnull(@desde,'19000101') and isnull(@hasta,'99990101') and ID_Usuario=isnull(@Usuario,ID_Usuario) and Tipo_Bitacora=isnull(@TipoBitacora,Tipo_Bitacora) order by ID_Bitacora_Auditoria "
+            consulta += " Valor_Anterior, Valor_Posterior, Detalle, Fecha, IP_Usuario, WebBrowser,Tipo_Bitacora, ID_Bitacora_Auditoria, ID_Usuario from BitacoraAuditoria where Fecha between isnull(@desde,'19000101') and isnull(@hasta,'99990101') and ID_Usuario=isnull(@Usuario,ID_Usuario) and Tipo_Bitacora=isnull(@TipoBitacora,Tipo_Bitacora) order by ID_Bitacora_Auditoria DESC "
 
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             With Command.Parameters

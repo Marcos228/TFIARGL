@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
+    <Content Include="SeleccionarIdioma.aspx" />
+    <Content Include="EliminarIdioma.aspx" />
     <Content Include="ModificarIdioma.aspx" />
     <Content Include="AgregarPerfil.aspx" />
     <Content Include="AgregarUsuario.aspx" />
@@ -178,6 +180,20 @@
     </Compile>
     <Compile Include="AccesoRestringido.aspx.vb">
       <DependentUpon>AccesoRestringido.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SeleccionarIdioma.aspx.designer.vb">
+      <DependentUpon>SeleccionarIdioma.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SeleccionarIdioma.aspx.vb">
+      <DependentUpon>SeleccionarIdioma.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EliminarIdioma.aspx.designer.vb">
+      <DependentUpon>EliminarIdioma.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EliminarIdioma.aspx.vb">
+      <DependentUpon>EliminarIdioma.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ModificarIdioma.aspx.designer.vb">

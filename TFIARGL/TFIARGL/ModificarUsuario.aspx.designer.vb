@@ -149,6 +149,24 @@ Partial Public Class ModificarUsuario
     Protected WithEvents lstidioma As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
+    '''Control botont2.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents botont2 As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''Control btneliminar.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btneliminar As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
     '''Control botont.
     '''</summary>
     '''<remarks>

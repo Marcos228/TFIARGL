@@ -27,7 +27,7 @@ Public Class BitacoraErrores
         Dim lista As New List(Of Entidades.UsuarioEntidad)
         Dim Gestor As New Negocio.UsuarioBLL
         lista.Add(New Entidades.UsuarioEntidad With {.ID_Usuario = -1, .NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MensajeTodos").Traduccion})
-        lista.AddRange(Gestor.TraerUsuariosParaBloqueo)
+        lista.AddRange(Gestor.TraerUsuariosParaBloqueo(New Entidades.UsuarioEntidad With {.ID_Usuario = 0}))
         Me.lstusuarios.DataSource = lista
         Me.lstusuarios.DataBind()
     End Sub
@@ -73,16 +73,18 @@ Public Class BitacoraErrores
                 Next cnt
 
                 Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
-                With gv_Bitacora
-                    .Columns(0).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
-                    .Columns(1).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderDetalle").Traduccion
-                    .Columns(2).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
-                    .Columns(3).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderUsuario").Traduccion
-                    .Columns(4).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderIPUsuario").Traduccion
-                    .Columns(5).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoBitacora").Traduccion
-                    .Columns(6).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderURL").Traduccion
-                    .Columns(7).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderException").Traduccion
-                    .Columns(8).HeaderText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderStackTrace").Traduccion
+
+
+                With gv_Bitacora.HeaderRow
+                    .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                    .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderDetalle").Traduccion
+                    .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
+                    .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderUsuario").Traduccion
+                    .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderIPUsuario").Traduccion
+                    .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoBitacora").Traduccion
+                    .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderURL").Traduccion
+                    .Cells(7).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderException").Traduccion
+                    .Cells(8).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderStackTrace").Traduccion
                 End With
 
                 gv_Bitacora.BottomPagerRow.Visible = True

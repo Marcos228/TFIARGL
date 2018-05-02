@@ -117,6 +117,21 @@ Public Class UsuarioBLL
         End Try
 
     End Function
+
+    Public Function TraerUsuariosIdioma(ByVal ID_Idioma As Integer) As List(Of UsuarioEntidad)
+        Try
+
+            Return UsuarioDAL.TraerUsuariosIdioma(ID_Idioma)
+
+        Catch FalloConexion As InvalidOperationException
+            Throw FalloConexion
+        Catch ex As Exception
+            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Throw ex
+        End Try
+
+    End Function
+
     Public Function Alta(ByVal Usuario As UsuarioEntidad) As Boolean
         Try
             If Me.ValidarNombre(Usuario) Then
@@ -212,10 +227,10 @@ Public Class UsuarioBLL
         End Try
 
     End Function
-    Public Function TraerUsuariosParaBloqueo() As List(Of UsuarioEntidad)
+    Public Function TraerUsuariosParaBloqueo(ByRef Usuario As Entidades.UsuarioEntidad) As List(Of UsuarioEntidad)
         Try
             'If DigitoVerificadorBLL.Integridad Then
-            Return UsuarioDAL.TraerUsuariosParaBloqueo()
+            Return UsuarioDAL.TraerUsuariosParaBloqueo(Usuario)
             'Else
             '    Throw New ExceptionIntegridadUsuario
             'End If
@@ -236,21 +251,12 @@ Public Class UsuarioBLL
 
     Public Function TraerUsuariosPerfil(ByRef ID_Perfil As Integer) As List(Of UsuarioEntidad)
         Try
-            'If DigitoVerificadorBLL.Integridad Then
+
             Return UsuarioDAL.TraerUsuariosPerfil(ID_Perfil)
-            'Else
-            '    Throw New ExceptionIntegridadUsuario
-            'End If
-        Catch ExcepcionUsuario As ExceptionIntegridadUsuario
-            Throw ExcepcionUsuario
-        Catch ExcepcionBitacora As ExceptionIntegridadBitacora
-            Throw ExcepcionBitacora
-        Catch ExcepcionEvento As ExceptionIntegridadEvento
-            Throw ExcepcionEvento
+
         Catch FalloConexion As InvalidOperationException
             Throw FalloConexion
         Catch ex As Exception
-            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
             Throw ex
         End Try
 

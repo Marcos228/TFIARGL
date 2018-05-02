@@ -95,14 +95,15 @@ Public Class AgregarIdioma
                     End If
                 End If
             Next
+        Else
+            For Each rw As GridViewRow In gv_Traducciones.Rows
+                Dim txt As TextBox = CType(rw.Cells(0).FindControl("txtTraduccion"), TextBox)
+                If txt.Text <> "" Then
+                    Idioma.Palabras.Add(New Entidades.Palabras With {.ID_Control = rw.Cells(0).Text, .Traduccion = txt.Text})
+                End If
+            Next
         End If
 
-        For Each rw As GridViewRow In gv_Traducciones.Rows
-            Dim txt As TextBox = CType(rw.Cells(0).FindControl("txtTraduccion"), TextBox)
-            If txt.Text <> "" Then
-                Idioma.Palabras.Add(New Entidades.Palabras With {.ID_Control = rw.Cells(0).Text, .Traduccion = txt.Text})
-            End If
-        Next
 
         Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
         For Each Palabra In IdiomaActual.Palabras
@@ -132,12 +133,12 @@ Public Class AgregarIdioma
                     Me.alertvalid.Visible = False
                 Else
                     Me.alertvalid.Visible = True
-                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddIdiomalError1").Traduccion
                     Me.success.Visible = False
                 End If
             Else
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddIdiomalError1").Traduccion
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
                 Me.success.Visible = False
             End If
         Catch NombreUso As Negocio.ExceptionNombreEnUso
@@ -160,9 +161,10 @@ Public Class AgregarIdioma
             If traduccionesNuevas.ContainsKey(rw.Cells(0).Text) Then
                 traduccionesNuevas(rw.Cells(0).Text) = txt.Text
             Else
-                traduccionesNuevas.Add(rw.Cells(0).Text, txt.Text)
+                If txt.Text <> "" Then
+                    traduccionesNuevas.Add(rw.Cells(0).Text, txt.Text)
+                End If
             End If
-
         Next
         Current.Session("Traducciones") = traduccionesNuevas
     End Sub

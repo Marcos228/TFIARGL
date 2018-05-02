@@ -25,6 +25,7 @@ Public Class MasterPage
         If Me.Menu.Items.Count = 0 Then
             Me.Menu.Items.Add(New MenuItem("Home", "Home", Nothing, "/Default.aspx"))
             Me.Menu.Items.Add(New MenuItem("Empresa", "Institucional", Nothing, "/Institucional.aspx"))
+            Me.Menu.Items.Add(New MenuItem("Cambiar Idioma", "SeleccionarIdioma", Nothing, "/SeleccionarIdioma.aspx"))
             Me.Menu.Items.Add(New MenuItem("Login", "Login", Nothing, "/Login.aspx"))
         End If
         Dim PermisosInvitado As New Entidades.PermisoCompuestoEntidad
@@ -37,43 +38,54 @@ Public Class MasterPage
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/BaseCorrupta.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/ConfirmarRegistracion.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/ConfirmarRecupero.aspx"})
+        PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/SeleccionarIdioma.aspx"})
 
         UsuarioInvitado.Perfil = PermisosInvitado
         Dim GestorUsuario As New Negocio.IdiomaBLL
-        UsuarioInvitado.Idioma = GestorUsuario.ConsultarPorCultura(Request.UserLanguages(0))
+        If IsNothing(Current.Session("Idioma")) Then
+            UsuarioInvitado.Idioma = GestorUsuario.ConsultarPorCultura(Request.UserLanguages(0))
+            Current.Session("Idioma") = UsuarioInvitado.Idioma
+        Else
+            UsuarioInvitado.Idioma = Current.Session("Idioma")
+        End If
+
 
         If UsuarioInvitado.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
             Response.Redirect("AccesoRestringido.aspx", False)
         End If
     End Sub
 
-
+    Private Sub RecursividadMenu(ByRef pagina As MenuItem, ByRef Usuario As Entidades.UsuarioEntidad, ByRef ListaAremover As List(Of MenuItem))
+        Dim flag As Integer = 0
+        For Each paginadentro As MenuItem In pagina.ChildItems
+            If paginadentro.ChildItems.Count > 0 Then
+                RecursividadMenu(paginadentro, Usuario, ListaAremover)
+            Else
+                If Not Usuario.Perfil.ValidarURL(paginadentro.NavigateUrl) Then
+                    ListaAremover.Add(paginadentro)
+                    flag += 1
+                End If
+            End If
+        Next
+        If flag = pagina.ChildItems.Count Then
+            ListaAremover.Add(pagina)
+        End If
+    End Sub
 
 
     Private Sub CargarPerfil(ByRef Usuario As Entidades.UsuarioEntidad)
         Me.Menu.Items.Clear()
         ArmarMenuCompleto()
         Dim listaAremover As New List(Of MenuItem)
-        Dim flag As Integer
         For Each pagina As MenuItem In Menu.Items
             If pagina.ChildItems.Count > 0 Then
-                flag = 0
-                For Each paginadentro As MenuItem In pagina.ChildItems
-                    If Not Usuario.Perfil.ValidarURL(paginadentro.NavigateUrl) Then
-                        listaAremover.Add(paginadentro)
-                        flag += 1
-                    End If
-                Next
-                If flag = pagina.ChildItems.Count Then
-                    listaAremover.Add(pagina)
-                End If
+                RecursividadMenu(pagina, Usuario, listaAremover)
             Else
                 If pagina.Text = "Home" Or pagina.Text = "Empresa" Or pagina.Text = "Login" Then
                 Else
                     If Usuario.Perfil.ValidarURL(pagina.NavigateUrl) = False Then
                         listaAremover.Add(pagina)
                     End If
-
                 End If
             End If
         Next
@@ -85,7 +97,7 @@ Public Class MasterPage
         Next
 
         Me.Menu.Items.Add(New MenuItem("Logout", "Logout"))
-        If Me.Page.Request.FilePath = "/default.aspx" Or Me.Page.Request.FilePath = "/Institucional.aspx" Or Me.Page.Request.FilePath = "/Default.aspx" Or Me.Page.Request.FilePath = "/AccesoRestringido.aspx" Or Me.Page.Request.FilePath = "/RecuperarPassword.aspx" Or Me.Page.Request.FilePath = "/BaseCorrupta.aspx" Then
+        If Me.Page.Request.FilePath = "/default.aspx" Or Me.Page.Request.FilePath = "/Institucional.aspx" Or Me.Page.Request.FilePath = "/Default.aspx" Or Me.Page.Request.FilePath = "/AccesoRestringido.aspx" Or Me.Page.Request.FilePath = "/RecuperarPassword.aspx" Or Me.Page.Request.FilePath = "/BaseCorrupta.aspx" Or Me.Page.Request.FilePath = "/SeleccionarIdioma.aspx" Then
 
         Else
 
@@ -101,20 +113,28 @@ Public Class MasterPage
         Me.Menu.Items.Add(New MenuItem("Administración del Sistema", "AdminSist"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Copia de Seguridad", "Backup", Nothing, "/backup.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Restauración de Datos", "Restore", Nothing, "/restore.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Crear Perfil", "CrearPerfil", Nothing, "/AgregarPerfil.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Modificar Perfil", "ModificarPerfil", Nothing, "/ModificarPerfil.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Eliminar Perfil", "EliminarPerfil", Nothing, "/EliminarPerfil.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Agregar Usuario", "AgregarUsuario", Nothing, "/AgregarUsuario.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Modificar Usuario", "ModificarUsuario", Nothing, "/ModificarUsuario.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Eliminar Usuario", "EliminarUsuario", Nothing, "/EliminarUsuario.aspx"))
-        Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Crear Idioma", "AgregarIdioma", Nothing, "/AgregarIdioma.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Visualizar Bitacora Auditoria", "BitacoraAuditoria", Nothing, "/BitacoraAuditoria.aspx"))
         Me.Menu.Items.Item(1).ChildItems.Add(New MenuItem("Visualizar Bitacora Errores", "BitacoraErrores", Nothing, "/BitacoraErrores.aspx"))
+        Me.Menu.Items.Add(New MenuItem("Administración Usuarios", "AdminUsu"))
+        Me.Menu.Items.Item(2).ChildItems.Add(New MenuItem("Agregar Usuario", "AgregarUsuario", Nothing, "/AgregarUsuario.aspx"))
+        Me.Menu.Items.Item(2).ChildItems.Add(New MenuItem("Modificar Usuario", "ModificarUsuario", Nothing, "/ModificarUsuario.aspx"))
+
+        Me.Menu.Items.Add(New MenuItem("Administración Perfiles", "AdminPer"))
+        Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Crear Perfil", "CrearPerfil", Nothing, "/AgregarPerfil.aspx"))
+        Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Modificar Perfil", "ModificarPerfil", Nothing, "/ModificarPerfil.aspx"))
+        Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Eliminar Perfil", "EliminarPerfil", Nothing, "/EliminarPerfil.aspx"))
+
+        Me.Menu.Items.Add(New MenuItem("Administración Idiomas", "AdminIdi"))
+        Me.Menu.Items.Item(4).ChildItems.Add(New MenuItem("Crear Idioma", "AgregarIdioma", Nothing, "/AgregarIdioma.aspx"))
+        Me.Menu.Items.Item(4).ChildItems.Add(New MenuItem("Modificar Idioma", "ModificarIdioma", Nothing, "/ModificarIdioma.aspx"))
+        Me.Menu.Items.Item(4).ChildItems.Add(New MenuItem("Eliminar Idioma", "EliminarIdioma", Nothing, "/EliminarIdioma.aspx"))
+
         Me.Menu.Items.Add(New MenuItem("Empresa", "Institucional", Nothing, "/Institucional.aspx"))
         Me.Menu.Items.Add(New MenuItem("Area de Cliente", "Cliente"))
-        Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Carrito", "Carrito", Nothing, "/Orders.aspx"))
-        Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Mis Compras", "Compras", Nothing, "/MyOrders.aspx"))
-        Me.Menu.Items.Item(3).ChildItems.Add(New MenuItem("Lista de Productos", "Productos", Nothing, "/ProductList.aspx"))
+        Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Carrito", "Carrito", Nothing, "/Orders.aspx"))
+        Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Mis Compras", "Compras", Nothing, "/MyOrders.aspx"))
+        Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Lista de Productos", "Productos", Nothing, "/ProductList.aspx"))
+        Me.Menu.Items.Add(New MenuItem("Cambiar Idioma", "SeleccionarIdioma", Nothing, "/SeleccionarIdioma.aspx"))
 
     End Sub
 
@@ -122,7 +142,7 @@ Public Class MasterPage
         Dim deslogear As Menu = TryCast(sender, Menu)
 
         If deslogear.SelectedItem.Value = "Logout" Then
-            Current.Session("cliente") = DBNull.Value
+            Current.Session("cliente") = Nothing
             Response.Redirect("/Default.aspx", False)
         End If
     End Sub
@@ -168,7 +188,10 @@ Public Class MasterPage
         Try
             Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _menuitem.Value)
-            _menuitem.Text = PalabraAEncontrar.Traduccion
+            If Not IsNothing(PalabraAEncontrar) Then
+                _menuitem.Text = PalabraAEncontrar.Traduccion
+            End If
+
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -180,7 +203,10 @@ Public Class MasterPage
         Try
             Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _button.ID)
-            _button.Text = PalabraAEncontrar.Traduccion
+            If Not IsNothing(PalabraAEncontrar) Then
+                _button.Text = PalabraAEncontrar.Traduccion
+            End If
+
 
         Catch ex As System.Data.SqlClient.SqlException
         Catch ex As Exception
