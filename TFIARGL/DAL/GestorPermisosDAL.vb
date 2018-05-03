@@ -174,9 +174,9 @@ Public Class GestorPermisosDAL
             Command.Parameters.Add(New SqlParameter("@Nombre", Nombre))
             Dim DataTabla = Acceso.Lectura(Command)
             If DataTabla.Rows.Count > 0 Then
-                Return False
-            Else
                 Return True
+            Else
+                Return False
             End If
         Catch ex As Exception
             Throw ex

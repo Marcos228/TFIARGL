@@ -53,15 +53,10 @@ Public Class Acceso
             If objCommando.Connection.State = ConnectionState.Open Then
                 objCommando.Connection.Close()
                 Return objCommando
-            Else
-                Dim exc As InvalidOperationException = New InvalidOperationException
-                MsgBox("La base de Datos se encuentra sin conectividad. Vuelva a intentarlo nuevamente o consulte al administrador de la Base de Datos.", MsgBoxStyle.Critical, "Error Conexión")
-                Throw exc
             End If
         Catch ex As Exception
-            Dim exc As InvalidOperationException = New InvalidOperationException
-            MsgBox("La base de Datos se encuentra sin conectividad. Vuelva a intentarlo nuevamente o consulte al administrador de la Base de Datos.", MsgBoxStyle.Critical, "Error Conexión")
-            Throw exc
+
+            Throw ex
         End Try
     End Function
     Public Shared Function MiConexion() As SqlConnection
