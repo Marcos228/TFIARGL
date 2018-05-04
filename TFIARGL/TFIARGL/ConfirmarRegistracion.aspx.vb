@@ -5,7 +5,12 @@ Public Class ConfirmarRegistracion
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Dim GestorCliente As New Negocio.UsuarioBLL
             If Not GestorCliente.ACtivarUsuario(Request.QueryString("tok")) Then
                 Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ConfirmarRegSuccess").Traduccion

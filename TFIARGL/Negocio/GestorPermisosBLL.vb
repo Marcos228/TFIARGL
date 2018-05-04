@@ -9,7 +9,7 @@ Public Class GestorPermisosBLL
             If ValidarNombre(perm.Nombre) Then
                 PermisosDAL = New GestorPermisosDAL
                 PermisosDAL.Alta(perm)
-                'BitacoraBLL.CrearBitacoraAuditoria("Se creó el Perfil: " & perm.Nombre & " en el sistema.", TipoBitacora.Alta, Now, SessionBLL.SesionActual.ObtenerUsuarioActual)
+                'BitacoraBLL.CrearBitacoraAuditoria("Se creó el Perfil: " & perm.Nombre & " en el sistema.", TipoBitacora.Alta,  Now.AddMilliseconds(-Now.Millisecond), SessionBLL.SesionActual.ObtenerUsuarioActual)
                 Return True
             Else
                 Return False

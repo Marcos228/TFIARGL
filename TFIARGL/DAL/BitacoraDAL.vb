@@ -25,7 +25,12 @@ Public Class BitacoraDAL
             With Command.Parameters
                 .Add(New SqlParameter("@Descripcion", Bitacora.Detalle))
                 .Add(New SqlParameter("@Fecha", Bitacora.Fecha))
-                .Add(New SqlParameter("@id_usuario", Bitacora.Usuario.ID_Usuario))
+                If Not IsNothing(Bitacora.Usuario) Then
+                    .Add(New SqlParameter("@id_usuario", Bitacora.Usuario.ID_Usuario))
+                Else
+                    .Add(New SqlParameter("@id_usuario", DBNull.Value))
+                End If
+
                 .Add(New SqlParameter("@Tipo_Bitacora", Bitacora.Tipo_Bitacora))
                 .Add(New SqlParameter("@Browser", Bitacora.Browser))
                 .Add(New SqlParameter("@IP_Usuario", Bitacora.IP_Usuario))
@@ -150,7 +155,7 @@ Public Class BitacoraDAL
             Else
                 consulta = "Select "
             End If
-            consulta += " URL, Stacktrace, Exception, Detalle, Fecha, IP_Usuario, WebBrowser,Tipo_Bitacora, ID_Bitacora_Errores, ID_Usuario from BitacoraErrores where Fecha between isnull(@desde,'19000101') and isnull(@hasta,'99990101') and ID_Usuario=isnull(@Usuario,ID_Usuario) and Tipo_Bitacora=isnull(@TipoBitacora,Tipo_Bitacora) order by ID_Bitacora_Errores desc "
+            consulta += " URL, Stacktrace, Exception, Detalle, Fecha, IP_Usuario, WebBrowser,Tipo_Bitacora, ID_Bitacora_Errores, ID_Usuario from BitacoraErrores where Fecha between isnull(@desde,'19000101') and isnull(@hasta,'99990101') and isnull(ID_Usuario,0)=isnull(@Usuario,isnull(ID_Usuario,0)) and Tipo_Bitacora=isnull(@TipoBitacora,Tipo_Bitacora) order by ID_Bitacora_Errores desc "
 
             Dim Command As SqlCommand = Acceso.MiComando(consulta)
             With Command.Parameters
@@ -210,7 +215,7 @@ Public Class BitacoraDAL
             Bita.StackTrace = row("Stacktrace")
             Bita.Exception = row("Exception")
             Dim usu As New Entidades.UsuarioEntidad
-            usu.ID_Usuario = row("ID_Usuario")
+            usu.ID_Usuario = IIf(IsDBNull(row("ID_Usuario")), 0, row("ID_Usuario"))
             Bita.Usuario = New UsuarioDAL().BuscarUsuarioIDBitacora(usu)
         Catch ex As Exception
             Throw ex

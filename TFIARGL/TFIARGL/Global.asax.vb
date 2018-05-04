@@ -8,6 +8,9 @@ Public Class Global_asax
         Try
             Corrupted2 = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
             Corrupted = Corrupted2.GetRange(0, Corrupted2.Count)
+            Dim GestorIdioma As New Negocio.IdiomaBLL
+            Dim IdiomaDefault As Entidades.IdiomaEntidad = GestorIdioma.ConsultarPorID(1)
+            Application(IdiomaDefault.Nombre) = IdiomaDefault
         Catch ex As Exception
         End Try
     End Sub

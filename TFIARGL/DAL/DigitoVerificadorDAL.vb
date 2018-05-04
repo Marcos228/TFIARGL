@@ -82,7 +82,7 @@ Public Class DigitoVerificadorDAL
                 Dim Parametros As New List(Of String)
                 Dim c As Integer = 0
                 For Each column In row.ItemArray
-                    If (Not row.ItemArray.Count - 1 = c) Then Parametros.Add(column)
+                    If (Not row.ItemArray.Count - 1 = c) Then Parametros.Add(IIf(IsDBNull(column), DBNull.Value.ToString, column))
                     c += 1
                 Next
                 If Not DigitoVerificadorDAL.CalcularDVH(Parametros) = row.ItemArray.Last Then problematicRows.ImportRow(row)

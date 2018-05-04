@@ -152,6 +152,8 @@ Public Class UsuarioDAL
         Command.Dispose()
         If dt.Rows.Count > 0 Then
             Return dt.Rows(0)("ID_Usuario")
+        Else
+            Return Nothing
         End If
 
 

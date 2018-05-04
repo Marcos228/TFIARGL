@@ -191,7 +191,7 @@ Public Class BitacoraBLL
         'Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
         'Dim log As New Entidades.BitacoraAuditoria
         'log.Id_Bitacora = DAL.Acceso.TraerID("ID_bitacora", "Bitacora")
-        'log.Fecha = Now
+        'log.Fecha =  Now.AddMilliseconds(-Now.Millisecond)
         'log.Detalle = logMsg
         'If IsNothing(cliente) Then
         '    log.Usuario = Current.Session("cliente")

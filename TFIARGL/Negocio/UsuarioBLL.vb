@@ -56,7 +56,7 @@ Public Class UsuarioBLL
         Try
             Dim usuario As New Entidades.UsuarioEntidad
             usuario.ID_Usuario = UsuarioDAL.GetTokenUser(token)
-            If Not IsNothing(usuario.ID_Usuario) Then
+            If Not IsNothing(usuario.ID_Usuario) And usuario.ID_Usuario > 0 Then
                 Return UsuarioDAL.Bloquear(UsuarioDAL.BuscarUsuarioID(usuario))
             Else
                 Return True

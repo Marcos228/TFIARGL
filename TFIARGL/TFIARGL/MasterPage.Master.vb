@@ -15,7 +15,7 @@ Public Class MasterPage
                 TraducirPagina(Usuario)
             Catch ex As Exception
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
             End Try
         End If
@@ -44,10 +44,18 @@ Public Class MasterPage
         Dim GestorUsuario As New Negocio.IdiomaBLL
         If IsNothing(Current.Session("Idioma")) Then
             UsuarioInvitado.Idioma = GestorUsuario.ConsultarPorCultura(Request.UserLanguages(0))
-            Current.Session("Idioma") = UsuarioInvitado.Idioma
+            If IsNothing(Application(UsuarioInvitado.Idioma.Nombre)) Then
+                Application(UsuarioInvitado.Idioma.Nombre) = UsuarioInvitado.Idioma
+            End If
         Else
-            UsuarioInvitado.Idioma = Current.Session("Idioma")
+            If IsNothing(Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre)) Then
+                Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre) = GestorUsuario.ConsultarPorID(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).ID_Idioma)
+            End If
+            UsuarioInvitado.Idioma = Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre)
         End If
+
+
+
 
 
         If UsuarioInvitado.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
@@ -149,44 +157,42 @@ Public Class MasterPage
 
     Protected Sub TraducirPagina(ByRef Usuario As Entidades.UsuarioEntidad)
         Try
-            Dim MiIdioma As New Entidades.IdiomaEntidad
-            MiIdioma = Usuario.Idioma
+
             Dim MiPagina As String = Right(Request.Path, Len(Request.Path) - 1)
-            Current.Session("Idioma") = MiIdioma
-            Me.traducirMenu()
-            Me.lblcopyright.Text = MiIdioma.Palabras.Find(Function(p) p.Codigo = "lblcopyright").Traduccion
+            Me.traducirMenu(Usuario.Idioma.Nombre)
+            Me.lblcopyright.Text = TryCast(Application(Usuario.Idioma.Nombre), Entidades.IdiomaEntidad).Palabras.Find(Function(p) p.Codigo = "lblcopyright").Traduccion
 
             Dim mpContentPlaceHolder As New ContentPlaceHolder
             mpContentPlaceHolder = Me.FindControl("ContentPlaceHolder1")
 
-            traducirControl(mpContentPlaceHolder.Controls)
+            traducirControl(mpContentPlaceHolder.Controls, Usuario.Idioma.Nombre)
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
-    Private Sub traducirMenu()
+    Private Sub traducirMenu(ByVal Idioma As String)
         Try
             Dim MasterMenu As Menu
             MasterMenu = Me.FindControl("Menu")
             If MasterMenu.Items.Count > 0 Then
-                traducirMenuRecursivo(MasterMenu.Items)
+                traducirMenuRecursivo(MasterMenu.Items, Idioma)
             End If
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 
     End Sub
 
-    Private Sub traducir(ByVal _menuitem As MenuItem)
+    Private Sub traducir(ByVal _menuitem As MenuItem, ByVal Idioma As String)
         Try
-            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
+            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Application(Idioma), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _menuitem.Value)
             If Not IsNothing(PalabraAEncontrar) Then
                 _menuitem.Text = PalabraAEncontrar.Traduccion
@@ -194,14 +200,14 @@ Public Class MasterPage
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
-    Private Sub traducir(ByVal _button As Button)
+    Private Sub traducir(ByVal _button As Button, ByVal Idioma As String)
         Try
-            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
+            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Application(Idioma), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _button.ID)
             If Not IsNothing(PalabraAEncontrar) Then
                 _button.Text = PalabraAEncontrar.Traduccion
@@ -211,14 +217,14 @@ Public Class MasterPage
         Catch ex As System.Data.SqlClient.SqlException
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
-    Private Sub traducir(ByVal _label As Label)
+    Private Sub traducir(ByVal _label As Label, ByVal Idioma As String)
         Try
-            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Current.Session("Idioma"), Entidades.IdiomaEntidad).Palabras
+            Dim LStPalabras As List(Of Entidades.Palabras) = CType(Application(Idioma), Entidades.IdiomaEntidad).Palabras
             Dim PalabraAEncontrar As Entidades.Palabras = LStPalabras.Find(Function(p) p.Codigo = _label.ID)
             If Not IsNothing(PalabraAEncontrar) Then
                 _label.Text = PalabraAEncontrar.Traduccion
@@ -226,39 +232,39 @@ Public Class MasterPage
         Catch ex As System.Data.SqlClient.SqlException
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
 
-    Private Sub traducirMenuRecursivo(ByVal _items As MenuItemCollection)
+    Private Sub traducirMenuRecursivo(ByVal _items As MenuItemCollection, ByVal Idioma As String)
         Try
             For Each MiMenuItem As MenuItem In _items
-                Me.traducir(MiMenuItem)
+                Me.traducir(MiMenuItem, Idioma)
                 If MiMenuItem.ChildItems.Count > 0 Then
-                    traducirMenuRecursivo(MiMenuItem.ChildItems)
+                    traducirMenuRecursivo(MiMenuItem.ChildItems, Idioma)
                 End If
             Next
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 
     End Sub
 
-    Private Sub traducirControl(ByVal paramListaControl As ControlCollection)
+    Private Sub traducirControl(ByVal paramListaControl As ControlCollection, ByVal Idioma As String)
         Try
             For Each miControl As Control In paramListaControl
                 If TypeOf miControl Is Button Then
-                    traducir(DirectCast(miControl, Button))
+                    traducir(DirectCast(miControl, Button), Idioma)
                 ElseIf TypeOf miControl Is Label Then
-                    traducir(DirectCast(miControl, Label))
+                    traducir(DirectCast(miControl, Label), Idioma)
                 ElseIf TypeOf miControl Is GridView Then
                     Dim ControlGrview As GridView = DirectCast(miControl, GridView)
                     For Each GrvLabel In ControlGrview.BottomPagerRow.Cells(0).Controls
                         If TypeOf GrvLabel Is Label Then
-                            traducir(DirectCast(GrvLabel, Label))
+                            traducir(DirectCast(GrvLabel, Label), Idioma)
                         End If
                     Next
                 End If

@@ -99,7 +99,12 @@ Public Class Acceso
                         For Each _property2 As PropertyInfo In _property.PropertyType.GetProperties
                             Dim Objeto As Object = _property.GetValue(Someobject, Nothing)
                             If _property2.Name.Contains("ID") Then
-                                listaparam.Add(_property2.GetValue(Objeto, Nothing).ToString)
+                                If IsNothing(Objeto) Then
+                                    listaparam.Add(DBNull.Value.ToString)
+                                Else
+                                    listaparam.Add(_property2.GetValue(Objeto, Nothing).ToString)
+                                End If
+
                                 Exit For
                             End If
                         Next
