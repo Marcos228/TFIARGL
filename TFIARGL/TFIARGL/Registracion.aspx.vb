@@ -7,8 +7,14 @@ Public Class Registracion
     Protected Sub Btnregistrarse_Click(sender As Object, e As EventArgs) Handles Btnregistrarse.Click
         Dim GestorCliente As New Negocio.UsuarioBLL
         Dim usu As New Entidades.UsuarioEntidad
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+
             If Page.IsValid = True Then
 
                 If IsValidEmail(txtusuario.Text) Then
@@ -53,7 +59,7 @@ Public Class Registracion
             End If
         Catch nombreuso As Negocio.ExceptionNombreEnUso
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = nombreuso.Mensaje(Current.Session("Idioma"))
+            Me.textovalid.InnerText = nombreuso.Mensaje(IdiomaActual)
             Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
@@ -65,7 +71,8 @@ Public Class Registracion
     Private Sub EnviarMailRegistro(ByVal token As String)
         Dim body As String = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath("EmailTemplates/registracion.html"))
         Dim ruta As String = HttpContext.Current.Server.MapPath("Imagenes")
-        Negocio.MailingBLL.enviarMailRegistroUsuario(token, body, ruta)
+        Dim ur As Uri = Request.Url
+        Negocio.MailingBLL.enviarMailRegistroUsuario(token, body, ruta, Replace(ur.AbsoluteUri, ur.AbsolutePath, ""))
     End Sub
 
     Dim invalid As Boolean = False

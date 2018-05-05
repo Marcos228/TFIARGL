@@ -3,7 +3,7 @@ Public Class PermisoEntidad
     Inherits PermisoBaseEntidad
 
     Public Overrides Function ValidarURL(paramURL As String) As Boolean
-        If Me.URL = paramURL Then
+        If UCASE(Me.URL) = UCASE(paramURL) Then
             Return True
         Else
             Return False

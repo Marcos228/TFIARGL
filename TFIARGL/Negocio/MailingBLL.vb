@@ -4,7 +4,7 @@ Imports System.Net.Mail
 Public Class MailingBLL
 
 
-    Public Shared Sub enviarMailRegistroUsuario(ByVal token As String, ByVal body As String, ByVal ruta As String)
+    Public Shared Sub enviarMailRegistroUsuario(ByVal token As String, ByVal body As String, ByVal ruta As String, ByVal ubicacionserver As String)
         Try
             Dim Correo As New System.Net.Mail.MailMessage()
             Correo.Attachments.Add(New Attachment(ruta & "\twitter.png") With {.ContentId = "twitter"})
@@ -16,7 +16,7 @@ Public Class MailingBLL
 
             Correo.Attachments.Add(New Attachment(ruta & "\youtube-gaming_1200x500.jpg") With {.ContentId = "banner"})
             Dim variable As String() = body.Split("$$$")
-            variable(0) = variable(0) & "http://localhost:8080/ConfirmarRegistracion.aspx?tok=" & token
+            variable(0) = variable(0) & ubicacionserver & "/ConfirmarRegistracion.aspx?tok=" & token
             body = variable(0) & variable(3)
             Correo.IsBodyHtml = True
             Correo.To.Add("Marcos.tassara2@gmail.com")
@@ -30,7 +30,7 @@ Public Class MailingBLL
         End Try
     End Sub
 
-    Public Shared Sub enviarMailRecupero(ByVal token As String, ByVal body As String, ByVal ruta As String)
+    Public Shared Sub enviarMailRecupero(ByVal token As String, ByVal body As String, ByVal ruta As String, ByVal ubicacionserver As String)
         Try
             Dim Correo As New System.Net.Mail.MailMessage()
             Correo.Attachments.Add(New Attachment(ruta & "\twitter.png") With {.ContentId = "twitter"})
@@ -42,7 +42,7 @@ Public Class MailingBLL
 
             Correo.Attachments.Add(New Attachment(ruta & "\youtube-gaming_1200x500.jpg") With {.ContentId = "banner"})
             Dim variable As String() = body.Split("$$$")
-            variable(0) = variable(0) & "http://localhost:8080/ConfirmarRecupero.aspx?tok=" & token
+            variable(0) = variable(0) & ubicacionserver & "/ConfirmarRecupero.aspx?tok=" & token
             body = variable(0) & variable(3)
             Correo.IsBodyHtml = True
             Correo.To.Add("Marcos.tassara2@gmail.com")

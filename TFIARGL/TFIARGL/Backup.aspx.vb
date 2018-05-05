@@ -9,11 +9,11 @@ Public Class BackUp
 
     Protected Sub hacerBackup(sender As Object, e As EventArgs) Handles BtnBackup.Click
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
-            Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
-            If (Current.Session("FilasCorruptas").Count > 0) Then
-                Current.Session("cliente") = DBNull.Value
-                Response.Redirect("/BaseCorrupta.aspx", False)
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
 
             Dim gestorBK As New Negocio.BackupRestoreBLL

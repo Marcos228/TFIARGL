@@ -19,7 +19,6 @@ Public Class Acceso
         End Try
     End Function
     Public Shared Function Scalar(ByVal command As SqlCommand) As Integer
-
         Try
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US")
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
@@ -55,7 +54,6 @@ Public Class Acceso
                 Return objCommando
             End If
         Catch ex As Exception
-
             Throw ex
         End Try
     End Function

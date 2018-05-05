@@ -28,7 +28,13 @@ Public Class EliminarIdioma
     Protected Sub btndelIdioma_Click(sender As Object, e As EventArgs) Handles btndelIdioma.Click
         Dim GestorCliente As New Negocio.UsuarioBLL
         Try
-            Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim idiomabitacora As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                idiomabitacora = Application("Español")
+            Else
+                idiomabitacora = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+
             Dim GestorIdioma As New Negocio.IdiomaBLL
             Dim IdiomaActual As New Entidades.IdiomaEntidad With {.ID_Idioma = lstidioma.SelectedValue, .Nombre = lstidioma.SelectedItem.Text}
             If GestorIdioma.EliminarIdioma(IdiomaActual) Then
@@ -54,7 +60,12 @@ Public Class EliminarIdioma
 
     Private Sub lstidioma_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstidioma.SelectedIndexChanged
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Dim GestorIdioma As New Negocio.IdiomaBLL
             Dim Gestor As New Negocio.UsuarioBLL
             Dim Lista As List(Of Entidades.UsuarioEntidad) = Gestor.TraerUsuariosIdioma(lstidioma.SelectedValue)
@@ -62,12 +73,23 @@ Public Class EliminarIdioma
                 Lista.Add(New Entidades.UsuarioEntidad With {.NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "UsuariosIdiomas404").Traduccion})
                 Me.gv_idiomas.DataSource = Lista
                 Me.gv_idiomas.DataBind()
-                Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim idiomabitacora As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    idiomabitacora = Application("Español")
+                Else
+                    idiomabitacora = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
+
                 gv_idiomas.HeaderRow.Cells(0).Text = idiomabitacora.Palabras.Find(Function(p) p.Codigo = "HeaderUsuariosSeleccionados2").Traduccion
             Else
                 Me.gv_idiomas.DataSource = Lista
                 Me.gv_idiomas.DataBind()
-                Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim idiomabitacora As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    idiomabitacora = Application("Español")
+                Else
+                    idiomabitacora = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
                 gv_idiomas.HeaderRow.Cells(0).Text = idiomabitacora.Palabras.Find(Function(p) p.Codigo = "HeaderUsuariosSeleccionados2").Traduccion
             End If
         Catch ex As Exception

@@ -43,7 +43,12 @@ Public Class ModificarPerfil
 
     Private Sub lstperfil_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstperfil.SelectedIndexChanged
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Dim Roles As List(Of Entidades.PermisoBaseEntidad) = TryCast(Session("Roles"), List(Of Entidades.PermisoBaseEntidad))
             ControladorPermisos.CargarPermisos(Me.TreeView1, Roles(lstperfil.SelectedIndex))
             ControladorPermisos.CargarPermisos(Me.TreeView2)
@@ -54,12 +59,22 @@ Public Class ModificarPerfil
                 Lista.Add(New Entidades.UsuarioEntidad With {.NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "UsuariosPerfil404").Traduccion})
                 Me.gv_Perfiles.DataSource = Lista
                 Me.gv_Perfiles.DataBind()
-                Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim idiomabitacora As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    idiomabitacora = Application("Español")
+                Else
+                    idiomabitacora = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
                 gv_Perfiles.HeaderRow.Cells(0).Text = idiomabitacora.Palabras.Find(Function(p) p.Codigo = "HeaderUsuariosSeleccionados").Traduccion
             Else
                 Me.gv_Perfiles.DataSource = Lista
                 Me.gv_Perfiles.DataBind()
-                Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim idiomabitacora As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    idiomabitacora = Application("Español")
+                Else
+                    idiomabitacora = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
                 gv_Perfiles.HeaderRow.Cells(0).Text = idiomabitacora.Palabras.Find(Function(p) p.Codigo = "HeaderUsuariosSeleccionados").Traduccion
             End If
         Catch ex As Exception
@@ -77,7 +92,12 @@ Public Class ModificarPerfil
             Dim PerfilAnterior As Entidades.PermisoCompuestoEntidad = Perfil.Clone
             Perfil.Hijos.Clear()
             Perfil = ControladorPermisos.RecorrerArbol(Nothing, Perfil, TreeView2)
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             If Perfil.Hijos.Count <> 0 Then
                 Dim GestorPermisos As New Negocio.GestorPermisosBLL
                 GestorPermisos.Modificar(Perfil)

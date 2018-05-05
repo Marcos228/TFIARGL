@@ -111,8 +111,6 @@ Public Class ModificarIdioma
             Next
         End If
 
-
-
         Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("IdiomaEditar")
         For Each Palabra In IdiomaActual.Palabras
             If Not Idioma.Palabras.Contains(Palabra) Then
@@ -134,10 +132,18 @@ Public Class ModificarIdioma
                 CargarIdioma(IdiomaActual)
                 If GestorIdioma.ModificarIdioma(IdiomaActual) Then
                     Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    If clienteLogeado.Idioma.ID_Idioma = IdiomaActual.ID_Idioma Then
-                        clienteLogeado.Idioma = GestorIdioma.ConsultarPorID(IdiomaActual.ID_Idioma)
+
+                    If Not IsNothing(Application(IdiomaActual.Nombre)) Then
+                        Application(IdiomaActual.Nombre) = GestorIdioma.ConsultarPorID(IdiomaActual.ID_Idioma)
                     End If
-                    Dim idiomabitacora As Entidades.IdiomaEntidad = Current.Session("Idioma")
+
+                    Dim idiomabitacora As Entidades.IdiomaEntidad
+                    If IsNothing(Current.Session("Cliente")) Then
+                        idiomabitacora = Application("Español")
+                    Else
+                        idiomabitacora = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                    End If
+
                     Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, idiomabitacora.Palabras.Find(Function(p) p.Codigo = "BitacoraModIdiomaSuccess").Traduccion & IdiomaActual.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac, IdiomaAnterior, IdiomaActual)
                     Me.success.Visible = True

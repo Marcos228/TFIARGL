@@ -7,7 +7,12 @@ Public Class AgregarUsuario
         Dim GestorCliente As New Negocio.UsuarioBLL
         Dim usu As New Entidades.UsuarioEntidad
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             If Page.IsValid = True Then
                 usu.NombreUsu = txtusuario.Text
                 usu.Nombre = txtnombre.Text
@@ -33,8 +38,14 @@ Public Class AgregarUsuario
                 Me.success.Visible = False
             End If
         Catch nombreuso As Negocio.ExceptionNombreEnUso
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = nombreuso.Mensaje(Current.Session("Idioma"))
+            Me.textovalid.InnerText = nombreuso.Mensaje(IdiomaActual)
             Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")

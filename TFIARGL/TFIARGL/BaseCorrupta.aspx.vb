@@ -4,8 +4,13 @@ Public Class BaseCorrupta
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
-            For Each corruptedrow As Entidades.FilaCorrupta In Global_asax.Corrupted
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            For Each corruptedrow As Entidades.FilaCorrupta In Application("Corruption")
                 Me.FilasCorruptas.Text += "</br>" + "ID: " + corruptedrow.ID + IdiomaActual.Palabras.Find(Function(p) p.Codigo = "TablaCorrupta1").Traduccion + corruptedrow.NombreTabla
             Next
             Global_asax.Corrupted.Clear()

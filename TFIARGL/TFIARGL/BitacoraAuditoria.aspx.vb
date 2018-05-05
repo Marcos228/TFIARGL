@@ -7,12 +7,12 @@ Public Class ConsultarBitacoraAuditoria
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not IsPostBack Then
             Try
-                Current.Session("FilasCorruptas") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
-                If (Current.Session("FilasCorruptas").Count > 0) Then
-                    Current.Session("cliente") = DBNull.Value
-                    Response.Redirect("/BaseCorrupta.aspx", False)
+                Dim IdiomaActual As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    IdiomaActual = Application("Español")
+                Else
+                    IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
                 End If
-                      Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
                 CargarBitacoras()
                 CargarUsuarios(IdiomaActual)
                 CargarTipos(IdiomaActual)
@@ -47,7 +47,7 @@ Public Class ConsultarBitacoraAuditoria
         Dim lista As List(Of Entidades.BitacoraAuditoria)
         Dim Gestor As New Negocio.BitacoraBLL
         lista = Gestor.ListarBitacorasAuditoria(tipoBitacora, Desde, Hasta, Usu)
-        If isnothing(lista) Then
+        If IsNothing(lista) Then
             Me.alertvalid.Visible = True
             Me.gv_Bitacora.DataSource = lista
             Me.gv_Bitacora.DataBind()
@@ -80,7 +80,13 @@ Public Class ConsultarBitacoraAuditoria
                     End If
                     ddl.Items.Add(item)
                 Next cnt
-                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+
+                Dim IdiomaActual As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    IdiomaActual = Application("Español")
+                Else
+                    IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
 
                 With gv_Bitacora.HeaderRow
                     .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
@@ -154,7 +160,7 @@ Public Class ConsultarBitacoraAuditoria
             CargarBitacoras(tipo, Desde, Hasta, usu)
 
         Catch ex As Exception
-        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try

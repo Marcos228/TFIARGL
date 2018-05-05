@@ -18,7 +18,12 @@ Public Class BitacoraErrores
         End If
     End Sub
     Private Sub CargarUsuarios()
-        Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
         Dim lista As New List(Of Entidades.UsuarioEntidad)
         Dim Gestor As New Negocio.UsuarioBLL
         lista.Add(New Entidades.UsuarioEntidad With {.ID_Usuario = -1, .NombreUsu = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MensajeTodos").Traduccion})
@@ -67,7 +72,12 @@ Public Class BitacoraErrores
 
                 Next cnt
 
-                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim IdiomaActual As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    IdiomaActual = Application("Español")
+                Else
+                    IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
 
 
                 With gv_Bitacora.HeaderRow

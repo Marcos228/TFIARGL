@@ -46,7 +46,12 @@ Public Class Restore
                 System.IO.File.Encrypt(System.Web.Configuration.WebConfigurationManager.AppSettings("RutaBackup").ToString() & "\" & nombreArchivo & ".bak")
             End If
             If gestorBK.RealizarRestore(Bkre) Then
-                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim IdiomaActual As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    IdiomaActual = Application("Español")
+                Else
+                    IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
                 Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraRestoreSuccess").Traduccion, Entidades.Tipo_Bitacora.Restore, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
                 Me.success.Visible = True

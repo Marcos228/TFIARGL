@@ -91,6 +91,7 @@ Public Class IdiomaDAL
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Update Usuario SET ID_Idioma=@ID_Idioma, DVH=@DVH where ID_Usuario=@ID_Usuario")
             Dim ListaParametros As New List(Of String)
+            Usuario.Idioma.ID_Idioma = ID_Idioma
             Acceso.AgregarParametros(Usuario, ListaParametros)
             ListaParametros.Add(False.ToString) 'Agregado de Baja Logica
 

@@ -6,8 +6,7 @@ Public Class Global_asax
     Public Shared Corrupted As New List(Of Entidades.FilaCorrupta)
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
         Try
-            Corrupted2 = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
-            Corrupted = Corrupted2.GetRange(0, Corrupted2.Count)
+            Application("Corruption") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
             Dim GestorIdioma As New Negocio.IdiomaBLL
             Dim IdiomaDefault As Entidades.IdiomaEntidad = GestorIdioma.ConsultarPorID(1)
             Application(IdiomaDefault.Nombre) = IdiomaDefault
@@ -20,10 +19,6 @@ Public Class Global_asax
     End Sub
 
     Sub Application_BeginRequest(ByVal sender As Object, ByVal e As EventArgs)
-        If (Corrupted2.Count > 0) Then
-            Corrupted2.Clear()
-            Response.Redirect("BaseCorrupta.aspx", False)
-        End If
         ' Se desencadena al comienzo de cada solicitud
     End Sub
 

@@ -118,6 +118,18 @@ Public Class UsuarioBLL
 
     End Function
 
+    Public Sub RefrescarUsuario(ByRef USuario As Entidades.UsuarioEntidad)
+        Try
+            UsuarioDAL.RefrescarUsuario(USuario)
+        Catch FalloConexion As InvalidOperationException
+            Throw FalloConexion
+        Catch ex As Exception
+            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
+            Throw ex
+        End Try
+
+    End Sub
+
     Public Function TraerUsuariosIdioma(ByVal ID_Idioma As Integer) As List(Of UsuarioEntidad)
         Try
 
@@ -311,28 +323,27 @@ Public Class UsuarioBLL
                 UsuarioDAL.BuscarUsuarioID(usu)
                 usu.Salt = Usuario.Salt
                 usu.Password = Usuario.Password
-                If UsuarioDAL.CambiarPassword(usu) Then
-                    'BitacoraBLL.CrearBitacora("El Usuario: " & Usuario.Nombre & " actual cambió su contraseña.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-                    Return True
+                If usu.ID_Usuario > 0 Then
+                    If UsuarioDAL.CambiarPassword(usu) Then
+                        Return True
+                    Else
+                        Return False
+                    End If
                 Else
                     Return False
                 End If
+
             Else
                 If UsuarioDAL.CambiarPassword(Usuario) Then
-                    'BitacoraBLL.CrearBitacora("El Usuario: " & Usuario.Nombre & " actual cambió su contraseña.", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
                     Return True
                 Else
                     Return False
                 End If
             End If
 
-
         Catch FalloConexion As InvalidOperationException
-            'Dim Bitacora As New BitacoraEntidad("El Usuario: " & Usuario.Nombre & " no pudo cambiar su contraseña. Error de Conexion", TipoBitacora.Login, SessionBLL.SesionActual.ObtenerUsuarioActual)
-            'BitacoraBLL.ArchivarBitacora(Bitacora)
             Throw FalloConexion
         Catch ex As Exception
-            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
             Throw ex
         End Try
 

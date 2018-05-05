@@ -28,7 +28,12 @@ Public Class AgregarPerfil
 
     Private Sub btnAddPerfil_Click(sender As Object, e As EventArgs) Handles btnAddPerfil.Click
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Dim Perfil As New Entidades.PermisoCompuestoEntidad
             Perfil.Nombre = txtnombre.Text
             Perfil = ControladorPermisos.RecorrerArbol(Nothing, Perfil, TreeView1)
@@ -52,8 +57,6 @@ Public Class AgregarPerfil
                 alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddPerfilError2").Traduccion
                 alertvalid.Visible = True
                 success.Visible = False
-                'MessageBox.Show("Debe seleccionar al menos un permiso para continuar.", "Permisos", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                'MessageBox.Show(Traductor.TraducirMensaje("Mensaje_38"), Traductor.TraducirMensaje("Titulo_03"), MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")

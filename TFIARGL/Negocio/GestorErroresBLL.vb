@@ -50,7 +50,7 @@ End Class
 Public Class ExceptionUsuarioBloqueado
     Inherits GestorErroresBLL
     Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
-        Return idioma.Palabras.Find(Function(p) p.Codigo = " ExceptionUsuarioBloqueado").Traduccion
+        Return idioma.Palabras.Find(Function(p) p.Codigo = "ExceptionUsuarioBloqueado").Traduccion
     End Function
 End Class
 

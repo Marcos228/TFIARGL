@@ -14,9 +14,14 @@ Public Class ModificarUsuario
             Me.gv_Usuarios.DataSource = lista
             Me.gv_Usuarios.DataBind()
         Else
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Me.alertvalid.Visible = True
-            Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ModUserError1").Traduccion
+            Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ModUserError3").Traduccion
             Me.success.Visible = False
         End If
     End Sub
@@ -81,7 +86,12 @@ Public Class ModificarUsuario
                 ddl.Items.Add(item)
 
             Next cnt
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             For Each row As GridViewRow In gv_Usuarios.Rows
                 Dim imagen1 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_Bloquear"), System.Web.UI.WebControls.ImageButton)
                 Dim imagen2 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_desbloqueo"), System.Web.UI.WebControls.ImageButton)
@@ -151,7 +161,12 @@ Public Class ModificarUsuario
             Dim gestor As New Negocio.UsuarioBLL
             Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(e.CommandArgument + (gv_Usuarios.PageIndex * gv_Usuarios.PageSize))
             Me.id_usuario.Value = e.CommandArgument
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             Select Case e.CommandName.ToString
                 Case "B"
                     If Usuario.Bloqueo = True Then
@@ -208,7 +223,12 @@ Public Class ModificarUsuario
         Try
             Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(Me.id_usuario.Value)
             Dim UsuarioAnterior As Entidades.UsuarioEntidad = Usuario.Clone
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             If Page.IsValid = True Then
                 Usuario.NombreUsu = txtusuario.Text
                 Usuario.Idioma = New Entidades.IdiomaEntidad With {.ID_Idioma = lstidioma.SelectedValue}
@@ -271,7 +291,12 @@ Public Class ModificarUsuario
         Dim GestorCliente As New Negocio.UsuarioBLL
         Try
             Dim Usuario As Entidades.UsuarioEntidad = TryCast(Session("Usuarios"), List(Of Entidades.UsuarioEntidad))(Me.id_usuario.Value)
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
             If GestorCliente.Eliminar(Usuario) Then
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
                 Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")

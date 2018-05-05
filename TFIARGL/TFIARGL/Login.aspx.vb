@@ -11,7 +11,12 @@ Public Class Login
 
     Private Sub btnIngresar_Click(sender As Object, e As EventArgs) Handles btnIngresar.Click
         Dim Cliente As New Entidades.UsuarioEntidad
-        Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
         Try
             If Page.IsValid = True Then
                 Cliente.NombreUsu = txtUsuario.Text
@@ -30,15 +35,15 @@ Public Class Login
             End If
         Catch UsuarioBloqueado As Negocio.ExceptionUsuarioBloqueado
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = UsuarioBloqueado.Mensaje(Current.Session("Idioma"))
+            Me.textovalid.InnerText = UsuarioBloqueado.Mensaje(IdiomaActual)
             Me.success.Visible = False
         Catch UsuarioNoExiste As Negocio.ExceptionUsuarioNoExiste
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = UsuarioNoExiste.Mensaje(Current.Session("Idioma"))
+            Me.textovalid.InnerText = UsuarioNoExiste.Mensaje(IdiomaActual)
             Me.success.Visible = False
         Catch Password As Negocio.ExceptionPasswordIncorrecta
             Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = Password.Mensaje(Current.Session("Idioma"))
+            Me.textovalid.InnerText = Password.Mensaje(IdiomaActual)
             Me.success.Visible = False
             Dim clienteLogeado As UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess1").Traduccion & clienteLogeado.NombreUsu & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess3").Traduccion, Tipo_Bitacora.Login, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
@@ -91,7 +96,12 @@ Public Class Login
             If Negocio.UsuarioBLL.ProbarConectividad Then
                 ConsultarporBitacoras()
             Else
-                Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+                Dim IdiomaActual As Entidades.IdiomaEntidad
+                If IsNothing(Current.Session("Cliente")) Then
+                    IdiomaActual = Application("Español")
+                Else
+                    IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+                End If
                 Me.alertvalid.Visible = True
                 Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ErrorConexionBase").Traduccion
                 Me.success.Visible = False

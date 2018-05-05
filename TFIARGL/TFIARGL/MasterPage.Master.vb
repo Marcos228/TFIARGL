@@ -41,22 +41,18 @@ Public Class MasterPage
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/SeleccionarIdioma.aspx"})
 
         UsuarioInvitado.Perfil = PermisosInvitado
-        Dim GestorUsuario As New Negocio.IdiomaBLL
+        Dim GestorIdioma As New Negocio.IdiomaBLL
         If IsNothing(Current.Session("Idioma")) Then
-            UsuarioInvitado.Idioma = GestorUsuario.ConsultarPorCultura(Request.UserLanguages(0))
+            UsuarioInvitado.Idioma = GestorIdioma.ConsultarPorCultura(Request.UserLanguages(0))
             If IsNothing(Application(UsuarioInvitado.Idioma.Nombre)) Then
                 Application(UsuarioInvitado.Idioma.Nombre) = UsuarioInvitado.Idioma
             End If
         Else
             If IsNothing(Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre)) Then
-                Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre) = GestorUsuario.ConsultarPorID(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).ID_Idioma)
+                Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre) = GestorIdioma.ConsultarPorID(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).ID_Idioma)
             End If
             UsuarioInvitado.Idioma = Application(TryCast(Current.Session("Idioma"), Entidades.IdiomaEntidad).Nombre)
         End If
-
-
-
-
 
         If UsuarioInvitado.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
             Response.Redirect("AccesoRestringido.aspx", False)
@@ -82,6 +78,17 @@ Public Class MasterPage
 
 
     Private Sub CargarPerfil(ByRef Usuario As Entidades.UsuarioEntidad)
+
+        Dim GestorUsuario As New Negocio.UsuarioBLL
+
+        GestorUsuario.RefrescarUsuario(Usuario)
+
+        If Usuario.Bloqueo = True Then
+            Current.Session("cliente") = Nothing
+            Response.Redirect("/Default.aspx", False)
+        End If
+
+
         Me.Menu.Items.Clear()
         ArmarMenuCompleto()
         Dim listaAremover As New List(Of MenuItem)
@@ -89,7 +96,7 @@ Public Class MasterPage
             If pagina.ChildItems.Count > 0 Then
                 RecursividadMenu(pagina, Usuario, listaAremover)
             Else
-                If pagina.Text = "Home" Or pagina.Text = "Empresa" Or pagina.Text = "Login" Then
+                If pagina.Text = "Home" Or pagina.Text = "Empresa" Or pagina.Text = "Login" Or pagina.Text = "Cambiar Idioma" Then
                 Else
                     If Usuario.Perfil.ValidarURL(pagina.NavigateUrl) = False Then
                         listaAremover.Add(pagina)
@@ -106,13 +113,13 @@ Public Class MasterPage
 
         Me.Menu.Items.Add(New MenuItem("Logout", "Logout"))
         If Me.Page.Request.FilePath = "/default.aspx" Or Me.Page.Request.FilePath = "/Institucional.aspx" Or Me.Page.Request.FilePath = "/Default.aspx" Or Me.Page.Request.FilePath = "/AccesoRestringido.aspx" Or Me.Page.Request.FilePath = "/RecuperarPassword.aspx" Or Me.Page.Request.FilePath = "/BaseCorrupta.aspx" Or Me.Page.Request.FilePath = "/SeleccionarIdioma.aspx" Then
-
         Else
-
             If Usuario.Perfil.ValidarURL(Me.Page.Request.FilePath) = False Then
                 Response.Redirect("AccesoRestringido.aspx", False)
             End If
-
+            If (Application("Corruption").Count > 0) And Me.Page.Request.FilePath <> "/Restore.aspx" Then
+                Response.Redirect("BaseCorrupta.aspx", False)
+            End If
         End If
     End Sub
 
@@ -159,6 +166,12 @@ Public Class MasterPage
         Try
 
             Dim MiPagina As String = Right(Request.Path, Len(Request.Path) - 1)
+
+            Dim GestorIdioma As New Negocio.IdiomaBLL
+            If IsNothing(Application(Usuario.Idioma.Nombre)) Then
+                Application(Usuario.Idioma.Nombre) = GestorIdioma.ConsultarPorID(Usuario.Idioma.ID_Idioma)
+            End If
+
             Me.traducirMenu(Usuario.Idioma.Nombre)
             Me.lblcopyright.Text = TryCast(Application(Usuario.Idioma.Nombre), Entidades.IdiomaEntidad).Palabras.Find(Function(p) p.Codigo = "lblcopyright").Traduccion
 

@@ -108,7 +108,23 @@ Public Class UsuarioDAL
         DigitoVerificadorDAL.CalcularDVV(Digitos, "Usuario")
     End Sub
 
-
+    Public Function RefrescarUsuario(uSuario As UsuarioEntidad) As UsuarioEntidad
+        Try
+            Dim consulta As String = "Select Bloqueo,ID_Perfil from Usuario where ID_Usuario=@ID_Usuario"
+            Dim Command As SqlCommand = Acceso.MiComando(consulta)
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Usuario", uSuario.ID_Usuario))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            If dt.Rows.Count > 0 Then
+                uSuario.Bloqueo = dt.Rows(0)("Bloqueo")
+                Dim GestorPermisos As New GestorPermisosDAL
+                uSuario.Perfil = GestorPermisos.ConsultarporID(dt.Rows(0)("ID_Perfil"))
+            End If
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function Modificar(ByRef Usuario As UsuarioEntidad) As Boolean
         Try

@@ -18,7 +18,12 @@ Public Class AgregarIdioma
     End Sub
 
     Private Sub CargarPalabras()
-        Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
 
         If IsNothing(IdiomaActual.Palabras) Then
             Me.alertvalid.Visible = True
@@ -48,8 +53,8 @@ Public Class AgregarIdioma
             ddlpage.ClearSelection()
             ddlpage.Items.FindByValue(gv_Traducciones.PageSize).Selected = True
 
-
             txttotal.Text = gv_Traducciones.PageCount
+
             For cnt As Integer = 0 To gv_Traducciones.PageCount - 1
                 Dim curr As Integer = cnt + 1
                 Dim item As New ListItem(curr.ToString())
@@ -105,7 +110,12 @@ Public Class AgregarIdioma
         End If
 
 
-        Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
         For Each Palabra In IdiomaActual.Palabras
             If Not Idioma.Palabras.Contains(Palabra) Then
                 Idioma.Palabras.Add(New Entidades.Palabras With {.ID_Control = Palabra.ID_Control, .Traduccion = Palabra.Traduccion})
@@ -116,7 +126,13 @@ Public Class AgregarIdioma
         Dim GestorCliente As New Negocio.UsuarioBLL
         Try
 
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Current.Session("Idioma")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+
             If Page.IsValid = True Then
                 Dim GestorIdioma As New Negocio.IdiomaBLL
                 Dim Idioma As New Entidades.IdiomaEntidad
@@ -142,7 +158,15 @@ Public Class AgregarIdioma
                 Me.success.Visible = False
             End If
         Catch NombreUso As Negocio.ExceptionNombreEnUso
-
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Me.alertvalid.Visible = True
+            Me.textovalid.InnerText = NombreUso.Mensaje(IdiomaActual)
+            Me.success.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
