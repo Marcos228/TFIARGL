@@ -93,6 +93,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
+    <Content Include="AgregarPerfilJugador.aspx" />
+    <Content Include="IMAGENES\cs-go.jpg" />
+    <Content Include="IMAGENES\dota.jpg" />
+    <Content Include="IMAGENES\FIFA.jpg" />
+    <Content Include="IMAGENES\LoL.jpg" />
+    <Content Include="IMAGENES\overwatch.jpg" />
+    <Content Include="IMAGENES\starcraft.jpg" />
     <Content Include="SeleccionarIdioma.aspx" />
     <Content Include="EliminarIdioma.aspx" />
     <Content Include="ModificarIdioma.aspx" />
@@ -180,6 +187,13 @@
     </Compile>
     <Compile Include="AccesoRestringido.aspx.vb">
       <DependentUpon>AccesoRestringido.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AgregarPerfilJugador.aspx.designer.vb">
+      <DependentUpon>AgregarPerfilJugador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AgregarPerfilJugador.aspx.vb">
+      <DependentUpon>AgregarPerfilJugador.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SeleccionarIdioma.aspx.designer.vb">

@@ -57,5 +57,14 @@
         End Set
     End Property
 
+    Private _Imagen As Byte()
+    Public Property Imagen() As Byte()
+        Get
+            Return _Imagen
+        End Get
+        Set(ByVal value As Byte())
+            _Imagen = value
+        End Set
+    End Property
 
 End Class
