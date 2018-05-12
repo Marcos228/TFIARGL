@@ -4,21 +4,21 @@ Public Class MasterPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        'If IsNothing(Current.Session("cliente")) Or IsDBNull(Current.Session("Cliente")) Then
-        '    Dim UsuarioInvitado As New Entidades.UsuarioEntidad
-        '    CargarSinPerfilIdioma(UsuarioInvitado)
-        '    TraducirPagina(UsuarioInvitado)
-        'Else
-        '    Try
-        '        Dim Usuario As Entidades.UsuarioEntidad = TryCast(Current.Session("cliente"), Entidades.UsuarioEntidad)
-        '        CargarPerfil(Usuario)
-        '        TraducirPagina(Usuario)
-        '    Catch ex As Exception
-        '        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-        '        Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
-        '        Negocio.BitacoraBLL.CrearBitacora(Bitac)
-        '    End Try
-        'End If
+        If IsNothing(Current.Session("cliente")) Or IsDBNull(Current.Session("Cliente")) Then
+            Dim UsuarioInvitado As New Entidades.UsuarioEntidad
+            CargarSinPerfilIdioma(UsuarioInvitado)
+            TraducirPagina(UsuarioInvitado)
+        Else
+            Try
+                Dim Usuario As Entidades.UsuarioEntidad = TryCast(Current.Session("cliente"), Entidades.UsuarioEntidad)
+                CargarPerfil(Usuario)
+                TraducirPagina(Usuario)
+            Catch ex As Exception
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            End Try
+        End If
     End Sub
 
     Private Sub CargarSinPerfilIdioma(ByRef UsuarioInvitado As Entidades.UsuarioEntidad)
@@ -149,6 +149,8 @@ Public Class MasterPage
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Carrito", "Carrito", Nothing, "/Orders.aspx"))
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Mis Compras", "Compras", Nothing, "/MyOrders.aspx"))
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Lista de Productos", "Productos", Nothing, "/ProductList.aspx"))
+
+        Me.Menu.Items.Add(New MenuItem("Crear Perfil Jugador", "PerfilJugador", Nothing, "/AgregarPerfilJugador.aspx"))
         Me.Menu.Items.Add(New MenuItem("Cambiar Idioma", "SeleccionarIdioma", Nothing, "/SeleccionarIdioma.aspx"))
 
     End Sub

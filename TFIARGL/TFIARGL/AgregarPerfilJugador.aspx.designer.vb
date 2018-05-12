@@ -59,6 +59,96 @@ Partial Public Class AgregarPerfilJugador
     Protected WithEvents Panel As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
+    '''Control Datos.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents Datos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''Control lblnickname.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblnickname As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control txtnickname.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents txtnickname As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''Control lbljuego.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lbljuego As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lstgame.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lstgame As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''Control lblroljugador.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblroljugador As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control lstroljugador.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lstroljugador As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''Control lblgametag.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblgametag As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control txtgametag.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents txtgametag As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''Control btnAceptar.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btnAceptar As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
     '''Control id_game.
     '''</summary>
     '''<remarks>
