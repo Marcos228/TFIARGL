@@ -112,6 +112,9 @@ Public Class AgregarPerfilJugador
             Dim GestorGame As New Negocio.GameBLL
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Juegos As List(Of Entidades.Game) = GestorGame.TraerJuegos(clienteLogeado)
+            If Juegos.Count = 1 Then
+                Response.Redirect("/AgregarPerfilJugador.aspx" & "?game=" & Juegos(0).ID_Game, False)
+            End If
             For Each Game In Juegos
                 Dim base64string As String = Convert.ToBase64String(Game.Imagen, 0, Game.Imagen.Length)
                 Dim ImgBut As New ImageButton()
@@ -152,7 +155,8 @@ Public Class AgregarPerfilJugador
                 Dim GestorJugador As New Negocio.JugadorBLL
                 clienteLogeado = Current.Session("cliente")
                 If GestorJugador.AltaJugador(JugadorPerfil, clienteLogeado) Then
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddPerfJugSuccess1").Traduccion, Entidades.Tipo_Bitacora.Alta, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
+                    clienteLogeado.Perfiles_Jugador = GestorJugador.TraerPerfiles(clienteLogeado)
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddPerfJugSuccess1").Traduccion & " " & JugadorPerfil.Game.Nombre, Entidades.Tipo_Bitacora.Alta, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False

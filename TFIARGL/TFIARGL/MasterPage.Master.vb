@@ -151,6 +151,7 @@ Public Class MasterPage
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Lista de Productos", "Productos", Nothing, "/ProductList.aspx"))
 
         Me.Menu.Items.Add(New MenuItem("Crear Perfil Jugador", "PerfilJugador", Nothing, "/AgregarPerfilJugador.aspx"))
+        Me.Menu.Items.Add(New MenuItem("Crear Equipo", "Equipo", Nothing, "/CrearEquipo.aspx"))
         Me.Menu.Items.Add(New MenuItem("Cambiar Idioma", "SeleccionarIdioma", Nothing, "/SeleccionarIdioma.aspx"))
 
     End Sub

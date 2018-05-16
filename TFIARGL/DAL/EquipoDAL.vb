@@ -1,31 +1,39 @@
 ﻿Imports System.Data.SqlClient
 Imports Entidades
 
-Public Class JugadorDAL
-    Public Function AltaJugador(ByRef Jugado As Entidades.Jugador, ByRef Usu As Entidades.UsuarioEntidad) As Boolean
+Public Class EquipoDAL
+    Public Function AltaEquipo(ByRef Equipo As Entidades.Equipo) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Jugador (ID_Usuario,Nickname,ID_Game,Game_Tag,ID_Rol_Jugador) OUTPUT INSERTED.ID_Jugador values (@ID_Usuario,@Nickname,@ID_Game,@Game_Tag,@ID_Rol_Jugador)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Equipo (Nombre,Fecha_Creacion,ID_Game,Historia) OUTPUT INSERTED.ID_Equipo values (@Nombre,@Fecha_Creacion,@ID_Game,@Historia)")
             With Command.Parameters
-                .Add(New SqlParameter("@ID_Usuario", Usu.ID_Usuario))
-                .Add(New SqlParameter("@Nickname", Jugado.NickName))
-                .Add(New SqlParameter("@ID_Game", Jugado.Game.ID_Game))
-                .Add(New SqlParameter("@Game_Tag", Jugado.Game_Tag))
-                .Add(New SqlParameter("@ID_Rol_Jugador", Jugado.Rol_Jugador.ID_Rol))
+                .Add(New SqlParameter("@Nombre", Equipo.Nombre))
+                .Add(New SqlParameter("@Fecha_Creacion", Equipo.Fecha_Inicio))
+                .Add(New SqlParameter("@ID_Game", Equipo.Game.ID_Game))
+                .Add(New SqlParameter("@Historia", Equipo.Historia))
             End With
-            Jugado.ID_Jugador = Acceso.Scalar(Command)
+            Equipo.ID_Equipo = Acceso.Scalar(Command)
             Command.Dispose()
+
+            Dim CommandJ As SqlCommand = Acceso.MiComando("insert into Jugador_Equipo (ID_Jugador,ID_Equipo,Fecha_Inicio) OUTPUT INSERTED.ID_Jug_Equipo values (@ID_Jugador,@ID_Equipo,@Fecha_Inicio)")
+            With CommandJ.Parameters
+                .Add(New SqlParameter("@ID_Jugador", Equipo.Jugadores(0).ID_Jugador))
+                .Add(New SqlParameter("@ID_Equipo", Equipo.ID_Equipo))
+                .Add(New SqlParameter("@Fecha_Inicio", Equipo.Fecha_Inicio))
+            End With
+            Acceso.Scalar(CommandJ)
+            CommandJ.Dispose()
             Return True
         Catch ex As Exception
             Throw ex
         End Try
     End Function
 
-    Public Function ValidaNombre(jugador As Jugador) As Boolean
+    Public Function ValidaNombre(equipo As Equipo) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Jugador from  Jugador where  id_game=@id_game and nickname=@nickname")
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Equipo from  Equipo where  id_game=@id_game and nombre=@nombre")
             With Command.Parameters
-                .Add(New SqlParameter("@nickname", jugador.NickName))
-                .Add(New SqlParameter("@ID_Game", jugador.Game.ID_Game))
+                .Add(New SqlParameter("@nombre", equipo.Nombre))
+                .Add(New SqlParameter("@ID_Game", equipo.Game.ID_Game))
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)
             Command.Dispose()

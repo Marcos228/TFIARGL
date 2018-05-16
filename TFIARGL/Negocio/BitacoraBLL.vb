@@ -13,6 +13,8 @@ Public Class BitacoraBLL
     End Function
 
     Public Shared Sub CrearBitacora(ByRef Bita As Bitacora, Optional ByRef ObjetoAnt As Object = Nothing, Optional ByRef ObjetoAct As Object = Nothing)
+        Bita.Fecha.AddMilliseconds(-Bita.Fecha.Millisecond)
+        Dim p = Bita.Fecha.Millisecond
         Dim bitdal As New DAL.BitacoraDAL
         If IsNothing(ObjetoAnt) And IsNothing(ObjetoAct) Then
             bitdal.GuardarBitacora(Bita)

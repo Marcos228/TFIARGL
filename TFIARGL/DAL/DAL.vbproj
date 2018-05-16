@@ -69,6 +69,7 @@
     <Compile Include="BackupRestoreDAL.vb" />
     <Compile Include="BitacoraDAL.vb" />
     <Compile Include="DigitoVerificadorDAL.vb" />
+    <Compile Include="EquipoDAL.vb" />
     <Compile Include="JugadorDAL.vb" />
     <Compile Include="Rol_JugadorDAL.vb" />
     <Compile Include="GameDAL.vb" />

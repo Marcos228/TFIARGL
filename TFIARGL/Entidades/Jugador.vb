@@ -67,4 +67,7 @@
 
     End Sub
 
+    Sub New()
+
+    End Sub
 End Class

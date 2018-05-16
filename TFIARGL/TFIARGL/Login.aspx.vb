@@ -12,6 +12,7 @@ Public Class Login
     Private Sub btnIngresar_Click(sender As Object, e As EventArgs) Handles btnIngresar.Click
         Dim Cliente As New Entidades.UsuarioEntidad
         Dim IdiomaActual As Entidades.IdiomaEntidad
+        Dim clienteLogeado As New Entidades.UsuarioEntidad
         If IsNothing(Current.Session("Cliente")) Then
             IdiomaActual = Application("Español")
         Else
@@ -21,7 +22,7 @@ Public Class Login
             If Page.IsValid = True Then
                 Cliente.NombreUsu = txtUsuario.Text
                 Cliente.Password = txtPassword.Text
-                Dim clienteLogeado = GestorUsu.ExisteUsuario(Cliente)
+                clienteLogeado = GestorUsu.ExisteUsuario(Cliente)
                 Dim Bitac As New BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess1").Traduccion & clienteLogeado.NombreUsu & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess2").Traduccion, Tipo_Bitacora.Login, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
                 BitacoraBLL.CrearBitacora(Bitac)
                 Current.Session("cliente") = clienteLogeado
@@ -45,12 +46,10 @@ Public Class Login
             Me.alertvalid.Visible = True
             Me.textovalid.InnerText = Password.Mensaje(IdiomaActual)
             Me.success.Visible = False
-            Dim clienteLogeado As UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess1").Traduccion & clienteLogeado.NombreUsu & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess3").Traduccion, Tipo_Bitacora.Login, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
+            Dim Bitac As New BitacoraAuditoria(Cliente, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess1").Traduccion & Cliente.NombreUsu & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraLoginSuccess3").Traduccion, Tipo_Bitacora.Login, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
             BitacoraBLL.CrearBitacora(Bitac)
         Catch ex As Exception
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(Cliente, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub

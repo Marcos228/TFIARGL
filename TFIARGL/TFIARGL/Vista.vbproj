@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
+    <Content Include="CrearEquipo.aspx" />
     <Content Include="AgregarPerfilJugador.aspx" />
     <Content Include="IMAGENES\cs-go.jpg" />
     <Content Include="IMAGENES\dota.jpg" />
@@ -187,6 +188,13 @@
     </Compile>
     <Compile Include="AccesoRestringido.aspx.vb">
       <DependentUpon>AccesoRestringido.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CrearEquipo.aspx.designer.vb">
+      <DependentUpon>CrearEquipo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CrearEquipo.aspx.vb">
+      <DependentUpon>CrearEquipo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="AgregarPerfilJugador.aspx.designer.vb">

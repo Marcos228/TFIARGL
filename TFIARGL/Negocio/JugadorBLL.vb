@@ -23,4 +23,12 @@
         End Try
     End Function
 
+    Public Function TraerPerfiles(usuario As Entidades.UsuarioEntidad) As List(Of Entidades.Jugador)
+        Try
+            Dim DALJugador As New DAL.JugadorDAL
+            Return DALJugador.TraerPerfiles(usuario.ID_Usuario)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 End Class

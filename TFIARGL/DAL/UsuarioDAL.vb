@@ -201,6 +201,12 @@ Public Class UsuarioDAL
             Usuario.Perfil = GestorPermisos.ConsultarporID(Usuario.Perfil.ID_Permiso)
             Dim GestorIdioma As New IdiomaDAL
             Usuario.Idioma = GestorIdioma.ConsultarPorID(Usuario.Idioma.ID_Idioma)
+            If Usuario.Empleado = False Then
+                Dim GestorPerfilesJug As New JugadorDAL
+                Usuario.Perfiles_Jugador = GestorPerfilesJug.TraerPerfiles(Usuario.ID_Usuario)
+            End If
+
+
             Return Usuario
         Catch ex As Exception
             Throw ex
