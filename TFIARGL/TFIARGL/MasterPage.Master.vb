@@ -15,7 +15,7 @@ Public Class MasterPage
                 TraducirPagina(Usuario)
             Catch ex As Exception
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
             End Try
         End If
@@ -149,9 +149,12 @@ Public Class MasterPage
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Carrito", "Carrito", Nothing, "/Orders.aspx"))
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Mis Compras", "Compras", Nothing, "/MyOrders.aspx"))
         Me.Menu.Items.Item(6).ChildItems.Add(New MenuItem("Lista de Productos", "Productos", Nothing, "/ProductList.aspx"))
-
-        Me.Menu.Items.Add(New MenuItem("Crear Perfil Jugador", "PerfilJugador", Nothing, "/AgregarPerfilJugador.aspx"))
-        Me.Menu.Items.Add(New MenuItem("Crear Equipo", "Equipo", Nothing, "/CrearEquipo.aspx"))
+        Me.Menu.Items.Add(New MenuItem("Equipo", "AdminEqu"))
+        Me.Menu.Items.Item(7).ChildItems.Add(New MenuItem("Crear Equipo", "Equipo", Nothing, "/CrearEquipo.aspx"))
+        Me.Menu.Items.Item(7).ChildItems.Add(New MenuItem("Enviar Invitacion", "EnviarInvitacion", Nothing, "/EnviarInvitacion.aspx"))
+        Me.Menu.Items.Add(New MenuItem("Jugador", "AdminJug"))
+        Me.Menu.Items.Item(8).ChildItems.Add(New MenuItem("Crear Perfil Jugador", "PerfilJugador", Nothing, "/AgregarPerfilJugador.aspx"))
+        Me.Menu.Items.Item(8).ChildItems.Add(New MenuItem("Enviar Solicitud", "EnviarSolicitud", Nothing, "/EnviarSolicitud.aspx"))
         Me.Menu.Items.Add(New MenuItem("Cambiar Idioma", "SeleccionarIdioma", Nothing, "/SeleccionarIdioma.aspx"))
 
     End Sub
@@ -185,7 +188,7 @@ Public Class MasterPage
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
@@ -200,7 +203,7 @@ Public Class MasterPage
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 
@@ -216,7 +219,7 @@ Public Class MasterPage
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
@@ -233,7 +236,7 @@ Public Class MasterPage
         Catch ex As System.Data.SqlClient.SqlException
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
@@ -248,7 +251,7 @@ Public Class MasterPage
         Catch ex As System.Data.SqlClient.SqlException
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
@@ -263,7 +266,7 @@ Public Class MasterPage
             Next
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 

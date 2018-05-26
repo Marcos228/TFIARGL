@@ -9,7 +9,7 @@ Public Class SeleccionarIdioma
                 CargarIdiomas()
             Catch ex As Exception
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
 
             End Try
@@ -34,11 +34,11 @@ Public Class SeleccionarIdioma
                 Current.Session("Idioma") = GestorIdioma.ConsultarPorID(CInt(lstidioma.SelectedValue))
             End If
             Me.success.Visible = True
-                Me.alertvalid.Visible = False
-                Response.Redirect("/SeleccionarIdioma.aspx", False)
+            Me.alertvalid.Visible = False
+            Response.Redirect("/SeleccionarIdioma.aspx", False)
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub

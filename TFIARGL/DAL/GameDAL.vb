@@ -21,6 +21,25 @@ Public Class GameDAL
         End Try
     End Function
 
+    Public Function TraerJuegosSolicitud(usu As UsuarioEntidad) As List(Of Game)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando(" Select game.ID_Game,game.Nombre,game.ID_Tipo_Game,game.Descripcion,game.Reglas,game.Cantidad_Max_Jugadores, game.imagen from Game inner join Jugador on Jugador.ID_Game=Game.ID_Game and ID_Usuario=@usuario and exists(Select ID_Jugador from Jugador_Equipo as JE inner join Equipo as E on Je.ID_Equipo=E.ID_Equipo where Je.ID_Jugador=Jugador.ID_Jugador and e.ID_Game=Jugador.ID_Game and JE.Fecha_Fin is null)")
+            With Command.Parameters
+                .Add(New SqlParameter("@usuario", usu.ID_Usuario))
+            End With
+            Dim _dt As DataTable = Acceso.Lectura(Command)
+            Dim ListaGames As New List(Of Entidades.Game)
+            For Each _dr As DataRow In _dt.Rows
+                Dim Game As New Entidades.Game
+                FormatearGame(Game, _dr)
+                ListaGames.Add(Game)
+            Next
+            Return ListaGames
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function TraerJuegosAltaEquipo(ByRef Usuario As Entidades.UsuarioEntidad) As List(Of Entidades.Game)
         Try
             Dim Command As SqlCommand = Acceso.MiComando(" Select game.ID_Game,game.Nombre,game.ID_Tipo_Game,game.Descripcion,game.Reglas,game.Cantidad_Max_Jugadores, game.imagen from Game inner join Jugador on Jugador.ID_Game=Game.ID_Game and ID_Usuario=@usuario and not exists(Select ID_Jugador from Jugador_Equipo as JE inner join Equipo as E on Je.ID_Equipo=E.ID_Equipo where Je.ID_Jugador=Jugador.ID_Jugador and e.ID_Game=Jugador.ID_Game and JE.Fecha_Fin is null)")

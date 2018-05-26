@@ -93,8 +93,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
+    <Content Include="EnviarInvitacion.aspx" />
+    <Content Include="EscribirSolicitud.aspx" />
+    <Content Include="EnviarSolicitud.aspx" />
     <Content Include="CrearEquipo.aspx" />
     <Content Include="AgregarPerfilJugador.aspx" />
+    <Content Include="IMAGENES\check.png" />
+    <Content Include="IMAGENES\clear.png" />
     <Content Include="IMAGENES\cs-go.jpg" />
     <Content Include="IMAGENES\dota.jpg" />
     <Content Include="IMAGENES\FIFA.jpg" />
@@ -188,6 +193,27 @@
     </Compile>
     <Compile Include="AccesoRestringido.aspx.vb">
       <DependentUpon>AccesoRestringido.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EnviarInvitacion.aspx.designer.vb">
+      <DependentUpon>EnviarInvitacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EnviarInvitacion.aspx.vb">
+      <DependentUpon>EnviarInvitacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EscribirSolicitud.aspx.designer.vb">
+      <DependentUpon>EscribirSolicitud.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EscribirSolicitud.aspx.vb">
+      <DependentUpon>EscribirSolicitud.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EnviarSolicitud.aspx.designer.vb">
+      <DependentUpon>EnviarSolicitud.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EnviarSolicitud.aspx.vb">
+      <DependentUpon>EnviarSolicitud.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="CrearEquipo.aspx.designer.vb">

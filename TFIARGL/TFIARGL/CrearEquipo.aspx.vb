@@ -68,7 +68,7 @@ Public Class CrearEquipo
             Next
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 
@@ -84,7 +84,7 @@ Public Class CrearEquipo
                 Dim Equi As New Entidades.Equipo(New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, txtnombre.Text, txthistoria.Text, Now, clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = lstgame.SelectedValue))
                 Dim Gestorequi As New Negocio.EquipoBLL
                 If Gestorequi.AltaEquipo(Equi) Then
-                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddEquipoSuccess1").Traduccion & " " & Equi.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddEquipoSuccess1").Traduccion & " " & Equi.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac)
                     Me.success.Visible = True
                     Me.alertvalid.Visible = False
@@ -100,7 +100,7 @@ Public Class CrearEquipo
             End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 

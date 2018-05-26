@@ -10,7 +10,7 @@ Public Class EliminarIdioma
 
             Catch ex As Exception
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+                Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
             End Try
         End If
@@ -40,7 +40,7 @@ Public Class EliminarIdioma
             If GestorIdioma.EliminarIdioma(IdiomaActual) Then
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
 
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, idiomabitacora.Palabras.Find(Function(p) p.Codigo = "BitacoraDelIdiomaSuccess").Traduccion & IdiomaActual.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, "", "")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, idiomabitacora.Palabras.Find(Function(p) p.Codigo = "BitacoraDelIdiomaSuccess").Traduccion & IdiomaActual.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
                 Me.success.Visible = True
                 Me.alertvalid.Visible = False
@@ -52,7 +52,7 @@ Public Class EliminarIdioma
             End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
@@ -94,7 +94,7 @@ Public Class EliminarIdioma
             End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now.AddMilliseconds(-Now.Millisecond), Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 

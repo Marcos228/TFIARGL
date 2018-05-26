@@ -7,10 +7,11 @@ Public Class GestorPermisosDAL
         Try
             If perm.tieneHijos = True Then
                 'Es un Perfil
-                Dim Command As SqlCommand = Acceso.MiComando("insert into Permiso (Nombre,esAccion) OUTPUT INSERTED.ID_Rol values(@Nombre,@esAccion)")
+                Dim Command As SqlCommand = Acceso.MiComando("insert into Permiso (Nombre,esAccion,esCliente) OUTPUT INSERTED.ID_Rol values(@Nombre,@esAccion,@esCliente)")
                 With Command.Parameters
                     .Add(New SqlParameter("@Nombre", perm.Nombre))
                     .Add(New SqlParameter("@esAccion", 0))
+                    .Add(New SqlParameter("@esCliente", 0))
                 End With
                 Dim ID As Integer = Acceso.Scalar(Command)
 
@@ -115,7 +116,7 @@ Public Class GestorPermisosDAL
         Try
             Dim _listaFamilias As New List(Of PermisoBaseEntidad)
             Dim Command As SqlCommand
-            Command = Acceso.MiComando("Select * from Permiso where esAccion= @accion and ID_ROL > @PerfilEliminado order by esAccion asc, ID_ROL asc")
+            Command = Acceso.MiComando("Select * from Permiso where esAccion= @accion and esCliente=0 and ID_ROL > @PerfilEliminado order by esAccion asc, ID_ROL asc")
 
             If filtro = True Then
                 Command.Parameters.Add(New SqlParameter("@accion", 0))
@@ -156,7 +157,7 @@ Public Class GestorPermisosDAL
         Try
             Dim _listaPermisos As New List(Of PermisoBaseEntidad)
             Dim Command As SqlCommand
-            Command = Acceso.MiComando("Select * from Permiso where ID_Rol <> 0 order by esAccion asc, ID_Rol asc")
+            Command = Acceso.MiComando("Select * from Permiso where esCliente=0 and ID_Rol > 0 order by esAccion asc, ID_Rol asc")
             Dim _dt As DataTable = Acceso.Lectura(Command)
             For Each _dr As DataRow In _dt.Rows
                 Dim _permiso As PermisoBaseEntidad = ConvertirDataRowEnPermiso(_dr)

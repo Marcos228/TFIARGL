@@ -13,7 +13,7 @@ Public Class BitacoraBLL
     End Function
 
     Public Shared Sub CrearBitacora(ByRef Bita As Bitacora, Optional ByRef ObjetoAnt As Object = Nothing, Optional ByRef ObjetoAct As Object = Nothing)
-        Bita.Fecha.AddMilliseconds(-Bita.Fecha.Millisecond)
+        Bita.Fecha = Bita.Fecha.AddMilliseconds(-Bita.Fecha.Millisecond)
         Dim p = Bita.Fecha.Millisecond
         Dim bitdal As New DAL.BitacoraDAL
         If IsNothing(ObjetoAnt) And IsNothing(ObjetoAct) Then
@@ -193,7 +193,7 @@ Public Class BitacoraBLL
         'Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
         'Dim log As New Entidades.BitacoraAuditoria
         'log.Id_Bitacora = DAL.Acceso.TraerID("ID_bitacora", "Bitacora")
-        'log.Fecha =  Now.AddMilliseconds(-Now.Millisecond)
+        'log.Fecha =  Now
         'log.Detalle = logMsg
         'If IsNothing(cliente) Then
         '    log.Usuario = Current.Session("cliente")

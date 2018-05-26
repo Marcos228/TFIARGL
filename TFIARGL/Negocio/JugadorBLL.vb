@@ -1,4 +1,6 @@
-﻿Public Class JugadorBLL
+﻿Imports Entidades
+
+Public Class JugadorBLL
 
 
     Public Function AltaJugador(Jugador As Entidades.Jugador, ByRef usu As Entidades.UsuarioEntidad) As Boolean
@@ -27,6 +29,25 @@
         Try
             Dim DALJugador As New DAL.JugadorDAL
             Return DALJugador.TraerPerfiles(usuario.ID_Usuario)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function TraerJugadoresSolicitud(nombre As String, game As Game) As List(Of Jugador)
+        Try
+            Dim DALJugador As New DAL.JugadorDAL
+            Return DALJugador.TraerJugadoresSolicitud(nombre, game)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+
+    Public Function TraeSolicitudesJugador(jugador As Jugador) As List(Of Solicitudes)
+        Try
+            Dim DAljugadores As New DAL.JugadorDAL
+            Return DAljugadores.TraeSolicitudesJugador(jugador)
         Catch ex As Exception
             Throw ex
         End Try
