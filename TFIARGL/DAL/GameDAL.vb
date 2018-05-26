@@ -23,7 +23,7 @@ Public Class GameDAL
 
     Public Function TraerJuegosSolicitud(usu As UsuarioEntidad) As List(Of Game)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando(" Select game.ID_Game,game.Nombre,game.ID_Tipo_Game,game.Descripcion,game.Reglas,game.Cantidad_Max_Jugadores, game.imagen from Game inner join Jugador on Jugador.ID_Game=Game.ID_Game and ID_Usuario=@usuario and exists(Select ID_Jugador from Jugador_Equipo as JE inner join Equipo as E on Je.ID_Equipo=E.ID_Equipo where Je.ID_Jugador=Jugador.ID_Jugador and e.ID_Game=Jugador.ID_Game and JE.Fecha_Fin is null)")
+            Dim Command As SqlCommand = Acceso.MiComando(" Select game.ID_Game,game.Nombre,game.ID_Tipo_Game,game.Descripcion,game.Reglas,game.Cantidad_Max_Jugadores, game.imagen from Game inner join Jugador on Jugador.ID_Game=Game.ID_Game and ID_Usuario=@usuario and Game.Cantidad_Max_Jugadores >1 and exists(Select ID_Jugador from Jugador_Equipo as JE inner join Equipo as E on Je.ID_Equipo=E.ID_Equipo where Je.ID_Jugador=Jugador.ID_Jugador and e.ID_Game=Jugador.ID_Game and JE.Fecha_Fin is null and JE.Administrador_Equipo =1)")
             With Command.Parameters
                 .Add(New SqlParameter("@usuario", usu.ID_Usuario))
             End With
@@ -42,7 +42,7 @@ Public Class GameDAL
 
     Public Function TraerJuegosAltaEquipo(ByRef Usuario As Entidades.UsuarioEntidad) As List(Of Entidades.Game)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando(" Select game.ID_Game,game.Nombre,game.ID_Tipo_Game,game.Descripcion,game.Reglas,game.Cantidad_Max_Jugadores, game.imagen from Game inner join Jugador on Jugador.ID_Game=Game.ID_Game and ID_Usuario=@usuario and not exists(Select ID_Jugador from Jugador_Equipo as JE inner join Equipo as E on Je.ID_Equipo=E.ID_Equipo where Je.ID_Jugador=Jugador.ID_Jugador and e.ID_Game=Jugador.ID_Game and JE.Fecha_Fin is null)")
+            Dim Command As SqlCommand = Acceso.MiComando(" Select game.ID_Game,game.Nombre,game.ID_Tipo_Game,game.Descripcion,game.Reglas,game.Cantidad_Max_Jugadores, game.imagen from Game inner join Jugador on Jugador.ID_Game=Game.ID_Game and ID_Usuario=@usuario and game.Cantidad_Max_Jugadores>1 and not exists(Select ID_Jugador from Jugador_Equipo as JE inner join Equipo as E on Je.ID_Equipo=E.ID_Equipo where Je.ID_Jugador=Jugador.ID_Jugador and e.ID_Game=Jugador.ID_Game and JE.Fecha_Fin is null)")
             With Command.Parameters
                 .Add(New SqlParameter("@usuario", Usuario.ID_Usuario))
             End With
