@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
+    <Content Include="ABMSponsor.aspx" />
+    <Content Include="CrearTorneo.aspx" />
     <Content Include="EnviarInvitacion.aspx" />
     <Content Include="EscribirSolicitud.aspx" />
     <Content Include="EnviarSolicitud.aspx" />
@@ -193,6 +195,20 @@
     </Compile>
     <Compile Include="AccesoRestringido.aspx.vb">
       <DependentUpon>AccesoRestringido.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ABMSponsor.aspx.designer.vb">
+      <DependentUpon>ABMSponsor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ABMSponsor.aspx.vb">
+      <DependentUpon>ABMSponsor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CrearTorneo.aspx.designer.vb">
+      <DependentUpon>CrearTorneo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CrearTorneo.aspx.vb">
+      <DependentUpon>CrearTorneo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EnviarInvitacion.aspx.designer.vb">

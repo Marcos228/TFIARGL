@@ -70,7 +70,9 @@
     <Compile Include="BitacoraBLL.vb" />
     <Compile Include="DigitoVerificadorBLL.vb" />
     <Compile Include="EncriptarBLL.vb" />
+    <Compile Include="SponsorBLL.vb" />
     <Compile Include="EquipoBLL.vb" />
+    <Compile Include="TorneoBLL.vb" />
     <Compile Include="JugadorBLL.vb" />
     <Compile Include="Rol_JugadorBLL.vb" />
     <Compile Include="GameBLL.vb" />

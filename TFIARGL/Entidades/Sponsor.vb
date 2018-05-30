@@ -19,7 +19,7 @@
     End Property
 
     Private _correo As String
-    Public Property Valor() As String
+    Public Property Correo() As String
         Get
             Return _correo
         End Get
