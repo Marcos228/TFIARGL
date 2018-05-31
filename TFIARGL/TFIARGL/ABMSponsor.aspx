@@ -11,25 +11,25 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label  id="lblSuccessAddSponsor" class="text-success">El Sponsor correctamente.</label>
+            <label id="lblSuccessAddSponsor" class="text-success">El Sponsor correctamente.</label>
         </div>
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
                         <asp:Label ID="lblPanelAddSponsor" runat="server" Text="Administracion de Sponsor" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div class="panel-body FondoPanel">
                         <br />
-                        <div class="form-horizontal has-success">     
-                                                    <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <asp:Button ClientIDMode="Static" ID="btn_nuevo" name="btnNuevo" runat="server" Text="Nuevo" CssClass="btn btn-block btn-info" />
+                        <div class="form-horizontal has-success">
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-4">
+                                    <asp:Button ClientIDMode="Static" ID="btn_nuevo" name="btnNuevo" runat="server" Text="Nuevo" CssClass="btn btn-block btn-info" />
+                                </div>
                             </div>
-                        </div>
                             <br />
 
-                                                        <div class="form-group">
+                            <div class="form-group">
                                 <div>
                                     <div>
                                         <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_sponsors" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_sponsors_PageIndexChanging" RowStyle-Height="40px">
@@ -61,7 +61,7 @@
                                                 <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
                                                     <ItemTemplate>
                                                         <div>
-                                                           <asp:ImageButton ID="btn_editar" runat="server" CommandName="E" ImageUrl="~/Imagenes/edit.png" Height="18px" />
+                                                            <asp:ImageButton ID="btn_editar" runat="server" CommandName="E" ImageUrl="~/Imagenes/edit.png" Height="18px" />
                                                         </div>
                                                     </ItemTemplate>
                                                     <HeaderStyle Width="100px"></HeaderStyle>
@@ -71,6 +71,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="Datos2">
                             <div class="form-group">
                                 <asp:Label ID="lblnombre" runat="server" Text="Nombre:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
@@ -87,15 +88,15 @@
                                 <asp:Label ID="lblcuil" runat="server" Text="CUIL:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <asp:TextBox ID="txtcuil" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="txtcuil" runat="server" CssClass="form-control" MaxLength="15"></asp:TextBox>
                                         <span class="input-group-addon" id="basic-addon8"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="txtusuario" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="txtcuil" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
                                 </div>
                             </div>
-                                                        <div class="form-group">
+                            <div class="form-group">
                                 <asp:Label ID="lblcorreo" runat="server" Text="Correo:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -104,7 +105,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtusuario" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtcorreo" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
                                 </div>
                             </div>
                         </div>

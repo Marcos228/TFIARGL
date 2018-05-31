@@ -44,17 +44,67 @@ Public Class TorneoDAL
         End Try
     End Function
 
-
-
-    Private Sub FormatearGame(ByVal Game As Entidades.Game, ByVal row As DataRow)
+    Public Function TraerTorneosInscripcion(game As Game) As List(Of Torneo)
         Try
-            'Game.ID_Game = row("ID_Game")
-            'Game.Nombre = row("Nombre")
-            'Game.Reglas = row("Reglas")
-            'Game.Descripcion = row("descripcion")
-            'Game.CantJugadores = row("Cantidad_Max_Jugadores")
-            'Game.Tipo_Juego = row("ID_Tipo_Game")
-            'Game.Imagen = row("Imagen")
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Torneo,Fecha_Inicio,Fecha_Fin,Nombre,Lugar_Final, ID_Game,PRecio_Inscripcion,Fecha_Fin_Inscripcion,Fecha_Inicio_Inscripcion from Torneo where ID_game=@ID_Game")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Game", game.ID_Game))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListTorneo As New List(Of Entidades.Torneo)
+            For Each _dr As DataRow In dt.Rows
+                Dim torn As New Entidades.Torneo
+                FormatearTorneo(torn, _dr)
+                ListTorneo.Add(torn)
+            Next
+            Return ListTorneo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Private Function TraerPremios(ByRef Torneo As Entidades.Torneo) As List(Of Premio)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Premio,Nombre,ID_Posicion,Descripcion,Valor from Premios where ID_Torneo=@ID_Torneo ")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Torneo", Torneo.ID_Torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListPre As New List(Of Entidades.Premio)
+            For Each _dr As DataRow In dt.Rows
+                Dim pre As New Entidades.Premio
+                pre.ID_Premio = _dr("ID_Premio")
+                pre.Descripcion = _dr("Descripcion")
+                pre.Nombre = _dr("Nombre")
+                pre.Posicion = _dr("ID_Posicion")
+                pre.Valor = _dr("Valor")
+                ListPre.Add(pre)
+            Next
+            Return ListPre
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+    End Function
+
+
+    Private Sub FormatearTorneo(ByVal torneo As Entidades.Torneo, ByVal row As DataRow)
+        Try
+            torneo.ID_Torneo = row("ID_Torneo")
+            torneo.Nombre = row("Nombre")
+            torneo.Fecha_Inicio = row("Fecha_Inicio")
+            torneo.Fecha_Fin = row("Fecha_Fin")
+            If Not IsDBNull(row("Lugar_Final")) Then
+                torneo.Lugar_Final = row("Lugar_Final")
+            End If
+            torneo.Precio_Inscripcion = row("PRecio_Inscripcion")
+            torneo.Fecha_Inicio_Inscripcion = row("Fecha_Inicio_Inscripcion")
+            torneo.Fecha_Fin_Inscripcion = row("Fecha_Fin_Inscripcion")
+            torneo.Game = (New GameDAL).TraerJuego(row("ID_Game"))
+            torneo.Premios = TraerPremios(torneo)
+
         Catch ex As Exception
             Throw ex
         End Try

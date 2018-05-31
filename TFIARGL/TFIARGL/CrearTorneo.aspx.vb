@@ -156,6 +156,7 @@ Public Class CrearTorneo
             Select Case e.CommandName.ToString
                 Case "E"
                     TryCast(Session("Premios"), List(Of Entidades.Premio)).RemoveAt(e.CommandArgument)
+                    TryCast(Session("Premios"), List(Of Entidades.Premio)).Sort()
                     gv_premios.DataSource = Session("Premios")
                     gv_premios.DataBind()
                     CargarPosiciones()
@@ -254,6 +255,7 @@ Public Class CrearTorneo
 
                 Dim Premio2 As New Entidades.Premio With {.Nombre = txtnombrepremio.Text, .Posicion = lstposicion.SelectedValue, .Descripcion = txtdescripcion.Text, .Valor = txtvalor.Text}
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Add(Premio2)
+                TryCast(Session("Premios"), List(Of Entidades.Premio)).Sort()
                 gv_premios.DataSource = Session("Premios")
                 gv_premios.DataBind()
                 CargarPosiciones()

@@ -11,4 +11,13 @@ Public Class TorneoBLL
             Throw ex
         End Try
     End Function
+
+    Public Function TraerTorneosInscripcion(game As Entidades.Game) As List(Of Torneo)
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            Return TorneDAL.TraerTorneosInscripcion(game)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 End Class

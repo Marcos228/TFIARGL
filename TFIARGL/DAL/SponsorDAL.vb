@@ -4,7 +4,7 @@ Imports Entidades
 Public Class SponsorDAL
     Public Function AltaSponsor(ByRef Sponsor As Entidades.Sponsor) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Sponsor (Nombre,Cuil,Correo) (@Nombre,@Cuil,@Correo)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Sponsor (Nombre,Cuil,Correo) values (@Nombre,@Cuil,@Correo)")
             With Command.Parameters
                 .Add(New SqlParameter("@Nombre", Sponsor.Nombre))
                 .Add(New SqlParameter("@Cuil", Sponsor.CUIL))

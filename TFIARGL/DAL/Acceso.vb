@@ -58,12 +58,12 @@ Public Class Acceso
         End Try
     End Function
     Public Shared Function MiConexion() As SqlConnection
-        Dim MiConecction = New SqlConnection(WebConfigurationManager.ConnectionStrings("Saitama").ConnectionString)
+        Dim MiConecction = New SqlConnection(WebConfigurationManager.ConnectionStrings("SaitamaDell").ConnectionString)
         Return MiConecction
     End Function
 
     Public Shared Function MiConexionMaster() As SqlConnection
-        Dim MiConecction = New SqlConnection(System.Web.Configuration.WebConfigurationManager.ConnectionStrings("SaitamaMaster").ConnectionString)
+        Dim MiConecction = New SqlConnection(System.Web.Configuration.WebConfigurationManager.ConnectionStrings("SaitamaDellMaster").ConnectionString)
         Return MiConecction
     End Function
 

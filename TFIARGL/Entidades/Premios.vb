@@ -1,4 +1,7 @@
-﻿Public Class Premio
+﻿Imports Entidades
+
+Public Class Premio
+    Implements IComparable(Of Premio)
     Private _id_premio As Integer
     Public Property ID_Premio() As Integer
         Get
@@ -48,5 +51,8 @@
         End Set
     End Property
 
+    Public Function CompareTo(other As Premio) As Integer Implements IComparable(Of Premio).CompareTo
 
+        Return Me.Posicion.CompareTo(other.Posicion)
+    End Function
 End Class

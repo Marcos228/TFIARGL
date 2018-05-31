@@ -56,10 +56,10 @@ Public Class CrearSponsor
             Next
 
             With gv_sponsors.HeaderRow
-                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
+                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
+                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
+                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_sponsors.BottomPagerRow.Visible = True
@@ -139,41 +139,43 @@ Public Class CrearSponsor
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            If Page.IsValid = True Then
-                Dim SponsoRnew As New Entidades.Sponsor
+            If Page.IsValid = True And txtcuil.Text.Length = 11 Then
+                If IsNumeric(txtcuil.Text) Then
+                    Dim SponsoRnew As New Entidades.Sponsor
 
-                SponsoRnew.Nombre = txtnombre.Text
-                SponsoRnew.Correo = txtcorreo.Text
-                SponsoRnew.CUIL = txtcuil.Text
-                SponsoRnew.ID_Sponsor = Me.id_sponsor.Value
+                    SponsoRnew.Nombre = txtnombre.Text
+                    SponsoRnew.Correo = txtcorreo.Text
+                    SponsoRnew.CUIL = txtcuil.Text
+                    SponsoRnew.ID_Sponsor = Me.id_sponsor.Value
 
-                If SponsoRnew.ID_Sponsor = 0 Then
-                    If GestorCliente.AltaSponsor(SponsoRnew) Then
-                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddSponsorSuccess1").Traduccion & SponsoRnew.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                        Negocio.BitacoraBLL.CrearBitacora(Bitac)
-                        Me.success.Visible = True
-                        Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddSponsorSuccess1").Traduccion
-                        Me.alertvalid.Visible = False
+                    If SponsoRnew.ID_Sponsor = 0 Then
+                        If GestorCliente.AltaSponsor(SponsoRnew) Then
+                            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddSponsorSuccess1").Traduccion & SponsoRnew.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                            Me.success.Visible = True
+                            Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddSponsorSuccess1").Traduccion
+                            Me.alertvalid.Visible = False
+                        Else
+                            Me.alertvalid.Visible = True
+                            Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddSponsorSuccess2").Traduccion
+                            Me.success.Visible = False
+                        End If
                     Else
-                        Me.alertvalid.Visible = True
-                        Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddSponsorSuccess2").Traduccion
-                        Me.success.Visible = False
-                    End If
-                Else
-                    If GestorCliente.ModificarSponsor(SponsoRnew) Then
-                        Dim SponsorOLD As Entidades.Sponsor = TryCast(Session("Sponsors"), List(Of Entidades.Sponsor))(Me.id_sponsor.Value)
-                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddSponsorSuccess2").Traduccion & SponsoRnew.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                        Negocio.BitacoraBLL.CrearBitacora(Bitac, SponsorOLD, SponsoRnew)
-                        Me.success.Visible = True
-                        Me.success.InnerText =
+                        If GestorCliente.ModificarSponsor(SponsoRnew) Then
+                            Dim SponsorOLD As Entidades.Sponsor = TryCast(Session("Sponsors"), List(Of Entidades.Sponsor))(Me.id_sponsor.Value)
+                            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddSponsorSuccess2").Traduccion & SponsoRnew.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                            Negocio.BitacoraBLL.CrearBitacora(Bitac, SponsorOLD, SponsoRnew)
+                            Me.success.Visible = True
+                            Me.success.InnerText =
                         Me.alertvalid.Visible = False
-                    Else
-                        Me.alertvalid.Visible = True
-                        Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddSponsorError2").Traduccion
-                        Me.success.Visible = False
+                        Else
+                            Me.alertvalid.Visible = True
+                            Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddSponsorError2").Traduccion
+                            Me.success.Visible = False
+                        End If
                     End If
+                    CargarSponsors()
                 End If
-
             Else
                 Me.alertvalid.Visible = True
                 Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
@@ -185,11 +187,20 @@ Public Class CrearSponsor
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
+    Private Function ValidarNumero(ByVal numero As String) As Boolean
+        If IsNumeric(numero) Then
+            If CInt(numero) >= 1 Then
+                Return True
+            End If
+        End If
+        Return False
+    End Function
 
     Protected Sub btn_nuevo_Click(sender As Object, e As EventArgs) Handles btn_nuevo.Click
         Me.txtcorreo.Text = ""
         Me.txtcuil.Text = ""
         Me.txtnombre.Text = ""
         Me.id_sponsor.Value = 0
+
     End Sub
 End Class
