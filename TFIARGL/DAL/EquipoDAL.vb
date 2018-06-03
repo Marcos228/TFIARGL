@@ -31,7 +31,7 @@ Public Class EquipoDAL
 
     Public Function TraeSolicitudesEquipo(jugador As Jugador) As List(Of Solicitudes)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("SELECT SI.* FROM Solicitud_Invitacion as SI inner join Jugador_Equipo as JE on SI.ID_Equipo=Je.ID_Equipo where JE.ID_Jugador=@ID_Jugador and SI.Jug_a_Equipo =1 and si.aprobada is null")
+            Dim Command As SqlCommand = Acceso.MiComando("SELECT SI.* FROM Solicitud_Invitacion as SI inner join Jugador_Equipo as JE on SI.ID_Equipo=Je.ID_Equipo where JE.ID_Jugador=@ID_Jugador and SI.Jug_a_Equipo =1 and si.Estado = 0")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Jugador", jugador.ID_Jugador))
             End With
@@ -46,6 +46,7 @@ Public Class EquipoDAL
                 soli.Jugador = jugdal.TraerJugadorID(_dr("ID_Jugador"))
                 soli.Mensaje = _dr("Mensaje")
                 soli.Fecha = _dr("Fecha")
+                soli.Estado = _dr("estado")
                 listasoli.Add(soli)
             Next
             Return listasoli
@@ -54,13 +55,32 @@ Public Class EquipoDAL
         End Try
     End Function
 
+    Public Function TraerUsuariosEquipo(equipo As Entidades.Equipo) As List(Of UsuarioEntidad)
+        Try
 
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Sub RechazarSolicitud(solicitud As Solicitudes)
         Try
-            Dim CommandJ As SqlCommand = Acceso.MiComando("Update Solicitud_Invitacion set Aprobada = @aprueba where ID_solicitud=@id_solicitud")
+            Dim CommandJ As SqlCommand = Acceso.MiComando("Update Solicitud_Invitacion set Estado = @estado where ID_solicitud=@id_solicitud")
             With CommandJ.Parameters
-                .Add(New SqlParameter("@aprueba", False))
+                .Add(New SqlParameter("@estado", Estado.Rechazado))
+                .Add(New SqlParameter("@id_solicitud", solicitud.ID_Solicitud))
+            End With
+            Acceso.Escritura(CommandJ)
+            CommandJ.Dispose()
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
+    Public Sub CancelarSolicitud(solicitud As Solicitudes)
+        Try
+            Dim CommandJ As SqlCommand = Acceso.MiComando("Update Solicitud_Invitacion set Estado = @estado where ID_solicitud=@id_solicitud")
+            With CommandJ.Parameters
+                .Add(New SqlParameter("@estado", Estado.Cancelado))
                 .Add(New SqlParameter("@id_solicitud", solicitud.ID_Solicitud))
             End With
             Acceso.Escritura(CommandJ)
@@ -72,7 +92,7 @@ Public Class EquipoDAL
 
     Public Function ValidaSolicitud(solicitud As Solicitudes) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("SELECT ID_Solicitud FROM Solicitud_Invitacion where ID_Solicitud=@ID_Solicitud and Aprobada is null")
+            Dim Command As SqlCommand = Acceso.MiComando("SELECT ID_Solicitud FROM Solicitud_Invitacion where ID_Solicitud=@ID_Solicitud and estado =0")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Solicitud", solicitud.ID_Solicitud))
             End With
@@ -90,15 +110,15 @@ Public Class EquipoDAL
 
     Public Sub AprobarSolicitud(solicitud As Solicitudes)
         Try
-            Dim CommandJ As SqlCommand = Acceso.MiComando("Update Solicitud_Invitacion set Aprobada = @aprueba where ID_solicitud=@id_solicitud")
+            Dim CommandJ As SqlCommand = Acceso.MiComando("Update Solicitud_Invitacion set estado = @estado where ID_solicitud=@id_solicitud")
             With CommandJ.Parameters
-                .Add(New SqlParameter("@aprueba", True))
+                .Add(New SqlParameter("@estado", Estado.Aprobado))
                 .Add(New SqlParameter("@id_solicitud", solicitud.ID_Solicitud))
             End With
             Acceso.Escritura(CommandJ)
             CommandJ.Dispose()
 
-            Dim Command As SqlCommand = Acceso.MiComando("Select * from Solicitud_Invitacion where id_jugador=@id_jugador and Aprobada is null")
+            Dim Command As SqlCommand = Acceso.MiComando("Select * from Solicitud_Invitacion where id_jugador=@id_jugador and estado =0")
             With Command.Parameters
                 .Add(New SqlParameter("@id_jugador", solicitud.Jugador.ID_Jugador))
             End With
@@ -107,7 +127,7 @@ Public Class EquipoDAL
             For Each _dr As DataRow In dt.Rows
                 Dim soli As New Entidades.Solicitudes
                 soli.ID_Solicitud = _dr("ID_solicitud")
-                RechazarSolicitud(soli)
+                CancelarSolicitud(soli)
             Next
         Catch ex As Exception
             Throw ex
@@ -124,7 +144,7 @@ Public Class EquipoDAL
             For Each _dr As DataRow In dt.Rows
                 Dim soli As New Entidades.Solicitudes
                 soli.ID_Solicitud = _dr("ID_solicitud")
-                RechazarSolicitud(soli)
+                CancelarSolicitud(soli)
             Next
         Catch ex As Exception
             Throw ex
@@ -259,10 +279,33 @@ Public Class EquipoDAL
             End If
             Dim gestorGame As New GameDAL
             Equip.Game = gestorGame.TraerJuego(row("ID_Game"))
+            Equip.Jugadores = TraerJugadoresEquipo(Equip)
         Catch ex As Exception
             Throw ex
         End Try
     End Sub
+
+    Private Function TraerJugadoresEquipo(ByRef Equipo As Entidades.Equipo) As List(Of Jugador)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select * from Jugador_Equipo where id_equipo=@id_equipo")
+            With Command.Parameters
+                .Add(New SqlParameter("@id_equipo", Equipo.ID_Equipo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim Listajugadores As New List(Of Entidades.Jugador)
+            For Each _dr As DataRow In dt.Rows
+                Dim jugador As New Entidades.Jugador
+                jugador.ID_Jugador = _dr("id_jugador")
+                Dim gestorjugador As New JugadorDAL
+                jugador = gestorjugador.TraerJugadorID(jugador.ID_Jugador)
+                Listajugadores.Add(jugador)
+            Next
+            Return Listajugadores
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function TraerPerfiles(iD_Usuario As Integer) As List(Of Jugador)
         Try

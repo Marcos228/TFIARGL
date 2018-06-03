@@ -4,6 +4,7 @@
 
 .fondoClaro {
     background-color: #FF9C47;
+    /*background-color: gold;*/
 }
 
 .bordeMenu {
@@ -25,6 +26,7 @@
 
 .lineaCopyright {
     background-color: #333333;
+
     height: 2px;
 }
 

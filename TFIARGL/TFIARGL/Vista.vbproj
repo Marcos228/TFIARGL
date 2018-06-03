@@ -94,6 +94,9 @@
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
     <Content Include="ABMSponsor.aspx" />
+    <Content Include="IMAGENES\_banner.jpg" />
+    <Content Include="ConfirmarPagos.aspx" />
+    <Content Include="VisualizarTorneo.aspx" />
     <Content Include="InscribirTorneo.aspx" />
     <Content Include="CrearTorneo.aspx" />
     <Content Include="EnviarInvitacion.aspx" />
@@ -203,6 +206,20 @@
     </Compile>
     <Compile Include="ABMSponsor.aspx.vb">
       <DependentUpon>ABMSponsor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmarPagos.aspx.designer.vb">
+      <DependentUpon>ConfirmarPagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmarPagos.aspx.vb">
+      <DependentUpon>ConfirmarPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VisualizarTorneo.aspx.designer.vb">
+      <DependentUpon>VisualizarTorneo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VisualizarTorneo.aspx.vb">
+      <DependentUpon>VisualizarTorneo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="InscribirTorneo.aspx.designer.vb">

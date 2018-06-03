@@ -4,7 +4,7 @@ Imports Entidades
 Public Class TorneoDAL
     Public Function AltaTorneo(ByRef torn As Entidades.Torneo) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Torneo (Fecha_Inicio,Fecha_Fin,Nombre,ID_Game,Precio_Inscripcion,Fecha_Inicio_Inscripcion,Fecha_Fin_Inscripcion) OUTPUT INSERTED.ID_Torneo values (@Fecha_Inicio,@Fecha_Fin,@Nombre,@ID_Game,@Precio_Inscripcion,@Fecha_Inicio_Inscripcion,@Fecha_Fin_Inscripcion)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Torneo (Fecha_Inicio,Fecha_Fin,Nombre,ID_Game,Precio_Inscripcion,Fecha_Inicio_Inscripcion,Fecha_Fin_Inscripcion,Cantidad_Inscripcion) OUTPUT INSERTED.ID_Torneo values (@Fecha_Inicio,@Fecha_Fin,@Nombre,@ID_Game,@Precio_Inscripcion,@Fecha_Inicio_Inscripcion,@Fecha_Fin_Inscripcion,@cantidad)")
             With Command.Parameters
                 .Add(New SqlParameter("@Fecha_Inicio", torn.Fecha_Inicio))
                 .Add(New SqlParameter("@Fecha_Fin", torn.Fecha_Fin))
@@ -13,6 +13,7 @@ Public Class TorneoDAL
                 .Add(New SqlParameter("@Precio_Inscripcion", torn.Precio_Inscripcion))
                 .Add(New SqlParameter("@Fecha_Inicio_Inscripcion", torn.Fecha_Inicio_Inscripcion))
                 .Add(New SqlParameter("@Fecha_Fin_Inscripcion", torn.Fecha_Fin_Inscripcion))
+                .Add(New SqlParameter("@cantidad", torn.CantidadParticipantes))
             End With
             torn.ID_Torneo = Acceso.Scalar(Command)
             Command.Dispose()
@@ -44,11 +45,27 @@ Public Class TorneoDAL
         End Try
     End Function
 
-    Public Function TraerTorneosInscripcion(game As Game) As List(Of Torneo)
+    Public Sub InscribirEquipo(fact As Factura)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Torneo,Fecha_Inicio,Fecha_Fin,Nombre,Lugar_Final, ID_Game,PRecio_Inscripcion,Fecha_Fin_Inscripcion,Fecha_Inicio_Inscripcion from Torneo where ID_game=@ID_Game")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Torneo_Equipo (ID_Torneo,ID_Equipo) values (@ID_Torneo,@ID_Equipo)")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Torneo", fact.Torneo.ID_Torneo))
+                .Add(New SqlParameter("@ID_Equipo", fact.Equipo.ID_Equipo))
+            End With
+            Acceso.Escritura(Command)
+            Command.Dispose()
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+    End Sub
+
+    Public Function TraerTorneosInscripcion(game As Game, equipo As Equipo) As List(Of Torneo)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select T.ID_Torneo,Fecha_Inicio,Fecha_Fin,Nombre,Lugar_Final, ID_Game,PRecio_Inscripcion,Fecha_Fin_Inscripcion,Fecha_Inicio_Inscripcion,cantidad_inscripcion from Torneo as T left join Torneo_Equipo as TE on Te.ID_Torneo=T.ID_Torneo and Te.ID_Equipo=@ID_Equipo where ID_game=@ID_Equipo and Te.ID_Torneo is null")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Game", game.ID_Game))
+                .Add(New SqlParameter("@ID_Equipo", equipo.ID_Equipo))
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)
             Command.Dispose()
@@ -89,6 +106,25 @@ Public Class TorneoDAL
 
     End Function
 
+    Friend Function TraerTorneoID(ByVal id_torneo As Integer) As Torneo
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Torneo,Fecha_Inicio,Fecha_Fin,Nombre,Lugar_Final, ID_Game,PRecio_Inscripcion,Fecha_Fin_Inscripcion,Fecha_Inicio_Inscripcion,cantidad_inscripcion from Torneo where ID_Torneo=@ID_torneo")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Torneo", id_torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            If dt.Rows.Count > 0 Then
+                Dim torn As New Entidades.Torneo
+                FormatearTorneo(torn, dt.Rows(0))
+                Return torn
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Private Sub FormatearTorneo(ByVal torneo As Entidades.Torneo, ByVal row As DataRow)
         Try
@@ -104,6 +140,7 @@ Public Class TorneoDAL
             torneo.Fecha_Fin_Inscripcion = row("Fecha_Fin_Inscripcion")
             torneo.Game = (New GameDAL).TraerJuego(row("ID_Game"))
             torneo.Premios = TraerPremios(torneo)
+            torneo.CantidadParticipantes = row("cantidad_inscripcion")
 
         Catch ex As Exception
             Throw ex

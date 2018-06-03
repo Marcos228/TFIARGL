@@ -12,12 +12,21 @@ Public Class TorneoBLL
         End Try
     End Function
 
-    Public Function TraerTorneosInscripcion(game As Entidades.Game) As List(Of Torneo)
+    Public Function TraerTorneosInscripcion(game As Entidades.Game, jugad As Entidades.Jugador) As List(Of Torneo)
         Try
             Dim TorneDAL As New DAL.TorneoDAL
-            Return TorneDAL.TraerTorneosInscripcion(game)
+            Return TorneDAL.TraerTorneosInscripcion(game, (New DAL.EquipoDAL).TraerEquipoJugador(jugad.ID_Jugador))
         Catch ex As Exception
             Throw ex
         End Try
     End Function
+
+    Public Sub InscribirEquipo(fact As Factura)
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            TorneDAL.InscribirEquipo(fact)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
 End Class

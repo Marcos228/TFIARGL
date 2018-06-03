@@ -4,24 +4,33 @@ Public Class InscribirTorneo
     Inherits System.Web.UI.Page
 
     Private Sub CrearEquipo_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Me.Datos.Visible = False
+        If Not IsPostBack Then
+            Me.Datos.Visible = False
+        End If
         If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
-            If Not IsNothing(Request.QueryString("game")) Then
-                If IsNumeric(Request.QueryString("game")) Then
+                If Not IsNothing(Request.QueryString("game")) Then
+                    If IsNumeric(Request.QueryString("game")) Then
                     Me.id_game.Value = Request.QueryString("game")
-                    CargarTorneos(Me.id_game.Value)
+                    If Me.Datos.Visible = False Then
+                        CargarTorneos(Me.id_game.Value)
+                    End If
+
+                Else
+                        CargarJuegos()
+                    End If
                 Else
                     CargarJuegos()
                 End If
-            Else
-                CargarJuegos()
             End If
-        End If
+
+
+
     End Sub
     Private Sub CargarTorneos(ByRef id_game As Integer)
         Dim lista As List(Of Entidades.Torneo)
         Dim Gestor As New Negocio.TorneoBLL
-        lista = Gestor.TraerTorneosInscripcion(New Entidades.Game With {.ID_Game = id_game})
+        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        lista = Gestor.TraerTorneosInscripcion(New Entidades.Game With {.ID_Game = id_game}, clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = Me.id_game.Value))
         Me.gv_torneos.DataSource = lista
         Me.gv_torneos.DataBind()
         Session("Torneos") = lista
@@ -177,41 +186,4 @@ Public Class InscribirTorneo
     End Sub
 
 
-    Protected Sub btnInscribir_Click(sender As Object, e As EventArgs) Handles btnInscribir.Click
-        Try
-            Dim GestorTorneo As New Negocio.TorneoBLL
-            Dim IdiomaActual As Entidades.IdiomaEntidad
-
-            If IsNothing(Current.Session("Cliente")) Then
-                IdiomaActual = Application("Español")
-            Else
-                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-            End If
-            'If ValidarFechas(IdiomaActual) Then
-            '    If txtnombre.Text <> "" And ValidarNumero(txtprecio.Text) Then
-
-            '        Dim TorneoNew As New Entidades.Torneo With {.Nombre = txtnombre.Text,
-            '                            .Fecha_Inicio = datepicker1.Value, .Fecha_Fin = datepicker2.Value,
-            '                            .Fecha_Inicio_Inscripcion = datepicker3.Value, .Fecha_Fin_Inscripcion = datepicker4.Value,
-            '                            .Game = New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, .Precio_Inscripcion = txtprecio.Text}
-            '        TorneoNew.Sponsors = TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor))
-            '        TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
-            '        If GestorTorneo.AltaTorneo(TorneoNew) Then
-            '            'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            '            'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            '            'Negocio.BitacoraBLL.CrearBitacora(Bitac)
-            '            'Me.success.Visible = True
-            '            'Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
-            '            'Me.alertvalid.Visible = False
-            '        End If
-            '    Else
-
-            '    End If
-            'End If
-        Catch ex As Exception
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
-            Negocio.BitacoraBLL.CrearBitacora(Bitac)
-        End Try
-    End Sub
 End Class

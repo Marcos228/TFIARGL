@@ -67,11 +67,43 @@
         End Set
     End Property
 
+    Private _estado As Estado
+    Public Property Estado() As Estado
+        Get
+            Return _estado
+        End Get
+        Set(ByVal value As Estado)
+            _estado = value
+        End Set
+    End Property
+
+    Private _equipo As Equipo
+    Public Property Equipo() As Equipo
+        Get
+            Return _equipo
+        End Get
+        Set(ByVal value As Equipo)
+            _equipo = value
+        End Set
+    End Property
+
+    Private Function Total() As Double
+        Dim retorno As Double
+        For Each deta As Detalle_Factura In Me.Detalles
+            retorno += deta.Monto
+        Next
+        Return retorno
+    End Function
+
     Sub New(ByRef tor As torneo, ByRef usu As UsuarioEntidad, fec As DateTime, det As List(Of Detalle_Factura))
         Me.Detalles = det
         Me.Torneo = tor
         Me.Fecha = fec
         Me.Usuario = usu
+        Me.Monto_Total = Total()
+        Me.Estado = Estado.Pendiente
     End Sub
+    Sub New()
 
+    End Sub
 End Class

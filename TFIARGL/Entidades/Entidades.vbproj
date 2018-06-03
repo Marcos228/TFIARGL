@@ -86,6 +86,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Partida.vb" />
+    <Compile Include="Estado.vb" />
     <Compile Include="Posicion.vb" />
     <Compile Include="Premios.vb" />
     <Compile Include="Rol_Jugador.vb" />

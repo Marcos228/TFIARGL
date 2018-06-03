@@ -132,10 +132,15 @@ Public Class CrearTorneo
                     If TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor)).Any(Function(p) p.ID_Sponsor = Sponsor.ID_Sponsor) Then
                         gv_sponsors.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.FromName("#c3e6cb")
                         TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor)).Remove(Sponsor)
+                        Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(gv_sponsors.Rows.Item(e.CommandArgument).FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                        imagen3.ImageUrl = "~/Imagenes/check.png"
                     Else
                         gv_sponsors.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
                         TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor)).Add(Sponsor)
+                        Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(gv_sponsors.Rows.Item(e.CommandArgument).FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                        imagen3.ImageUrl = "~/Imagenes/clear.png"
                     End If
+
 
             End Select
         Catch ex As Exception
@@ -287,12 +292,12 @@ Public Class CrearTorneo
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
             If ValidarFechas(IdiomaActual) Then
-                If txtnombre.Text <> "" And ValidarNumero(txtprecio.Text) Then
+                If txtnombre.Text <> "" And ValidarNumero(txtprecio.Text) And ValidarNumero(txtcantidad.Text) Then
 
                     Dim TorneoNew As New Entidades.Torneo With {.Nombre = txtnombre.Text,
                                         .Fecha_Inicio = datepicker1.Value, .Fecha_Fin = datepicker2.Value,
                                         .Fecha_Inicio_Inscripcion = datepicker3.Value, .Fecha_Fin_Inscripcion = datepicker4.Value,
-                                        .Game = New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, .Precio_Inscripcion = txtprecio.Text}
+                                        .Game = New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, .Precio_Inscripcion = CInt(txtprecio.Text), .CantidadParticipantes = CInt(txtcantidad.Text)}
                     TorneoNew.Sponsors = TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor))
                     TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
                     If GestorTorneo.AltaTorneo(TorneoNew) Then

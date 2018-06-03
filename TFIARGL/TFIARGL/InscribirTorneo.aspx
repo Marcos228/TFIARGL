@@ -5,15 +5,6 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script>
-        $(function () {
-            $("#datepicker1").datepicker();
-            $("#datepicker2").datepicker();
-            $("#datepicker3").datepicker();
-            $("#datepicker4").datepicker();
-        });
-
-    </script>
     <div class="container-fluid">
         <br />
         <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
@@ -74,12 +65,6 @@
                                             </asp:TemplateField>
                                         </Columns>
                                     </asp:GridView>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-md-4 col-md-offset-4">
-                                    <asp:Button ClientIDMode="Static" ID="btnInscribir" name="btnInscribir" runat="server" Text="Inscribir" CssClass="btn btn-block btn-success" />
                                 </div>
                             </div>
                         </div>

@@ -131,4 +131,14 @@
         End Set
     End Property
 
+    Private _cantidadparticipantes As Integer
+    Public Property CantidadParticipantes() As Integer
+        Get
+            Return _cantidadparticipantes
+        End Get
+        Set(ByVal value As Integer)
+            _cantidadparticipantes = value
+        End Set
+    End Property
+
 End Class

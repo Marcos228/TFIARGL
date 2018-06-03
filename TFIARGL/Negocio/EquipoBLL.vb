@@ -61,6 +61,22 @@ Public Class EquipoBLL
         End Try
     End Function
 
+    Public Function TraerUsuariosEquipo(iD_Jugador As Integer) As List(Of UsuarioEntidad)
+        Try
+            Dim Listaretorno As New List(Of UsuarioEntidad)
+            Dim DALEquipo As New DAL.EquipoDAL
+            Dim UsuarioDAL As New DAL.UsuarioDAL
+            Dim jugadordal As New DAL.JugadorDAL
+            Dim equipo As Entidades.Equipo = DALEquipo.TraerEquipoJugador(iD_Jugador)
+            For Each Jugador As Jugador In equipo.Jugadores
+                Listaretorno.Add(UsuarioDAL.BuscarUsuarioID(jugadordal.TraerUsuarioJugador(Jugador)))
+            Next
+            Return Listaretorno
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function AgregarJugador(solicitud As Solicitudes) As Boolean
         Try
             Dim DALEquipo As New DAL.EquipoDAL

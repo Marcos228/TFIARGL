@@ -32,5 +32,4 @@
         Me.Usuario = usuent
         Me.Monto = mont
     End Sub
-
 End Class

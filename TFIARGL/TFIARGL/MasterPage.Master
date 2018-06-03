@@ -24,10 +24,7 @@
     <form id="Master" runat="server">
         <div class="container-fluid FondoPagina">
             <div class="row fondoGris bordeImagen">
-                <div class="col-md-12 text-center">
              <asp:Image ID="LogoMenu" runat="server" ImageUrl="Imagenes/banner.jpg" CssClass="img-responsive"/>
-                    <br />
-                </div>
             </div>
             <div class="row fondoClaro bordeMenu">
                 <div class="col-md-12">

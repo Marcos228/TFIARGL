@@ -61,9 +61,25 @@ Public Class JugadorDAL
             Throw ex
         End Try
     End Function
+
+    Public Function TraerUsuarioJugador(jugador As Jugador) As UsuarioEntidad
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_usuario from Jugador where ID_Jugador=@ID_Jugador")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Jugador", jugador.ID_Jugador))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim usu As New Entidades.UsuarioEntidad With {.ID_Usuario = dt.Rows(0)("id_usuario")}
+            Return usu
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function TraeSolicitudesJugador(jugador As Jugador) As List(Of Solicitudes)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("SELECT SI.* FROM Solicitud_Invitacion as SI  where SI.ID_Jugador=@ID_Jugador and SI.Jug_a_Equipo =0 and aprobado is null")
+            Dim Command As SqlCommand = Acceso.MiComando("SELECT SI.* FROM Solicitud_Invitacion as SI  where SI.ID_Jugador=@ID_Jugador and SI.Jug_a_Equipo =0 and estado =0")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Jugador", jugador.ID_Jugador))
             End With
@@ -78,6 +94,7 @@ Public Class JugadorDAL
                 soli.Jugador = TraerJugadorID(_dr("ID_Jugador"))
                 soli.Mensaje = _dr("Mensaje")
                 soli.Fecha = _dr("Fecha")
+                soli.Estado = _dr("estado")
                 listasoli.Add(soli)
             Next
             Return listasoli

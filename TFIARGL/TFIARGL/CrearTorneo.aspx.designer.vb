@@ -194,6 +194,24 @@ Partial Public Class CrearTorneo
     Protected WithEvents txtprecio As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
+    '''Control lblcantidad.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblcantidad As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control txtcantidad.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents txtcantidad As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
     '''Control lblSponsors.
     '''</summary>
     '''<remarks>
