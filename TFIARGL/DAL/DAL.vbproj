@@ -72,6 +72,7 @@
     <Compile Include="FacturaDAL.vb" />
     <Compile Include="SponsorDAL.vb" />
     <Compile Include="EquipoDAL.vb" />
+    <Compile Include="PartidaDAL.vb" />
     <Compile Include="TorneoDAL.vb" />
     <Compile Include="JugadorDAL.vb" />
     <Compile Include="Rol_JugadorDAL.vb" />

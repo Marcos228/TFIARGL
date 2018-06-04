@@ -4,7 +4,7 @@ Imports Entidades
 Public Class FacturaDAL
     Public Function GenerarFactura(ByRef fact As Entidades.Factura) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Factura (ID_Torneo,ID_usuario,ID_Tipo_Pago,Monto_Total,Fecha,ID_Equipo) OUTPUT INSERTED.ID_Factura values (@ID_Torneo,@ID_usuario,@ID_Tipo_Pago,@Monto_Total,@Fecha,@ID_Equipo)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Factura (ID_Torneo,ID_usuario,ID_Tipo_Pago,Monto_Total,Fecha,ID_Equipo,Estado) OUTPUT INSERTED.ID_Factura values (@ID_Torneo,@ID_usuario,@ID_Tipo_Pago,@Monto_Total,@Fecha,@ID_Equipo,@estado)")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Torneo", fact.Torneo.ID_Torneo))
                 .Add(New SqlParameter("@ID_usuario", fact.Usuario.ID_Usuario))
@@ -12,6 +12,7 @@ Public Class FacturaDAL
                 .Add(New SqlParameter("@Monto_Total", fact.Monto_Total))
                 .Add(New SqlParameter("@Fecha", fact.Fecha))
                 .Add(New SqlParameter("@ID_Equipo", fact.Equipo.ID_Equipo))
+                .Add(New SqlParameter("@Estado", fact.Estado))
             End With
             fact.ID_Factura = Acceso.Scalar(Command)
             Command.Dispose()

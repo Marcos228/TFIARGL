@@ -45,6 +45,43 @@ Public Class TorneoDAL
         End Try
     End Function
 
+    Public Sub TraerEquiposInscriptos(torneosorteo As Torneo)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Torneo_Equipo where id_torneo=@id_torneo")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_torneo", torneosorteo.ID_Torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim gestorequipo As New EquipoDAL
+            For Each _dr As DataRow In dt.Rows
+                Dim equipotorneo As New Entidades.Equipo
+                equipotorneo.ID_Equipo = _dr("ID_Equipo")
+                gestorequipo.TraerEquipoID(equipotorneo.ID_Equipo)
+                torneosorteo.Equipos.Add(equipotorneo)
+            Next
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
+
+    Public Function TraerTorneosSorteo() As List(Of Torneo)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Torneo as T where Fecha_Fin_Inscripcion<GETDATE() and not exists(Select ID_Partida from Partida as P where P.ID_Torneo =T.ID_Torneo)")
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListTorneo As New List(Of Entidades.Torneo)
+            For Each _dr As DataRow In dt.Rows
+                Dim torn As New Entidades.Torneo
+                FormatearTorneo(torn, _dr)
+                ListTorneo.Add(torn)
+            Next
+            Return ListTorneo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Sub InscribirEquipo(fact As Factura)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("insert into Torneo_Equipo (ID_Torneo,ID_Equipo) values (@ID_Torneo,@ID_Equipo)")
@@ -62,7 +99,7 @@ Public Class TorneoDAL
 
     Public Function TraerTorneosInscripcion(game As Game, equipo As Equipo) As List(Of Torneo)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Select T.ID_Torneo,Fecha_Inicio,Fecha_Fin,Nombre,Lugar_Final, ID_Game,PRecio_Inscripcion,Fecha_Fin_Inscripcion,Fecha_Inicio_Inscripcion,cantidad_inscripcion from Torneo as T left join Torneo_Equipo as TE on Te.ID_Torneo=T.ID_Torneo and Te.ID_Equipo=@ID_Equipo where ID_game=@ID_Equipo and Te.ID_Torneo is null")
+            Dim Command As SqlCommand = Acceso.MiComando("Select T.ID_Torneo,Fecha_Inicio,Fecha_Fin,Nombre,Lugar_Final, ID_Game,PRecio_Inscripcion,Fecha_Fin_Inscripcion,Fecha_Inicio_Inscripcion,cantidad_inscripcion from Torneo as T left join Torneo_Equipo as TE on Te.ID_Torneo=T.ID_Torneo and Te.ID_Equipo=@ID_Equipo where ID_game=@ID_Game and Te.ID_Torneo is null")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Game", game.ID_Game))
                 .Add(New SqlParameter("@ID_Equipo", equipo.ID_Equipo))
@@ -141,7 +178,6 @@ Public Class TorneoDAL
             torneo.Game = (New GameDAL).TraerJuego(row("ID_Game"))
             torneo.Premios = TraerPremios(torneo)
             torneo.CantidadParticipantes = row("cantidad_inscripcion")
-
         Catch ex As Exception
             Throw ex
         End Try

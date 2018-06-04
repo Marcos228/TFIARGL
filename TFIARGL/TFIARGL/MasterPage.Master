@@ -13,9 +13,11 @@
     <link href="CSS/font-awesome.css" rel="stylesheet" type="text/css" />
     <link href="CSS/EstilosMaestra.css" rel="stylesheet" type="text/css" />
     <link href="CSS/MisEstilos.css" rel="stylesheet" type="text/css" />
+        <link href="CSS/jquery.ui.timepicker.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="JS/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="JS/bootstrap.js"></script>
         <script type="text/javascript" src="JS/jquery-ui.js"></script>
+        <script type="text/javascript" src="JS/jquery.ui.timepicker.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 

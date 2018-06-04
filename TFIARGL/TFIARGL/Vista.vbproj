@@ -94,8 +94,11 @@
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
     <Content Include="ABMSponsor.aspx" />
+    <Content Include="CSS\jquery.ui.timepicker.css" />
     <Content Include="IMAGENES\_banner.jpg" />
     <Content Include="ConfirmarPagos.aspx" />
+    <Content Include="JS\jquery.ui.timepicker.js" />
+    <Content Include="SortearTorneo.aspx" />
     <Content Include="VisualizarTorneo.aspx" />
     <Content Include="InscribirTorneo.aspx" />
     <Content Include="CrearTorneo.aspx" />
@@ -213,6 +216,13 @@
     </Compile>
     <Compile Include="ConfirmarPagos.aspx.vb">
       <DependentUpon>ConfirmarPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SortearTorneo.aspx.designer.vb">
+      <DependentUpon>SortearTorneo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SortearTorneo.aspx.vb">
+      <DependentUpon>SortearTorneo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="VisualizarTorneo.aspx.designer.vb">

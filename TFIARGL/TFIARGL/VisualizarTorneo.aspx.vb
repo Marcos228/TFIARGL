@@ -18,16 +18,17 @@ Public Class VisualizarTorneo
     End Sub
 
     Private Sub CargarDatos()
-        Dim IdiomaActual As Entidades.IdiomaEntidad = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-        Dim Torneo As Entidades.Torneo = Session("Torneo")
-        Me.titulotorneo.InnerText = Torneo.Nombre
-        Me.fechadesde.InnerText = Torneo.Fecha_Inicio
-        Me.fechainicio.InnerText = Torneo.Fecha_Inicio_Inscripcion
-        Me.fechafin.InnerText = Torneo.Fecha_Fin_Inscripcion
-        Me.fechahasta.InnerText = Torneo.Fecha_Fin
-        Me.precio.InnerText = Torneo.Precio_Inscripcion.ToString("c", IdiomaActual.Cultura)
-        Me.juego.InnerText = Torneo.Game.Nombre
-        Me.id_game.Value = Torneo.Game.ID_Game
+        If Not IsNothing(Session("Torneo")) And Not IsDBNull(Session("Torneo")) Then
+            Dim Torneo As Entidades.Torneo = Session("Torneo")
+            Me.titulotorneo.InnerText = Torneo.Nombre
+            Me.fechadesde.InnerText = Torneo.Fecha_Inicio
+            Me.fechainicio.InnerText = Torneo.Fecha_Inicio_Inscripcion
+            Me.fechafin.InnerText = Torneo.Fecha_Fin_Inscripcion
+            Me.fechahasta.InnerText = Torneo.Fecha_Fin
+            Me.precio.InnerText = Torneo.Precio_Inscripcion.ToString("c")
+            Me.juego.InnerText = Torneo.Game.Nombre
+            Me.id_game.Value = Torneo.Game.ID_Game
+        End If
     End Sub
 
     Protected Sub btnInscribir_Click(sender As Object, e As EventArgs) Handles btnInscribir.Click
