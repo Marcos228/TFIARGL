@@ -31,11 +31,9 @@
 
     <div class="container-fluid">
         <br />
-        <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
-            <label runat="server" id="textovalid" class="text-danger"></label>
-        </div>
+
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="lblSuccessVisTorneo" class="text-success"></label>
+            <label id="lblSuccessVisTorneo" class="text-success">Su Inscripcion esta pendiente de aprobacion, Gracias por su Compra.</label>
         </div>
         <div class="col-md-12">
             <div id="Datos" class="jumbotron" runat="server">
@@ -62,7 +60,7 @@
                     <h4 id="precio" runat="server" class="text-left text"></h4>
                 </div>
                 <div class="col-md-2">
-                    <h5 id="lblgame">Juego:</h5>
+                    <h5 id="lbljuego">Juego:</h5>
                     <h4 id="juego" runat="server" class="text-left text"></h4>
                 </div>
                 <br />
@@ -86,6 +84,9 @@
                     </div>
                 </div>
                 <br />
+                        <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
+            <label runat="server" id="textovalid" class="text-danger"></label>
+        </div>
                 <br />
                 <div id="btnins" runat="server" class="row">
                     <div class="col-md-4 col-md-offset-4">

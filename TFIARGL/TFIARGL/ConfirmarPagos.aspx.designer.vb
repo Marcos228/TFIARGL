@@ -23,13 +23,13 @@ Partial Public Class ConfirmarPagos
     Protected WithEvents alertvalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control textovalid.
+    '''Control lblErrorConPagos.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents lblErrorConPagos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
     '''Control success.

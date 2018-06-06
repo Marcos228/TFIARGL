@@ -18,7 +18,7 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="lblSuccessSorTorneo" class="text-success"></label>
+            <label id="lblSuccessSorTorneo" class="text-success">El sorteo se realizó correctamente</label>
         </div>
 
         <div class="row">
@@ -184,12 +184,6 @@
                                 <div id="Div1" runat="server" class="row">
                                     <div class="col-md-4 col-md-offset-4">
                                         <asp:Button ClientIDMode="Static" ID="btnAsignar" name="btnAsignar" runat="server" Text="Asignar" CssClass="btn btn-block btn-success" />
-                                    </div>
-                                </div>
-                                <br />
-                                <div id="btnFin" runat="server" class="row">
-                                    <div class="col-md-4 col-md-offset-4">
-                                        <asp:Button ClientIDMode="Static" ID="btnFinalizar" name="btnFinalizar" runat="server" Text="Finalizar Sorteo" CssClass="btn btn-block btn-success" />
                                     </div>
                                 </div>
                             </div>

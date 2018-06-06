@@ -8,33 +8,54 @@ Public Class InscribirTorneo
             Me.Datos.Visible = False
         End If
         If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
-                If Not IsNothing(Request.QueryString("game")) Then
-                    If IsNumeric(Request.QueryString("game")) Then
+            If Not IsNothing(Request.QueryString("game")) Then
+                If IsNumeric(Request.QueryString("game")) Then
                     Me.id_game.Value = Request.QueryString("game")
                     If Me.Datos.Visible = False Then
                         CargarTorneos(Me.id_game.Value)
                     End If
 
                 Else
-                        CargarJuegos()
-                    End If
-                Else
                     CargarJuegos()
                 End If
+            Else
+                CargarJuegos()
             End If
-
-
-
+        End If
     End Sub
     Private Sub CargarTorneos(ByRef id_game As Integer)
-        Dim lista As List(Of Entidades.Torneo)
-        Dim Gestor As New Negocio.TorneoBLL
-        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-        lista = Gestor.TraerTorneosInscripcion(New Entidades.Game With {.ID_Game = id_game}, clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = Me.id_game.Value))
-        Me.gv_torneos.DataSource = lista
-        Me.gv_torneos.DataBind()
-        Session("Torneos") = lista
-        Me.Datos.Visible = True
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Dim lista As List(Of Entidades.Torneo)
+            Dim Gestor As New Negocio.TorneoBLL
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            lista = Gestor.TraerTorneosInscripcion(New Entidades.Game With {.ID_Game = id_game}, clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = Me.id_game.Value))
+            Me.gv_torneos.DataSource = lista
+            Me.gv_torneos.DataBind()
+            If lista.Count = 0 Then
+                Me.alertvalid.Visible = True
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "InsTorneoError1").Traduccion
+            Else
+                Session("Torneos") = lista
+                Me.Datos.Visible = True
+                Me.alertvalid.Visible = False
+            End If
+        Catch equipono As Negocio.ExceptionEquipoIncompleto
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(clienteLogeado.Idioma.Nombre)
+            End If
+            Me.alertvalid.Visible = True
+            Me.textovalid.InnerText = equipono.Mensaje(IdiomaActual)
+        End Try
     End Sub
     Private Sub CargarJuegos()
         Try
@@ -47,8 +68,7 @@ Public Class InscribirTorneo
                 Response.Redirect("/InscribirTorneo.aspx" & "?game=" & Juegos(0).ID_Game, False)
             ElseIf Juegos.Count = 0 Then
                 Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddEquipoError1").Traduccion
-                Me.success.Visible = False
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "InsTorneoError2").Traduccion
             End If
 
             For Each Game In Juegos
@@ -112,10 +132,14 @@ Public Class InscribirTorneo
             Next
 
             With gv_torneos.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaInicio").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaFin").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaInicioInscripcion").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaFinInscripcion").Traduccion
+                .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPrecio").Traduccion
+                .Cells(7).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_torneos.BottomPagerRow.Visible = True

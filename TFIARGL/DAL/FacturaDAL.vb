@@ -22,6 +22,25 @@ Public Class FacturaDAL
         End Try
     End Function
 
+    Public Function ValidarFactura(fact As Factura) As Boolean
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select ID_Factura from Factura where ID_Usuario=@ID_Usuario and ID_Torneo=@ID_torneo and Estado in(0,1)")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Usuario", fact.Usuario.ID_Usuario))
+                .Add(New SqlParameter("@ID_Torneo", fact.Torneo.ID_Torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            If dt.Rows.Count > 0 Then
+                Return False
+            Else
+                Return True
+            End If
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function ListarFacturas(estado As Integer, desde As Date, hasta As Date, usu As String, torneo As String) As List(Of Factura)
         Try
             Dim consulta As String = ""

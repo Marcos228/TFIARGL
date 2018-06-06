@@ -5,6 +5,14 @@ Public MustInherit Class GestorErroresBLL
     Public MustOverride Function Mensaje(ByRef Idioma As Entidades.IdiomaEntidad) As String
 End Class
 
+Public Class ExceptionEquipoIncompleto
+    Inherits GestorErroresBLL
+    Public Overrides Function Mensaje(ByRef idioma As Entidades.IdiomaEntidad) As String
+        Return idioma.Palabras.Find(Function(p) p.Codigo = "ExceptionEquipoIncompleto").Traduccion
+    End Function
+
+End Class
+
 Public Class ExceptionFalloConectividad
     Inherits GestorErroresBLL
 

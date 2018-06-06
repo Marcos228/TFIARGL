@@ -7,20 +7,33 @@ Public Class SortearTorneo
         If Not IsPostBack Then
             Me.datosTor.Visible = False
             Me.datosPar.Visible = False
-            Me.btnFin.Visible = False
             If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
                 CargarTorneos()
             End If
         End If
     End Sub
     Private Sub CargarTorneos()
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
+
         Dim lista As List(Of Entidades.Torneo)
         Dim Gestor As New Negocio.TorneoBLL
         Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
         lista = Gestor.TraerTorneosSorteo()
         Me.gv_torneos.DataSource = lista
         Me.gv_torneos.DataBind()
-        Session("Torneos") = lista
+        If lista.Count = 0 Then
+            Me.alertvalid.Visible = True
+            Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "SorTorneoError1").Traduccion
+            Me.success.Visible = False
+        Else
+            Session("Torneos") = lista
+        End If
+
     End Sub
     Private Sub gv_torneos_DataBound(sender As Object, e As EventArgs) Handles gv_torneos.DataBound
         Try
@@ -55,10 +68,14 @@ Public Class SortearTorneo
             Next
 
             With gv_torneos.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaInicio").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaFin").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaInicioInscripcion").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaFinInscripcion").Traduccion
+                .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPrecio").Traduccion
+                .Cells(7).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_torneos.BottomPagerRow.Visible = True
@@ -174,10 +191,11 @@ Public Class SortearTorneo
             Next
 
             With gv_partidas.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFase").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_partidas.BottomPagerRow.Visible = True
@@ -271,12 +289,11 @@ Public Class SortearTorneo
             GestorTorneo.RealizarSorteo(TorneoSorteo)
             CargarPArtidas(TorneoSorteo)
 
-            'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            'Negocio.BitacoraBLL.CrearBitacora(Bitac)
-            'Me.success.Visible = True
-            'Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
-            'Me.alertvalid.Visible = False
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSorTorneoSuccess").Traduccion & TorneoSorteo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            Me.success.Visible = True
+            Me.alertvalid.Visible = False
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -289,18 +306,6 @@ Public Class SortearTorneo
             Me.gv_partidas.DataSource = Torneo.Partidas
             Me.gv_partidas.DataBind()
             Me.datosPar.Visible = True
-            Dim finalizado As Boolean = True
-            For Each PArtida As Entidades.Partida In Torneo.Partidas
-                If PArtida.FechaHora = Date.MinValue Then
-                    finalizado = False
-                    Exit For
-                End If
-            Next
-            If finalizado Then
-                btnFin.Visible = True
-            Else
-                btnFin.Visible = False
-            End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -319,27 +324,28 @@ Public Class SortearTorneo
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
+            If datepicker1.Value <> "" And timepicker1.Value <> "" Then
+                Dim Partida As Entidades.Partida = TryCast(Session("Partida"), Entidades.Partida)
+                Partida.FechaHora = datepicker1.Value & " " & timepicker1.Value
+                Dim gestorPartida As New Negocio.PartidaBLL
+                gestorPartida.AgregarHorarioPartida(Partida)
+                CargarPArtidas(Session("Torneo"))
 
-            Dim Partida As Entidades.Partida = TryCast(Session("Partida"), Entidades.Partida)
-            Partida.FechaHora = datepicker1.Value & " " & timepicker1.Value
-            Dim gestorPartida As New Negocio.PartidaBLL
-            gestorPartida.AgregarHorarioPartida(Partida)
-            CargarPArtidas(Session("Torneo"))
-
-            'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            'Negocio.BitacoraBLL.CrearBitacora(Bitac)
-            'Me.success.Visible = True
-            'Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
-            'Me.alertvalid.Visible = False
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSorTorneoSuccess2").Traduccion & " " & Partida.ID_Partida & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                Me.success.Visible = True
+                Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "SorTorneoSuccess").Traduccion
+                Me.alertvalid.Visible = False
+            Else
+                Me.alertvalid.Visible = True
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+                Me.success.Visible = False
+            End If
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
-
-
-
-
     End Sub
 End Class

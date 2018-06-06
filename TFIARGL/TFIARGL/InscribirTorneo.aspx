@@ -10,9 +10,6 @@
         <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
-        <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="lblSuccessInsTorneo" class="text-success"></label>
-        </div>
 
         <div class="row">
             <div class="col-md-8 col-md-offset-2">

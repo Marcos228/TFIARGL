@@ -15,7 +15,7 @@
     <div class="container-fluid">
         <br />
         <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
-            <label runat="server" id="textovalid" class="text-danger"></label>
+            <label runat="server" id="lblErrorConPagos" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
             <label id="lblSuccessConPagos" class="text-success"></label>

@@ -36,10 +36,10 @@ Public Class VisualizarTorneo
             If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
 
                 Dim Gestorequi As New Negocio.EquipoBLL
-                Dim IdiomaActual As Entidades.IdiomaEntidad
+
                 Dim usuarioPagador As Entidades.UsuarioEntidad = TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad)
                 Dim Torneo As Entidades.Torneo = Session("Torneo")
-
+                Dim IdiomaActual As Entidades.IdiomaEntidad
                 If IsNothing(Current.Session("Cliente")) Then
                     IdiomaActual = Application("Español")
                 Else
@@ -61,15 +61,19 @@ Public Class VisualizarTorneo
 
                 Dim gestorfactura As New Negocio.FacturaBLL
                 If gestorfactura.GenerarFactura(Factura) Then
-                    'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                    'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                    'Negocio.BitacoraBLL.CrearBitacora(Bitac)
-                    'Me.success.Visible = True
-                    'Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
-                    'Me.alertvalid.Visible = False
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraVisTorneoSuccess1").Traduccion & " " & Factura.Equipo.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraVisTorneoSuccess2").Traduccion & " " & Factura.Torneo.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraVisTorneoSuccess3").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    Me.success.Visible = True
+                    Me.alertvalid.Visible = False
+                    ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", "openWin();", True)
+                Else
+                    Me.success.Visible = False
+                    Me.alertvalid.Visible = True
+                    Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "VisTorneoError1").Traduccion
                 End If
-                ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", "openWin();", True)
             End If
+
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

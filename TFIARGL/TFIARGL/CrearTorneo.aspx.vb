@@ -75,10 +75,10 @@ Public Class CrearTorneo
             Next
 
             With gv_sponsors.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_sponsors.BottomPagerRow.Visible = True
@@ -105,10 +105,11 @@ Public Class CrearTorneo
             Next
 
             With gv_premios.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPosicion").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderDescripcion").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderValor").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
         Catch ex As Exception
@@ -238,11 +239,13 @@ Public Class CrearTorneo
                         Return True
                     End If
                 End If
-
             End If
+            Me.alertvalid.Visible = True
+            Me.textovalid.InnerText = idio.Palabras.Find(Function(p) p.Codigo = "AddTorneoError1").Traduccion
+            Me.success.Visible = False
         Else
             Me.alertvalid.Visible = True
-            'Me.textovalid.InnerText = idio.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+            Me.textovalid.InnerText = idio.Palabras.Find(Function(p) p.Codigo = "AddTorneoError2").Traduccion
             Me.success.Visible = False
         End If
         Return False
@@ -257,8 +260,14 @@ Public Class CrearTorneo
     End Function
     Protected Sub btnAgregar_Click(sender As Object, e As EventArgs) Handles btnagregar.Click
         Try
-            If txtnombrepremio.Text <> "" And txtdescripcion.Text <> "" And ValidarNumero(txtvalor.Text) Then
+            Dim IdiomaActual As Entidades.IdiomaEntidad
 
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            If txtnombrepremio.Text <> "" And txtdescripcion.Text <> "" And ValidarNumero(txtvalor.Text) Then
                 Dim Premio2 As New Entidades.Premio With {.Nombre = txtnombrepremio.Text, .Posicion = lstposicion.SelectedValue, .Descripcion = txtdescripcion.Text, .Valor = txtvalor.Text}
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Add(Premio2)
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Sort()
@@ -270,7 +279,7 @@ Public Class CrearTorneo
                 txtvalor.Text = ""
             Else
                 Me.alertvalid.Visible = True
-                'Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddTorneoError3").Traduccion
                 Me.success.Visible = False
             End If
         Catch ex As Exception
@@ -302,15 +311,20 @@ Public Class CrearTorneo
                     TorneoNew.Sponsors = TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor))
                     TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
                     If GestorTorneo.AltaTorneo(TorneoNew) Then
-                        'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                        'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                        'Negocio.BitacoraBLL.CrearBitacora(Bitac)
-                        'Me.success.Visible = True
-                        'Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
-                        'Me.alertvalid.Visible = False
+                        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddTorneoSuccess1").Traduccion & TorneoNew.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                        Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                        Me.success.Visible = True
+                        Me.alertvalid.Visible = False
+                    Else
+                        Me.alertvalid.Visible = True
+                        Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddPerfJugError1").Traduccion
+                        Me.success.Visible = False
                     End If
                 Else
-
+                    Me.alertvalid.Visible = True
+                    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+                    Me.success.Visible = False
                 End If
             End If
         Catch ex As Exception

@@ -11,7 +11,7 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="lblSuccessAddSponsor" class="text-success">El Sponsor correctamente.</label>
+            <label id="lblSuccessAddSponsor" class="text-success">El Sponsor se cargó correctamente.</label>
         </div>
         <div class="row">
             <div class="col-md-8 col-md-offset-2">

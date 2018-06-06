@@ -32,15 +32,6 @@ Partial Public Class CargarPartidas
     Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control success.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents success As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
-    '''<summary>
     '''Control lblPanelCarPartida.
     '''</summary>
     '''<remarks>

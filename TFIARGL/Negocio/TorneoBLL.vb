@@ -6,7 +6,21 @@ Public Class TorneoBLL
     Public Function AltaTorneo(torn As Entidades.Torneo) As Boolean
         Try
             Dim TorneDAL As New DAL.TorneoDAL
-            Return TorneDAL.AltaTorneo(torn)
+            If ValidarNombreTorneo(torn) Then
+                Return TorneDAL.AltaTorneo(torn)
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function ValidarNombreTorneo(torn As Entidades.Torneo) As Boolean
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            Return TorneDAL.ValidarNombreTorneo(torn)
         Catch ex As Exception
             Throw ex
         End Try
@@ -15,7 +29,16 @@ Public Class TorneoBLL
     Public Function TraerTorneosInscripcion(game As Entidades.Game, jugad As Entidades.Jugador) As List(Of Torneo)
         Try
             Dim TorneDAL As New DAL.TorneoDAL
-            Return TorneDAL.TraerTorneosInscripcion(game, (New DAL.EquipoDAL).TraerEquipoJugador(jugad.ID_Jugador))
+            Dim GameDAL As New DAL.GameDAL
+            game = GameDAL.TraerJuego(game.ID_Game)
+            Dim Equipo As Entidades.Equipo = (New DAL.EquipoDAL).TraerEquipoJugador(jugad.ID_Jugador)
+            If Equipo.Jugadores.Count = game.CantJugadores - 1 Then
+                Return TorneDAL.TraerTorneosInscripcion(game, Equipo)
+            Else
+                Throw New ExceptionEquipoIncompleto
+            End If
+        Catch EquipoNo As ExceptionEquipoIncompleto
+            Throw EquipoNo
         Catch ex As Exception
             Throw ex
         End Try

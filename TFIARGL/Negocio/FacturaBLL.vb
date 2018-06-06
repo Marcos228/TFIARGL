@@ -5,13 +5,24 @@ Public Class FacturaBLL
     Public Function GenerarFactura(ByRef fact As Entidades.Factura) As Boolean
         Try
             Dim DALFACTura As New DAL.FacturaDAL
-            If DALFACTura.GenerarFactura(fact) Then
-                For Each dettale In fact.Detalles
-                    DALFACTura.GenerarDetalle(fact, dettale)
-                Next
-                Return true
+            If ValidarFactura(fact) = True Then
+                If DALFACTura.GenerarFactura(fact) Then
+                    For Each dettale In fact.Detalles
+                        DALFACTura.GenerarDetalle(fact, dettale)
+                    Next
+                    Return True
+                End If
             End If
             Return False
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function ValidarFactura(ByRef fact As Entidades.Factura) As Boolean
+        Try
+            Dim DALFACTura As New DAL.FacturaDAL
+            Return DALFACTura.ValidarFactura(fact)
         Catch ex As Exception
             Throw ex
         End Try

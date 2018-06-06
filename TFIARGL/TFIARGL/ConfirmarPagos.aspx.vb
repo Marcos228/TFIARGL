@@ -121,10 +121,15 @@ Public Class ConfirmarPAgos
             Next
 
             With gv_Facturas.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCUIL").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderCorreo").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTorneo").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderUsuario").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTotal").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoPago").Traduccion
+                .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderEstado").Traduccion
+                .Cells(7).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_Facturas.BottomPagerRow.Visible = True
@@ -139,22 +144,16 @@ Public Class ConfirmarPAgos
 
     Private Sub gv_Facturas_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_Facturas.RowCommand
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad
-            If IsNothing(Current.Session("Cliente")) Then
-                IdiomaActual = Application("Español")
-            Else
-                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-            End If
             Dim Factura As Entidades.Factura = TryCast(Session("Facturas"), List(Of Entidades.Factura))(e.CommandArgument + (gv_Facturas.PageIndex * gv_Facturas.PageSize))
             Select Case e.CommandName.ToString
                 Case "S"
                     If TryCast(Session("FacturasSeleccionados"), List(Of Entidades.Factura)).Any(Function(p) p.ID_Factura = Factura.ID_Factura) Then
-                            gv_Facturas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.FromName("#c3e6cb")
+                        gv_Facturas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.FromName("#c3e6cb")
                         TryCast(Session("FacturasSeleccionados"), List(Of Entidades.Factura)).Remove(Factura)
                         Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(gv_Facturas.Rows.Item(e.CommandArgument).FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
                         imagen3.ImageUrl = "~/Imagenes/check.png"
                     Else
-                            gv_Facturas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
+                        gv_Facturas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
                         TryCast(Session("FacturasSeleccionados"), List(Of Entidades.Factura)).Add(Factura)
                         Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(gv_Facturas.Rows.Item(e.CommandArgument).FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
                         imagen3.ImageUrl = "~/Imagenes/clear.png"
@@ -216,22 +215,21 @@ Public Class ConfirmarPAgos
             End If
             Dim ListaConfirmar As List(Of Entidades.Factura) = TryCast(Session("FacturasSeleccionados"), List(Of Entidades.Factura))
             If ListaConfirmar.Count > 0 Then
-
                 GestorFact.AprobarFacturas(ListaConfirmar)
-
                 For Each Fact In ListaConfirmar
                     GestorTorneo.InscribirEquipo(Fact)
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraConPagosSuccess1").Traduccion & " " & Fact.Equipo.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraConPagosSuccess2").Traduccion & " " & Fact.Torneo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    Dim Bitac2 As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraVisTorneoSuccess1").Traduccion & " " & Fact.Equipo.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraConPagosSuccess3").Traduccion & " " & Fact.Torneo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac2)
+                    Me.success.Visible = True
+                    Me.alertvalid.Visible = False
                 Next
-
-                'Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                'Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraDelUserSuccess").Traduccion & Usuario.Nombre & ".", Entidades.Tipo_Bitacora.Baja, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                'Negocio.BitacoraBLL.CrearBitacora(Bitac)
-                'Me.success.Visible = True
-                'Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "DelUserSuccess").Traduccion
-                'Me.alertvalid.Visible = False
-
             Else
-
+                Me.alertvalid.Visible = True
+                Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ConPagosError1").Traduccion
+                Me.success.Visible = False
             End If
              FiltrarFacturas()
         Catch ex As Exception

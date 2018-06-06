@@ -239,24 +239,6 @@ Partial Public Class SortearTorneo
     Protected WithEvents btnAsignar As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''Control btnFin.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents btnFin As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
-    '''<summary>
-    '''Control btnFinalizar.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents btnFinalizar As Global.System.Web.UI.WebControls.Button
-    
-    '''<summary>
     '''Control id_torneo.
     '''</summary>
     '''<remarks>
