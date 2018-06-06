@@ -62,6 +62,7 @@ Public Class CrearTorneo
                 ddl.Items.Add(item)
 
             Next cnt
+
             Dim IdiomaActual As Entidades.IdiomaEntidad
             If IsNothing(Current.Session("Cliente")) Then
                 IdiomaActual = Application("Español")

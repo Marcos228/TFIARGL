@@ -17,7 +17,6 @@ Public Class PartidaDAL
                     .Add(New SqlParameter("@ID_Equipo_Local", part.Equipos(0).ID_Equipo))
                     .Add(New SqlParameter("@ID_Equipo_Visitante", part.Equipos(1).ID_Equipo))
                 End If
-
                 .Add(New SqlParameter("@ID_FAse", part.Fase))
             End With
             part.ID_Partida = Acceso.Scalar(Command)
@@ -30,6 +29,83 @@ Public Class PartidaDAL
         End Try
     End Function
 
+    Public Sub FinalizarPartida(partida As Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Update Partida set Resultado=@Resultado, Ganador_Local=@Ganador where id_partida=@ID_Partida")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Partida", partida.ID_Partida))
+                .Add(New SqlParameter("@Resultado", partida.Resultado))
+                If partida.Ganador.ID_Equipo = partida.Equipos(0).ID_Equipo Then
+                    .Add(New SqlParameter("@Ganador", True))
+                Else
+                    .Add(New SqlParameter("@Ganador", False))
+                End If
+            End With
+            Acceso.Escritura(Command)
+            Command.Dispose()
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
 
+    Public Sub AgregarHorarioPartida(partida As Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Update Partida set FechaHora=@Fecha where id_partida=@ID_Partida")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Partida", partida.ID_Partida))
+                .Add(New SqlParameter("@Fecha", partida.FechaHora))
+            End With
+            Acceso.Escritura(Command)
+            Command.Dispose()
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
 
+    Public Function TraerPartidasTorneo(id_torneo As Integer) As List(Of Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Partida where ID_Torneo=@ID_torneo")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Torneo", id_torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListaPArtida As New List(Of Entidades.Partida)
+            For Each _dr As DataRow In dt.Rows
+                Dim partida As New Entidades.Partida
+                FormatearPartida(partida, _dr)
+                ListaPArtida.Add(partida)
+            Next
+            Return ListaPArtida
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Private Sub FormatearPartida(partida As Partida, row As DataRow)
+        Try
+            partida.ID_Partida = Row("ID_Partida")
+            partida.Fase = Row("ID_Fase")
+            partida.FechaHora = Row("FechaHora")
+            If Not IsDBNull(row("Resultado")) Then
+                partida.Resultado = row("Resultado")
+            End If
+            Dim gestorEquipo As New EquipoDAL
+            If Not IsDBNull(row("ID_Equipo_Local")) Then
+                partida.Equipos.Add(gestorEquipo.TraerEquipoID(row("ID_Equipo_Local")))
+            End If
+            If Not IsDBNull(row("ID_Equipo_Visitante")) Then
+                partida.Equipos.Add(gestorEquipo.TraerEquipoID(row("ID_Equipo_Visitante")))
+            End If
+            If Not IsDBNull(row("Ganador_Local")) Then
+                If row("Ganador_Local") = 1 Then
+                    partida.Ganador = partida.Equipos(0)
+                Else
+                    partida.Ganador = partida.Equipos(1)
+                End If
+            End If
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
 End Class

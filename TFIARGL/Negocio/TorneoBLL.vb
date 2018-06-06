@@ -30,6 +30,15 @@ Public Class TorneoBLL
         End Try
     End Function
 
+    Public Function TraerTorneosCargaPartidas() As List(Of Torneo)
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            Return TorneDAL.TraerTorneosCargaPartidas()
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Sub InscribirEquipo(fact As Factura)
         Try
             Dim TorneDAL As New DAL.TorneoDAL
@@ -74,6 +83,11 @@ Public Class TorneoBLL
             Next
 
             LLenarPartidas(PrimeraFaseTorneo, torneoSorteo, torneoSorteo.Partidas.Count)
+
+            Dim PArtidaBLL As New PartidaBLL
+            For Each PArtida In torneoSorteo.Partidas
+                PArtidaBLL.AltaPartida(PArtida, torneoSorteo.ID_Torneo, torneoSorteo.Game.ID_Game)
+            Next
 
         Catch ex As Exception
             Throw ex
@@ -137,16 +151,4 @@ Public Class TorneoBLL
                 Return Fases.Final
         End Select
     End Function
-
-    Public Sub FinalizarSorteo(torneoSorteo As Torneo)
-        Try
-            Dim PartidaDAL As New DAL.PartidaDAL
-            For Each PArtida In torneoSorteo.Partidas
-                PartidaDAL.AltaPartida(PArtida, torneoSorteo.ID_Torneo)
-            Next
-
-        Catch ex As Exception
-            Throw ex
-        End Try
-    End Sub
 End Class

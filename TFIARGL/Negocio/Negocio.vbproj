@@ -71,6 +71,17 @@
     <Compile Include="DigitoVerificadorBLL.vb" />
     <Compile Include="EncriptarBLL.vb" />
     <Compile Include="FacturaBLL.vb" />
+    <Compile Include="EstadisticaBLL.vb" />
+    <Compile Include="PartidaBLL.vb" />
+    <Compile Include="Puntaje.vb" />
+    <Compile Include="ManejadorPuntos.vb" />
+    <Compile Include="PuntajeStarcraft.vb" />
+    <Compile Include="PuntajeDota2.vb" />
+    <Compile Include="PuntajeFIFA.vb" />
+    <Compile Include="PuntajeLOL.vb" />
+    <Compile Include="PuntajeOverwatch.vb" />
+    <Compile Include="PuntajeCSGO.vb" />
+    <Compile Include="Ranking.vb" />
     <Compile Include="SponsorBLL.vb" />
     <Compile Include="EquipoBLL.vb" />
     <Compile Include="TorneoBLL.vb" />

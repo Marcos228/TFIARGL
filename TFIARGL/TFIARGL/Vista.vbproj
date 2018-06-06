@@ -94,10 +94,12 @@
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
     <Content Include="ABMSponsor.aspx" />
+    <Content Include="VisualizarRanking.aspx" />
     <Content Include="CSS\jquery.ui.timepicker.css" />
     <Content Include="IMAGENES\_banner.jpg" />
     <Content Include="ConfirmarPagos.aspx" />
     <Content Include="JS\jquery.ui.timepicker.js" />
+    <Content Include="CargarPartidas.aspx" />
     <Content Include="SortearTorneo.aspx" />
     <Content Include="VisualizarTorneo.aspx" />
     <Content Include="InscribirTorneo.aspx" />
@@ -211,11 +213,25 @@
       <DependentUpon>ABMSponsor.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="VisualizarRanking.aspx.designer.vb">
+      <DependentUpon>VisualizarRanking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VisualizarRanking.aspx.vb">
+      <DependentUpon>VisualizarRanking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="ConfirmarPagos.aspx.designer.vb">
       <DependentUpon>ConfirmarPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmarPagos.aspx.vb">
       <DependentUpon>ConfirmarPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CargarPartidas.aspx.designer.vb">
+      <DependentUpon>CargarPartidas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CargarPartidas.aspx.vb">
+      <DependentUpon>CargarPartidas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SortearTorneo.aspx.designer.vb">

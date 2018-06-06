@@ -1,4 +1,14 @@
 ﻿Public Class Tipo_Estadistica
+
+    Private _ID_Tipo_estadistica As Integer
+    Public Property ID_Tipo_Estadistica() As Integer
+        Get
+            Return _ID_Tipo_estadistica
+        End Get
+        Set(ByVal value As Integer)
+            _ID_Tipo_estadistica = value
+        End Set
+    End Property
     Private _tipo_rol As Tipo_Rol
     Public Property Tipo_rol() As Tipo_Rol
         Get

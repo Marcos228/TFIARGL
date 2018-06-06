@@ -48,6 +48,16 @@
         End Set
     End Property
 
+    Private _ganador As Equipo
+    Public Property Ganador() As Equipo
+        Get
+            Return _ganador
+        End Get
+        Set(ByVal value As Equipo)
+            _ganador = value
+        End Set
+    End Property
+
     Private _fase As Fases
     Public Property Fase() As Fases
         Get

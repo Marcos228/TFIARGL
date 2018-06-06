@@ -45,6 +45,23 @@ Public Class TorneoDAL
         End Try
     End Function
 
+    Public Function TraerTorneosCargaPartidas() As List(Of Torneo)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Torneo as T where Fecha_Fin_Inscripcion<GETDATE() and exists(Select Top 1 ID_Partida from Partida as P where P.ID_Torneo =T.ID_Torneo)")
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListTorneo As New List(Of Entidades.Torneo)
+            For Each _dr As DataRow In dt.Rows
+                Dim torn As New Entidades.Torneo
+                FormatearTorneo(torn, _dr)
+                ListTorneo.Add(torn)
+            Next
+            Return ListTorneo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Sub TraerEquiposInscriptos(torneosorteo As Torneo)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("select * from Torneo_Equipo where id_torneo=@id_torneo")
@@ -57,7 +74,7 @@ Public Class TorneoDAL
             For Each _dr As DataRow In dt.Rows
                 Dim equipotorneo As New Entidades.Equipo
                 equipotorneo.ID_Equipo = _dr("ID_Equipo")
-                gestorequipo.TraerEquipoID(equipotorneo.ID_Equipo)
+                equipotorneo = gestorequipo.TraerEquipoID(equipotorneo.ID_Equipo)
                 torneosorteo.Equipos.Add(equipotorneo)
             Next
         Catch ex As Exception
