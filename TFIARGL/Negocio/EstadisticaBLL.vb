@@ -61,6 +61,15 @@ Public Class EstadisticaBLL
         End Try
     End Sub
 
+    Public Function TraerTipoEstadisticas(id_game As Integer) As List(Of Tipo_Estadistica)
+        Try
+            Dim DAL As New DAL.EstadisticaDAL
+            Return DAL.TraerTipoEstadisticas(id_game)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Sub CargarEstadistica(estadistica As Estadistica, id_partida As Integer)
         Try
             Dim DALEstadistica As New DAL.EstadisticaDAL

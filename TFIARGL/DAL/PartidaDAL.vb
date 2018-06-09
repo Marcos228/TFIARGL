@@ -29,6 +29,27 @@ Public Class PartidaDAL
         End Try
     End Function
 
+    Public Function TraerPartidasAnio(game As Game, anio As Integer) As List(Of Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Partida as P inner join Torneo as T on T.ID_Torneo=P.ID_Torneo where T.ID_Game=@Game and Year(P.FechaHora)=@Anio")
+            With Command.Parameters
+                .Add(New SqlParameter("@Anio", anio))
+                .Add(New SqlParameter("@Game", game.ID_Game))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListaPArtida As New List(Of Entidades.Partida)
+            For Each _dr As DataRow In dt.Rows
+                Dim partida As New Entidades.Partida
+                FormatearPartida(partida, _dr)
+                ListaPArtida.Add(partida)
+            Next
+            Return ListaPArtida
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Sub FinalizarPartida(partida As Partida)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Update Partida set Resultado=@Resultado, Ganador_Local=@Ganador where id_partida=@ID_Partida")

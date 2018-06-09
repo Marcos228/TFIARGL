@@ -17,6 +17,26 @@ Public Class PartidaBLL
             Throw ex
         End Try
     End Function
+
+    Public Function TraerEstadisticas(game As Game, anio As Integer) As List(Of Partida)
+        Try
+            Dim DALPartida As New DAL.PartidaDAL
+            Dim EstadisticaBLL As New EstadisticaBLL
+
+            Dim listaretorno As List(Of Entidades.Partida) = DALPartida.TraerPartidasAnio(game, anio)
+
+            For Each Partida In listaretorno
+                EstadisticaBLL.TraerEstadisticasPartida(Partida)
+            Next
+
+            Return listaretorno
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+
+    End Function
+
     Public Function FinalizarPartida(ByRef part As Entidades.Partida) As Boolean
         Try
             Dim DALPartida As New DAL.PartidaDAL
