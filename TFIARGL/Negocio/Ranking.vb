@@ -36,10 +36,10 @@
             For Each Equi As Entidades.Equipo In part.Equipos
                 Dim EquipoAgregar As Entidades.Equipo = ListaRetorno.Find(Function(p) p.ID_Equipo = Equi.ID_Equipo)
                 If IsNothing(EquipoAgregar) Then
-                    Equi.Puntos = manejador.CalcularPuntajeEquipo(part.Estadisticas, Equi, IIf(Equi.ID_Equipo = part.Ganador.ID_Equipo, True, False))
+                    Equi.Puntos = manejador.CalcularPuntajeEquipo(part.Estadisticas, Tipo_Estadisticas, Equi, IIf(Equi.ID_Equipo = part.Ganador.ID_Equipo, True, False))
                     ListaRetorno.Add(Equi)
                 Else
-                    EquipoAgregar.Puntos += manejador.CalcularPuntajeEquipo(part.Estadisticas, EquipoAgregar, IIf(EquipoAgregar.ID_Equipo = part.Ganador.ID_Equipo, True, False))
+                    EquipoAgregar.Puntos += manejador.CalcularPuntajeEquipo(part.Estadisticas, Tipo_Estadisticas, EquipoAgregar, IIf(EquipoAgregar.ID_Equipo = part.Ganador.ID_Equipo, True, False))
                 End If
             Next
         Next
@@ -74,10 +74,10 @@
                 For Each Jugador As Entidades.Jugador In Equi.Jugadores
                     Dim JugadorAgregar As Entidades.Jugador = ListaRetorno.Find(Function(p) p.ID_Jugador = Jugador.ID_Jugador)
                     If IsNothing(JugadorAgregar) Then
-                        Jugador.Puntos = manejador.CalcularPuntajeJugador(part.Estadisticas)
+                        Jugador.Puntos = manejador.CalcularPuntajeJugador(part.Estadisticas, Tipo_Estadisticas, Jugador)
                         ListaRetorno.Add(Jugador)
                     Else
-                        JugadorAgregar.Puntos += manejador.CalcularPuntajeJugador(part.Estadisticas)
+                        JugadorAgregar.Puntos += manejador.CalcularPuntajeJugador(part.Estadisticas, Tipo_Estadisticas, JugadorAgregar)
                     End If
 
                 Next

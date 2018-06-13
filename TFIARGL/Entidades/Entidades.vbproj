@@ -87,6 +87,8 @@
     </Compile>
     <Compile Include="Partida.vb" />
     <Compile Include="Estado.vb" />
+    <Compile Include="PartidaDeterminar.vb" />
+    <Compile Include="PartidaJugar.vb" />
     <Compile Include="Posicion.vb" />
     <Compile Include="Premios.vb" />
     <Compile Include="Rol_Jugador.vb" />

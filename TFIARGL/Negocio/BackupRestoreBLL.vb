@@ -24,13 +24,11 @@ Public Class BackupRestoreBLL
         Try
             _backuprestoredal = New BackupRestoreDAL
             If _backuprestoredal.RealizarRestore(BackupEntidad) Then
-                Bitacora.makeSimpleLog("Se ha realizado un restore del sistema.")
                 Return True
             Else
                 Return False
             End If
         Catch ex As Exception
-            Bitacora.makeSimpleLog("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message)
             Throw ex
         End Try
     End Function

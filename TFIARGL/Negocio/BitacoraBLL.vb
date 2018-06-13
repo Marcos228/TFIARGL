@@ -188,20 +188,4 @@ Public Class BitacoraBLL
         End If
     End Sub
 
-    Public Function makeSimpleLog(logMsg As String, Optional ByVal cliente As Entidades.UsuarioEntidad = Nothing) As Boolean
-        'Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US")
-        'Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US")
-        'Dim log As New Entidades.BitacoraAuditoria
-        'log.Id_Bitacora = DAL.Acceso.TraerID("ID_bitacora", "Bitacora")
-        'log.Fecha =  Now
-        'log.Detalle = logMsg
-        'If IsNothing(cliente) Then
-        '    log.Usuario = Current.Session("cliente")
-        'Else
-        '    log.Usuario = cliente
-        'End If
-
-
-        'Return Me.makeLog(log)
-    End Function
 End Class

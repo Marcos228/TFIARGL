@@ -21,13 +21,30 @@ Public Class PartidaDAL
             End With
             part.ID_Partida = Acceso.Scalar(Command)
             Command.Dispose()
-
-
             Return True
         Catch ex As Exception
             Throw ex
         End Try
     End Function
+
+    Public Sub RelacionPartidaDeterminar(part As PartidaDeterminar)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Partida_Partida (ID_Partida_Determinar,ID_Partida_Jugar,ID_Partida_Jugar2) values (@ID_Partida_D,@ID_Partida_J1,@ID_Partida_J2)")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Partida_D", part.ID_Partida))
+                .Add(New SqlParameter("@ID_Partida_J1", part.Partida1.ID_Partida))
+                If Not IsNothing(part.Partida2) Then
+                    .Add(New SqlParameter("@ID_Partida_J2", part.Partida2.ID_Partida))
+                Else
+                    .Add(New SqlParameter("@ID_Partida_J2", DBNull.Value))
+                End If
+            End With
+            Acceso.Escritura(Command)
+            Command.Dispose()
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
 
     Public Function TraerPartidasAnio(game As Game, anio As Integer) As List(Of Partida)
         Try

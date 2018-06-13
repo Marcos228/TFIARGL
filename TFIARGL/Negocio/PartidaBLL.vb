@@ -8,6 +8,9 @@ Public Class PartidaBLL
 
             Dim EstadisticaBLL As New EstadisticaBLL
             If DALPartida.AltaPartida(part, ID_Torneo) Then
+                If part.GetType = GetType(Entidades.PartidaDeterminar) Then
+                    DALPartida.RelacionPartidaDeterminar(part)
+                End If
                 If part.Equipos.Count = 2 Then
                     EstadisticaBLL.GenerarEstadisticas(part, ID_Game)
                 End If

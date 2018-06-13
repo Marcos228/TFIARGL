@@ -9,18 +9,12 @@ Public Class GestorPermisosBLL
             If ValidarNombre(perm.Nombre) Then
                 PermisosDAL = New GestorPermisosDAL
                 PermisosDAL.Alta(perm)
-                'BitacoraBLL.CrearBitacoraAuditoria("Se creó el Perfil: " & perm.Nombre & " en el sistema.", TipoBitacora.Alta,  Now, SessionBLL.SesionActual.ObtenerUsuarioActual)
                 Return True
             Else
                 Return False
             End If
-        Catch FalloConexion As InvalidOperationException
-            'Dim Bitacora As New BitacoraEntidad("No se pudo crear el Perfil: " & perm.Nombre & " en el sistema. Error de Conexion", TipoBitacora.Alta, SessionBLL.SesionActual.ObtenerUsuarioActual)
-            'BitacoraBLL.ArchivarBitacora(Bitacora)
-            'Throw FalloConexion
         Catch ex As Exception
-            'BitacoraBLL.CrearBitacora("El Metodo " & ex.TargetSite.ToString & " generó un error. Su mensaje es: " & ex.Message, TipoBitacora.Errores, (New UsuarioEntidad With {.ID_Usuario = 0, .Nombre = "Sistema"}))
-            'Throw ex
+            Throw ex
         End Try
     End Function
 
