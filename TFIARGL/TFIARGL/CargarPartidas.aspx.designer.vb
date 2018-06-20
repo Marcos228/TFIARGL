@@ -158,31 +158,13 @@ Partial Public Class CargarPartidas
     Protected WithEvents gv_estadisticas As Global.System.Web.UI.WebControls.GridView
     
     '''<summary>
-    '''Control lblvalorestadistica.
+    '''Control EstadisticasTextbox.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblvalorestadistica As Global.System.Web.UI.WebControls.Label
-    
-    '''<summary>
-    '''Control txtvalor.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents txtvalor As Global.System.Web.UI.WebControls.TextBox
-    
-    '''<summary>
-    '''Control RequiredFieldValidator1.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents RequiredFieldValidator1 As Global.System.Web.UI.WebControls.RequiredFieldValidator
+    Protected WithEvents EstadisticasTextbox As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
     '''Control Div3.

@@ -17,15 +17,6 @@ Public Class JugadorBLL
         End Try
     End Function
 
-    Public Function TraerJugadoresRanking() As List(Of Jugador)
-        'Try
-        '    Dim DALJugador As New DAL.JugadorDAL
-        '    Return DALJugador.TraerJugadoresSolicitud(nombre, Game)
-        'Catch ex As Exception
-        '    Throw ex
-        'End Try
-    End Function
-
     Public Function ValidaNombre(Jugador As Entidades.Jugador) As Boolean
         Try
             Dim DALJugador As New DAL.JugadorDAL

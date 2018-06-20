@@ -17,53 +17,39 @@
                     </div>
                     <div class="panel-body FondoPanel">
                         <br />
+                                                <div class="col-md-2 col-md-offset-3">
+                            <asp:Button ID="btnjugadores" runat="server" Text="Ranking Jugadores" CssClass="btn btn-block btn-warning" />
+                        </div>
+
+                        <div class="col-md-2 col-md-offset-1">
+                            <asp:Button ID="btnequipos" runat="server" Text="Ranking Equipos" CssClass="btn btn-block btn-warning" />
+                        </div>
+                        <br />
+                                  <br />
+                                  <br />
                         <div class="form-inline has-success">
-                            <div class="col-md-2 col-md-offset-2">
+                            <div class="col-md-3 col-md-offset-3">
                                 <asp:Label ID="lbljuego" runat="server" Text="Juego:" CssClass="control-label labelform"></asp:Label>
                                 <div class="input-group">
                                     <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre"></asp:DropDownList>
                                     <span class="input-group-addon" id="basic-addon12"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></span>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <asp:Label ID="lblrol" runat="server" Text="Rol:" CssClass="control-label labelform"></asp:Label>
                                 <div class="input-group">
                                     <asp:DropDownList ID="lstrol" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Rol" DataTextField="Nombre"></asp:DropDownList>
                                     <span class="input-group-addon" id="basic-addon13"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></span>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <asp:Label ID="lbljugador" runat="server" Text="Jugador:" CssClass="control-label labelform"></asp:Label>
-                                <div class="input-group">
-                                    <asp:TextBox ID="txtjugador" runat="server" CssClass="form-control"></asp:TextBox>
-                                    <span class="input-group-addon" id="basic-addon10"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <asp:Label ID="lblequipo" runat="server" Text="Equipo:" CssClass="control-label labelform"></asp:Label>
-                                <div class="input-group">
-                                    <asp:TextBox ID="txtequipo" runat="server" CssClass="form-control"></asp:TextBox>
-                                    <span class="input-group-addon" id="basic-addon14"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-                                </div>
-                            </div>
                         </div>
-
-                        <br />
-                        <br />
-                        <div class="col-md-2 col-md-offset-5">
-                            <asp:Button ID="btnjugadores" runat="server" Text="Ranking Jugadores" CssClass="btn btn-block btn-warning" />
-                        </div>
-
-                        <div class="col-md-2 col-md-offset-5">
-                            <asp:Button ID="btnequipos" runat="server" Text="Ranking Equipos" CssClass="btn btn-block btn-warning" />
-                        </div>
-                        <br />
-
+                            <br />
+                                  <br />
                         <br />
                         <br />
                         <div class="form-horizontal">
 
-                            <div id="datosjugadores" class="form-group">
+                            <div id="datosjugadores" class="form-group" runat="server">
                                 <div class="col-md-12">
                                     <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_jugadores" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_jugadores_PageIndexChanging" RowStyle-Height="40px">
                                         <HeaderStyle CssClass="thead-dark" />
@@ -98,7 +84,7 @@
                                 </div>
                             </div>
 
-                            <div id="datosequipos" class="form-group">
+                            <div id="datosequipos" class="form-group" runat="server">
                                 <div class="col-md-12">
                                     <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_equipos" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_equipos_PageIndexChanging" RowStyle-Height="40px">
                                         <HeaderStyle CssClass="thead-dark" />
@@ -123,7 +109,7 @@
                                             </div>
                                         </PagerTemplate>
                                         <Columns>
-                                            <asp:TemplateField HeaderText="Posicion"></asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Posicion" ></asp:TemplateField>
                                             <asp:BoundField DataField="Nombre" HeaderText="Equipo" />
                                             <asp:BoundField DataField="Game.Nombre" HeaderText="Juego" />
                                             <asp:BoundField DataField="Fecha_Inicio" HeaderText="Fecha Creacion" />

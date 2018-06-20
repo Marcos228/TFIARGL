@@ -27,6 +27,7 @@ Public Class PartidaDAL
         End Try
     End Function
 
+
     Public Sub RelacionPartidaDeterminar(part As PartidaDeterminar)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("insert into Partida_Partida (ID_Partida_Determinar,ID_Partida_Jugar,ID_Partida_Jugar2) values (@ID_Partida_D,@ID_Partida_J1,@ID_Partida_J2)")
@@ -46,9 +47,10 @@ Public Class PartidaDAL
         End Try
     End Sub
 
+
     Public Function TraerPartidasAnio(game As Game, anio As Integer) As List(Of Partida)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("select * from Partida as P inner join Torneo as T on T.ID_Torneo=P.ID_Torneo where T.ID_Game=@Game and Year(P.FechaHora)=@Anio")
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Partida as P inner join Torneo as T on T.ID_Torneo=P.ID_Torneo where T.ID_Game=@Game and Year(P.FechaHora)=@Anio and Ganador_Local is not Null")
             With Command.Parameters
                 .Add(New SqlParameter("@Anio", anio))
                 .Add(New SqlParameter("@Game", game.ID_Game))

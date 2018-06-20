@@ -95,7 +95,7 @@
                                                 <asp:BoundField DataField="FechaHora" HeaderText="Fecha" DataFormatString="{0:dd-MM-yyyy HH:mm:ss }" />
                                                 <asp:BoundField DataField="Equipos(0).Nombre" HeaderText="Equipo Local" />
                                                 <asp:BoundField DataField="Equipos(1).Nombre" HeaderText="Equipo Visitante" />
-                                                 <asp:BoundField DataField="Ganador.Nombre" HeaderText="Ganador" />
+                                                <asp:BoundField DataField="Ganador.Nombre" HeaderText="Ganador" />
                                                 <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
                                                     <ItemTemplate>
                                                         <div>
@@ -135,8 +135,8 @@
                                 </div>
                             </div>
                             <br />
-                                 <br />
-                                 <br />
+                            <br />
+                            <br />
                             <div runat="server" id="datosEst">
                                 <div class="form-group">
                                     <div class="col-md-12">
@@ -163,11 +163,7 @@
                                                 </div>
                                             </PagerTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="Jugador.Nickname" HeaderText="Jugador" />
-                                                <asp:BoundField DataField="Equipo.Nombre" HeaderText="Equipo" />
-                                                <asp:BoundField DataField="Tipo_Estadistica.Nombre" HeaderText="Tipo Estadistica" />
-                                                <asp:BoundField DataField="Valor_Estadistica" HeaderText="Valor" />
-                                                <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                  <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
                                                     <ItemTemplate>
                                                         <div>
                                                             <asp:ImageButton ID="btn_Seleccionar" runat="server" CommandName="S" ImageUrl="~/Imagenes/arrow.png" Height="18px" />
@@ -175,21 +171,16 @@
                                                     </ItemTemplate>
                                                     <HeaderStyle Width="100px"></HeaderStyle>
                                                 </asp:TemplateField>
+                                                <asp:BoundField DataField="Jugador.Nickname" HeaderText="Jugador" />
+                                                <asp:BoundField DataField="Equipo.Nombre" HeaderText="Equipo" />
+                                              
                                             </Columns>
                                         </asp:GridView>
                                     </div>
                                 </div>
-                                <div class="form-group" runat="server">
-                                    <asp:Label ID="lblvalorestadistica" runat="server" Text="Valor Estadistica:" CssClass="col-sm-4 control-label labelform"></asp:Label>
-                                    <div class="col-md-6">
-                                        <div class="input-group">
-                                            <asp:TextBox ID="txtvalor" runat="server" CssClass="form-control"></asp:TextBox>
-                                            <span class="input-group-addon" id="basic-addon10"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtvalor" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
-                                    </div>
+
+                                   <div id="EstadisticasTextbox" runat="server">
+                            
                                 </div>
 
                                 <div id="Div3" runat="server" class="row">

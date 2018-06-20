@@ -32,6 +32,24 @@ Partial Public Class VisualizarRanking
     Protected WithEvents lblPanelVisRanking As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
+    '''Control btnjugadores.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btnjugadores As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''Control btnequipos.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btnequipos As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
     '''Control lbljuego.
     '''</summary>
     '''<remarks>
@@ -68,58 +86,13 @@ Partial Public Class VisualizarRanking
     Protected WithEvents lstrol As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''Control lbljugador.
+    '''Control datosjugadores.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lbljugador As Global.System.Web.UI.WebControls.Label
-    
-    '''<summary>
-    '''Control txtjugador.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents txtjugador As Global.System.Web.UI.WebControls.TextBox
-    
-    '''<summary>
-    '''Control lblequipo.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents lblequipo As Global.System.Web.UI.WebControls.Label
-    
-    '''<summary>
-    '''Control txtequipo.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents txtequipo As Global.System.Web.UI.WebControls.TextBox
-    
-    '''<summary>
-    '''Control btnjugadores.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents btnjugadores As Global.System.Web.UI.WebControls.Button
-    
-    '''<summary>
-    '''Control btnequipos.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents btnequipos As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents datosjugadores As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
     '''Control gv_jugadores.
@@ -129,6 +102,15 @@ Partial Public Class VisualizarRanking
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
     Protected WithEvents gv_jugadores As Global.System.Web.UI.WebControls.GridView
+    
+    '''<summary>
+    '''Control datosequipos.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents datosequipos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
     '''Control gv_equipos.

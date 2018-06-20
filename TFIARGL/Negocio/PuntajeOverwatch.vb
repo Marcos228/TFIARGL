@@ -52,41 +52,55 @@ Public Class PuntajeOverwatch
         Dim NM As Integer = 8
 
 
+
         For Each estadistica In Estadisticas
             If estadistica.Jugador.ID_Jugador = Jugador.ID_Jugador Then
                 VJ.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
             End If
-            If VP.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
-                VP(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) += estadistica.Valor_Estadistica
-            Else
-                VP.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
-            End If
-            If VM.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
-                If VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) < estadistica.Valor_Estadistica Then
-                    VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) = estadistica.Valor_Estadistica
+            If Jugador.Rol_Jugador.Tipo_rol = estadistica.tipo_Estadistica.Tipo_rol Then
+
+                If VP.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
+                    VP(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) += estadistica.Valor_Estadistica
+                Else
+                    VP.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
+                End If
+                If VM.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
+                    If VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) < estadistica.Valor_Estadistica Then
+                        VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) = estadistica.Valor_Estadistica
+                    End If
                 Else
                     VM.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
                 End If
+
             End If
         Next
 
         Dim R As Integer = 0
 
         For Each Testad In Tipo_Estadisticas
-            If Testad.Destacado Then
-                Dim PrimerModulo As Single = ((VJ(Testad.ID_Tipo_Estadistica) / VP(Testad.ID_Tipo_Estadistica)) * NM)
-                If PrimerModulo < 0.5 Then
-                    PrimerModulo = 0.5
-                ElseIf PrimerModulo > 3 Then
-                    PrimerModulo = 3
-                End If
-                R = (PrimerModulo * Testad.Valor_Base)
-            Else
-                R = (Testad.Valor_Base / VM(Testad.ID_Tipo_Estadistica)) * VJ(Testad.ID_Tipo_Estadistica)
-            End If
+            If Testad.Tipo_rol = Jugador.Rol_Jugador.Tipo_rol Then
+                If Testad.Destacado Then
+                    Dim PrimerModulo As Single = ((VJ(Testad.ID_Tipo_Estadistica) / VP(Testad.ID_Tipo_Estadistica)) * NM)
+                    If Not Double.IsNaN(PrimerModulo) Then
+                        If PrimerModulo < 0.5 Then
+                            PrimerModulo = 0.5
+                        ElseIf PrimerModulo > 3 Then
+                            PrimerModulo = 3
+                        End If
+                        R = (PrimerModulo * Testad.Valor_Base)
+                    End If
+                Else
+                    Dim PrimerModulo As Single = VM(Testad.ID_Tipo_Estadistica) * VJ(Testad.ID_Tipo_Estadistica)
+                    If Not Double.IsNaN(PrimerModulo) And PrimerModulo <> 0 Then
+                        R = (Testad.Valor_Base / PrimerModulo)
+                    End If
 
-            Puntaje += R
+                    Puntaje += R
+                End If
+            End If
         Next
+
+
 
         Return Puntaje
 

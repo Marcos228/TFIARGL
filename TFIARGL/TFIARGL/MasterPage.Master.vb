@@ -39,6 +39,7 @@ Public Class MasterPage
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/ConfirmarRegistracion.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/ConfirmarRecupero.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/SeleccionarIdioma.aspx"})
+        PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/VisualizarRanking.aspx"})
 
         UsuarioInvitado.Perfil = PermisosInvitado
         Dim GestorIdioma As New Negocio.IdiomaBLL

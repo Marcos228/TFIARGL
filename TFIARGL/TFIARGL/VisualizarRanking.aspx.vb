@@ -5,25 +5,71 @@ Public Class VisualizarRanking
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        CargarRankingJugadores()
+        If Not IsPostBack Then
+            CargarJuegos()
+            CargarRankingJugadores()
+        End If
     End Sub
-    Private Sub CargarRankingJugadores()
+    Private Sub CargarRankingJugadores(Optional Rol As Entidades.Rol_Jugador = Nothing)
         Dim lista As New List(Of Entidades.Jugador)
-        Dim Gestor As New Negocio.JugadorBLL
-        lista = Gestor.TraerJugadoresRanking()
+        Dim Gestor As New Negocio.Ranking
+        If Me.lstrol.SelectedIndex <> lstrol.Items.Count - 1 Then
+            Rol = New Entidades.Rol_Jugador With {.ID_Rol = Me.lstrol.SelectedValue}
+        End If
+        lista = Gestor.CalcularRankingJugador(New Entidades.Game With {.ID_Game = Me.lstgame.SelectedValue}, 2018, Rol)
+        lista = lista.OrderByDescending(Function(x) x.Puntos).ToList
         Me.gv_jugadores.DataSource = lista
         Me.gv_jugadores.DataBind()
+        Me.datosequipos.Visible = False
+        Me.datosjugadores.Visible = True
     End Sub
 
     Private Sub CargarRankingEquipos()
-        'Dim lista As New List(Of Entidades.Equipo)
-        'Dim Gestor As New Negocio.EquipoBLL
-        'lista = Gestor.TraerEquiposRanking()
-        'Me.gv_equipos.DataSource = lista
-        'Me.gv_equipos.DataBind()
+        Dim lista As New List(Of Entidades.Equipo)
+        Dim Gestor As New Negocio.Ranking
+        lista = Gestor.CalcularRankingEquipo(New Entidades.Game With {.ID_Game = Me.lstgame.SelectedValue}, 2018)
+        lista = lista.OrderByDescending(Function(x) x.Puntos).ToList
+        Me.gv_equipos.DataSource = lista
+        Me.gv_equipos.DataBind()
+        Me.datosjugadores.Visible = False
+        Me.datosequipos.Visible = True
     End Sub
 
+    Private Sub CargarJuegos()
+        Try
+            Dim GestorGame As New Negocio.GameBLL
+            Dim Juegos As List(Of Entidades.Game) = GestorGame.TraerJuegos()
+            lstgame.DataSource = Juegos
+            lstgame.DataBind()
+            CargarRoles
 
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+    Private Sub CargarRoles()
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Dim Gestor As New Negocio.Rol_JugadorBLL
+            Dim Roles As List(Of Entidades.Rol_Jugador) = Gestor.TraerRolesJuego(New Entidades.Game With {.ID_Game = Me.lstgame.SelectedValue})
+
+            lstrol.DataSource = Roles
+            lstrol.DataBind()
+            Me.lstrol.Items.Add(New ListItem(IdiomaActual.Palabras.Find(Function(p) p.Codigo = "MensajeTodos").Traduccion, -1))
+            Me.lstrol.SelectedIndex = Me.lstrol.Items.Count - 1
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
     Private Sub gv_Jugadores_DataBound(sender As Object, e As EventArgs) Handles gv_jugadores.DataBound
         Try
             Dim ddl As DropDownList = CType(gv_jugadores.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
@@ -51,9 +97,9 @@ Public Class VisualizarRanking
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
+
             For Each row As GridViewRow In gv_jugadores.Rows
-                Dim imagen1 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_envio"), System.Web.UI.WebControls.ImageButton)
-                imagen1.CommandArgument = row.RowIndex
+                row.Cells(0).Text = row.RowIndex +1
             Next
 
             With gv_jugadores.HeaderRow
@@ -100,8 +146,7 @@ Public Class VisualizarRanking
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
             For Each row As GridViewRow In gv_equipos.Rows
-                Dim imagen1 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_envio"), System.Web.UI.WebControls.ImageButton)
-                imagen1.CommandArgument = row.RowIndex
+                row.Cells(0).Text = row.RowIndex + 1
             Next
 
             With gv_equipos.HeaderRow
@@ -126,6 +171,18 @@ Public Class VisualizarRanking
             CargarRankingJugadores()
             gv_jugadores.PageIndex = e.NewPageIndex
             gv_jugadores.DataBind()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Protected Sub gv_equipos_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
+        Try
+            CargarRankingEquipos()
+            gv_equipos.PageIndex = e.NewPageIndex
+            gv_equipos.DataBind()
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -177,4 +234,15 @@ Public Class VisualizarRanking
         End Try
     End Sub
 
+    Protected Sub lstgame_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstgame.SelectedIndexChanged
+        CargarRoles()
+    End Sub
+
+    Protected Sub btnjugadores_Click(sender As Object, e As EventArgs) Handles btnjugadores.Click
+        CargarRankingJugadores()
+    End Sub
+
+    Protected Sub btnequipos_Click(sender As Object, e As EventArgs) Handles btnequipos.Click
+        CargarRankingEquipos()
+    End Sub
 End Class

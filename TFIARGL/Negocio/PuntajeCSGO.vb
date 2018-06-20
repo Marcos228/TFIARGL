@@ -6,8 +6,8 @@ Public Class PuntajeCSGO
     Public Overrides Function CalcularPuntajeEquipo(ByRef Estadisticas As List(Of Estadistica),ByRef Tipo_Estadisticas As List(Of Tipo_Estadistica), ByRef Equipo As Entidades.Equipo, ByRef Ganador As Boolean) As Integer
         Dim Puntaje As Integer = 0
 
-        Dim Ve As New Dictionary(Of Integer, Double)
-        Dim VP As New Dictionary(Of Integer, Double)
+        Dim Ve As New Dictionary(Of String, Double)
+        Dim VP As New Dictionary(Of String, Double)
 
         Dim NM As Integer = 2
         Dim W As Integer = 0
@@ -19,24 +19,29 @@ Public Class PuntajeCSGO
 
         For Each estadistica In Estadisticas
             If estadistica.Equipo.ID_Equipo = Equipo.ID_Equipo Then
-                If Ve.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
-                    Ve(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) += estadistica.Valor_Estadistica
+                If Ve.ContainsKey(estadistica.tipo_Estadistica.Nombre) Then
+                    Ve(estadistica.tipo_Estadistica.Nombre) += estadistica.Valor_Estadistica
                 Else
-                    Ve.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
+                    Ve.Add(estadistica.tipo_Estadistica.Nombre, estadistica.Valor_Estadistica)
                 End If
             End If
-            If VP.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
-                VP(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) += estadistica.Valor_Estadistica
+            If VP.ContainsKey(estadistica.tipo_Estadistica.Nombre) Then
+                VP(estadistica.tipo_Estadistica.Nombre) += estadistica.Valor_Estadistica
             Else
-                VP.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
+                VP.Add(estadistica.tipo_Estadistica.Nombre, estadistica.Valor_Estadistica)
             End If
         Next
 
         Dim R As Integer = 0
 
         For Each Testad In Tipo_Estadisticas
-            R = (((Ve(Testad.ID_Tipo_Estadistica) / VP(Testad.ID_Tipo_Estadistica)) * NM) * Testad.Valor_Base) + W
-            Puntaje += R
+            If Testad.Tipo_rol = 0 Then
+                Dim PrimerModulo As Single = (Ve(Testad.Nombre) / VP(Testad.Nombre))
+                If Not Double.IsNaN(PrimerModulo) And PrimerModulo <> 0 Then
+                    R = ((PrimerModulo * NM) * Testad.Valor_Base) + W
+                End If
+                Puntaje += R
+            End If
         Next
 
         Return Puntaje
@@ -57,36 +62,47 @@ Public Class PuntajeCSGO
             If estadistica.Jugador.ID_Jugador = Jugador.ID_Jugador Then
                 VJ.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
             End If
-            If VP.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
-                VP(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) += estadistica.Valor_Estadistica
-            Else
-                VP.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
-            End If
-            If VM.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
-                If VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) < estadistica.Valor_Estadistica Then
-                    VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) = estadistica.Valor_Estadistica
+            If Jugador.Rol_Jugador.Tipo_rol = estadistica.tipo_Estadistica.Tipo_rol Then
+
+                If VP.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
+                    VP(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) += estadistica.Valor_Estadistica
+                Else
+                    VP.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
+                End If
+                If VM.ContainsKey(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) Then
+                    If VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) < estadistica.Valor_Estadistica Then
+                        VM(estadistica.tipo_Estadistica.ID_Tipo_Estadistica) = estadistica.Valor_Estadistica
+                    End If
                 Else
                     VM.Add(estadistica.tipo_Estadistica.ID_Tipo_Estadistica, estadistica.Valor_Estadistica)
                 End If
+
             End If
         Next
 
         Dim R As Integer = 0
 
         For Each Testad In Tipo_Estadisticas
-            If Testad.Destacado Then
-                Dim PrimerModulo As Single = ((VJ(Testad.ID_Tipo_Estadistica) / VP(Testad.ID_Tipo_Estadistica)) * NM)
-                If PrimerModulo < 0.5 Then
-                    PrimerModulo = 0.5
-                ElseIf PrimerModulo > 2 Then
-                    PrimerModulo = 2
-                End If
-                R = (PrimerModulo * Testad.Valor_Base)
-            Else
-                R = (Testad.Valor_Base / VM(Testad.ID_Tipo_Estadistica)) * VJ(Testad.ID_Tipo_Estadistica)
-            End If
+            If Testad.Tipo_rol = Jugador.Rol_Jugador.Tipo_rol Then
+                If Testad.Destacado Then
+                    Dim PrimerModulo As Single = ((VJ(Testad.ID_Tipo_Estadistica) / VP(Testad.ID_Tipo_Estadistica)) * NM)
+                    If Not Double.IsNaN(PrimerModulo) Then
+                        If PrimerModulo < 0.5 Then
+                            PrimerModulo = 0.5
+                        ElseIf PrimerModulo > 2 Then
+                            PrimerModulo = 2
+                        End If
+                        R = (PrimerModulo * Testad.Valor_Base)
+                    End If
+                Else
+                    Dim PrimerModulo As Single = VM(Testad.ID_Tipo_Estadistica) * VJ(Testad.ID_Tipo_Estadistica)
+                    If Not Double.IsNaN(PrimerModulo) And PrimerModulo <> 0 Then
+                        R = (Testad.Valor_Base / PrimerModulo)
+                    End If
 
-            Puntaje += R
+                    Puntaje += R
+                End If
+            End If
         Next
 
         Return Puntaje

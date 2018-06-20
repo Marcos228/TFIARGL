@@ -12,6 +12,15 @@ Public Class GameBLL
         End Try
     End Function
 
+    Public Function TraerJuegos() As List(Of Entidades.Game)
+        Try
+            Dim DalGame As New DAL.GameDAL
+            Return DalGame.TraerJuegos()
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function TraerJuegosAltaEquipo(usu As Entidades.UsuarioEntidad) As List(Of Entidades.Game)
         Try
             Dim DalGame As New DAL.GameDAL

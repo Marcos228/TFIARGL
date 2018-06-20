@@ -213,6 +213,7 @@
       <DependentUpon>ABMSponsor.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Clases Vista\EstadisticaVista.vb" />
     <Compile Include="VisualizarRanking.aspx.designer.vb">
       <DependentUpon>VisualizarRanking.aspx</DependentUpon>
     </Compile>

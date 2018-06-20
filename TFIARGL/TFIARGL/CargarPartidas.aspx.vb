@@ -10,6 +10,12 @@ Public Class CargarPartidas
             If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
                 CargarTorneos()
             End If
+        Else
+            If Me.datosEst.Visible = True Then
+                For Each estad2 In Session("Estadisticas")(0).Estadisticas()
+                    CargarTextboxs(estad2)
+                Next
+            End If
         End If
     End Sub
     Private Sub CargarTorneos()
@@ -60,8 +66,53 @@ Public Class CargarPartidas
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Partida As Entidades.Partida = Session("Partida")
             Gestor.TraerEstadisticasPartida(Partida)
-            Me.gv_estadisticas.DataSource = Partida.Estadisticas
+            Dim listavistaestadisticas As New List(Of Vista.EstadisticaVista)
+
+            For Each Estadistica As Entidades.Estadistica In Partida.Estadisticas
+                If listavistaestadisticas.Count = 0 Then
+                    Dim estadivista As New Vista.EstadisticaVista
+                    estadivista.Jugador = Estadistica.Jugador
+                    estadivista.Equipo = Estadistica.Equipo
+                    estadivista.Estadisticas.Add(Estadistica)
+                    listavistaestadisticas.Add(estadivista)
+                Else
+                    If listavistaestadisticas.Any(Function(p) p.Jugador.ID_Jugador = Estadistica.Jugador.ID_Jugador) Then
+                        listavistaestadisticas.Find(Function(p) p.Jugador.ID_Jugador = Estadistica.Jugador.ID_Jugador).Estadisticas.Add(Estadistica)
+                    Else
+                        Dim estadivista As New Vista.EstadisticaVista
+                        estadivista.Jugador = Estadistica.Jugador
+                        estadivista.Equipo = Estadistica.Equipo
+                        estadivista.Estadisticas.Add(Estadistica)
+                        listavistaestadisticas.Add(estadivista)
+                    End If
+                End If
+
+            Next
+
+
+            Dim x As Integer = 0
+            If Me.gv_estadisticas.Columns.Count = 3 Then
+                For Each estad2 In listavistaestadisticas(0).Estadisticas()
+                    Dim bfield As New BoundField()
+                    bfield.HeaderText = estad2.tipo_Estadistica.Nombre
+                    bfield.DataField = String.Concat("Estadisticas(", x, ")", ".Valor_Estadistica")
+                    Me.gv_estadisticas.Columns.Add(bfield)
+
+                    CargarTextboxs(estad2)
+                    x += 1
+                Next
+            Else
+                If Me.datosEst.Visible = False Then
+                    For Each estad2 In listavistaestadisticas(0).Estadisticas()
+                        CargarTextboxs(estad2)
+                    Next
+                End If
+
+            End If
+
+            Me.gv_estadisticas.DataSource = listavistaestadisticas
             Me.gv_estadisticas.DataBind()
+            Session("Estadisticas") = listavistaestadisticas
             Me.datosEst.Visible = True
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
@@ -69,7 +120,44 @@ Public Class CargarPartidas
         Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
+    Private Sub CargarTextboxs(ByRef estad2 As Entidades.Estadistica)
 
+        Dim divmaster As HtmlGenericControl = New HtmlGenericControl("div")
+        divmaster.Attributes.Add("class", "form-group")
+        divmaster.ID = "1-" & estad2.tipo_Estadistica.Nombre
+
+        Dim Labl As New Label
+        Labl.ID = "lbl" & estad2.tipo_Estadistica.Nombre
+        Labl.Text = estad2.tipo_Estadistica.Nombre
+        Labl.CssClass = "col-sm-4 control-label labelform"
+        Dim div As HtmlGenericControl = New HtmlGenericControl("div")
+        div.Attributes.Add("class", "col-md-6")
+        div.ID = "2-" & estad2.tipo_Estadistica.Nombre
+        Dim div2 As HtmlGenericControl = New HtmlGenericControl("div")
+        div2.Attributes.Add("class", "input-group")
+        div2.ID = "3-" & estad2.tipo_Estadistica.Nombre
+        div.Controls.Add(div2)
+        Dim Texbox As New TextBox
+        Texbox.ID = "txt" & estad2.tipo_Estadistica.Nombre
+        Texbox.CssClass = "form-control"
+        Dim span As HtmlGenericControl = New HtmlGenericControl("span")
+        span.Attributes.Add("class", "input-group-addon")
+
+        Dim span2 As HtmlGenericControl = New HtmlGenericControl("span")
+        span2.Attributes.Add("class", "glyphicon glyphicon-user")
+        span2.Attributes.Add("aria-hidden", "true")
+        span.Controls.Add(span2)
+
+        div2.Controls.Add(Texbox)
+        div2.Controls.Add(span)
+
+        divmaster.Controls.Add(Labl)
+
+        divmaster.Controls.Add(div)
+        Me.EstadisticasTextbox.Controls.Add(divmaster)
+
+
+    End Sub
     Private Sub gv_torneos_DataBound(sender As Object, e As EventArgs) Handles gv_torneos.DataBound
         Try
             Dim ddl As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
@@ -333,6 +421,7 @@ Public Class CargarPartidas
                 ddl.Items.Add(item)
 
             Next cnt
+
             Dim IdiomaActual As Entidades.IdiomaEntidad
             If IsNothing(Current.Session("Cliente")) Then
                 IdiomaActual = Application("Español")
@@ -345,12 +434,9 @@ Public Class CargarPartidas
             Next
 
             With gv_estadisticas.HeaderRow
-
-                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJugador").Traduccion
-                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderEquipo").Traduccion
-                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoEstadistica").Traduccion
-                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderValor").Traduccion
-                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJugador").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderEquipo").Traduccion
             End With
 
             gv_estadisticas.BottomPagerRow.Visible = True
@@ -374,11 +460,15 @@ Public Class CargarPartidas
 
             Select Case e.CommandName.ToString
                 Case "S"
-                    Dim Estadastica As Entidades.Estadistica = TryCast(Session("Partida"), Entidades.Partida).Estadisticas(e.CommandArgument + (gv_estadisticas.PageIndex * gv_estadisticas.PageSize))
+                    Dim Estadastica As EstadisticaVista = TryCast(Session("Estadisticas"), List(Of EstadisticaVista))(e.CommandArgument + (gv_estadisticas.PageIndex * gv_estadisticas.PageSize))
                     For Each r As GridViewRow In gv_estadisticas.Rows
                         r.BackColor = Drawing.Color.FromName("#c3e6cb")
                     Next
-                    txtvalor.Text = Estadastica.Valor_Estadistica
+                    For Each estad In Estadastica.Estadisticas
+
+                        Dim textbox As TextBox = Me.EstadisticasTextbox.FindControl("1-" & estad.tipo_Estadistica.Nombre).FindControl("2-" & estad.tipo_Estadistica.Nombre).FindControl("3-" & estad.tipo_Estadistica.Nombre).FindControl("txt" & estad.tipo_Estadistica.Nombre)
+                        textbox.Text = estad.Valor_Estadistica
+                    Next
                     gv_estadisticas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
                     Session("Estadistica") = Estadastica
             End Select
@@ -469,21 +559,49 @@ Public Class CargarPartidas
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
-            If IsNumeric(txtvalor.Text) Then
-                Dim estadistica As Entidades.Estadistica = TryCast(Session("Estadistica"), Entidades.Estadistica)
-                estadistica.Valor_Estadistica = CDbl(txtvalor.Text)
+            Dim validador As Boolean = True
+            For Each estad In Session("Estadistica").Estadisticas
+                Dim textbox As TextBox = Me.EstadisticasTextbox.FindControl("1-" & estad.tipo_Estadistica.Nombre).FindControl("2-" & estad.tipo_Estadistica.Nombre).FindControl("3-" & estad.tipo_Estadistica.Nombre).FindControl("txt" & estad.tipo_Estadistica.Nombre)
+                If Not IsNumeric(textbox.Text) Then
+                    validador = False
+                    Exit For
+                End If
+            Next
 
-                Dim gestoresta As New Negocio.EstadisticaBLL
-                gestoresta.CargarEstadistica(estadistica, TryCast(Session("Partida"), Entidades.Partida).ID_Partida)
-                CargarEstadisticas()
-                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess4").Traduccion & estadistica.Valor_Estadistica & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess5").Traduccion & " " & TryCast(Session("Partida"), Entidades.Partida).ID_Partida & " " & estadistica.Jugador.NickName & "-" & estadistica.tipo_Estadistica.Nombre & "-" & estadistica.Equipo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                Negocio.BitacoraBLL.CrearBitacora(Bitac)
-                Me.alertvalid.Visible = False
+            If validador Then
+                For Each estad In Session("Estadistica").Estadisticas
+                    Dim textbox As TextBox = Me.EstadisticasTextbox.FindControl("1-" & estad.tipo_Estadistica.Nombre).FindControl("2-" & estad.tipo_Estadistica.Nombre).FindControl("3-" & estad.tipo_Estadistica.Nombre).FindControl("txt" & estad.tipo_Estadistica.Nombre)
+                    Dim estadistica As Entidades.Estadistica = estad
+                    estadistica.Valor_Estadistica = CDbl(TextBox.Text)
+                    Dim gestoresta As New Negocio.EstadisticaBLL
+                    gestoresta.CargarEstadistica(estadistica, TryCast(Session("Partida"), Entidades.Partida).ID_Partida)
+                    CargarEstadisticas()
+                    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess4").Traduccion & estadistica.Valor_Estadistica & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess5").Traduccion & " " & TryCast(Session("Partida"), Entidades.Partida).ID_Partida & " " & estadistica.Jugador.NickName & "-" & estadistica.tipo_Estadistica.Nombre & "-" & estadistica.Equipo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                    Me.alertvalid.Visible = False
+                Next
             Else
                 Me.alertvalid.Visible = True
                 Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
             End If
+
+            'If IsNumeric(txtvalor.Text) Then
+            '    Dim estadistica As Entidades.Estadistica = TryCast(Session("Estadistica"), Entidades.Estadistica)
+            '    estadistica.Valor_Estadistica = CDbl(txtvalor.Text)
+
+            '    Dim gestoresta As New Negocio.EstadisticaBLL
+            '    gestoresta.CargarEstadistica(estadistica, TryCast(Session("Partida"), Entidades.Partida).ID_Partida)
+            '    CargarEstadisticas()
+            '    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            '    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess4").Traduccion & estadistica.Valor_Estadistica & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess5").Traduccion & " " & TryCast(Session("Partida"), Entidades.Partida).ID_Partida & " " & estadistica.Jugador.NickName & "-" & estadistica.tipo_Estadistica.Nombre & "-" & estadistica.Equipo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            '    Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            '    Me.alertvalid.Visible = False
+            'Else
+            '    Me.alertvalid.Visible = True
+            '    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+            'End If
+
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
