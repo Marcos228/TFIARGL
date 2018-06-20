@@ -28,6 +28,8 @@ Public Class VisualizarTorneo
             Me.precio.InnerText = Torneo.Precio_Inscripcion.ToString("c")
             Me.juego.InnerText = Torneo.Game.Nombre
             Me.id_game.Value = Torneo.Game.ID_Game
+            Me.yourube.Src = Torneo.Youtube
+            Me.twitch.Src = Torneo.Twitch
         End If
     End Sub
 

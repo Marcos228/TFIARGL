@@ -95,6 +95,24 @@ Partial Public Class VisualizarTorneo
     Protected WithEvents juego As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
+    '''Control yourube.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents yourube As Global.System.Web.UI.HtmlControls.HtmlIframe
+    
+    '''<summary>
+    '''Control twitch.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents twitch As Global.System.Web.UI.HtmlControls.HtmlIframe
+    
+    '''<summary>
     '''Control alertvalid.
     '''</summary>
     '''<remarks>

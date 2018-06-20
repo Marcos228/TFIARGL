@@ -212,6 +212,42 @@ Partial Public Class CrearTorneo
     Protected WithEvents txtcantidad As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
+    '''Control lblyoutube.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblyoutube As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control txtyoutube.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents txtyoutube As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''Control lbltwitch.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lbltwitch As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control txttwitch.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents txttwitch As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
     '''Control lblSponsors.
     '''</summary>
     '''<remarks>

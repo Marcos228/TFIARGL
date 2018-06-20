@@ -73,12 +73,12 @@
                     <div class="">
                         <div class="col-md-6">
                             <div class="embed-responsive embed-responsive-16by9 ">
-                                <iframe class="embed-responsive-item" src="https://player.twitch.tv/?autoplay=false&video=v102640518" frameborder="0" allowfullscreen="true" scrolling="no" height="300"></iframe>
+                                <iframe id="yourube" runat="server" class="embed-responsive-item" src="" frameborder="0" allowfullscreen="true" scrolling="no" height="300"></iframe>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/ujPkpUOtkIA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen height="300"></iframe>
+                                <iframe id="twitch" runat="server" class="embed-responsive-item" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen height="300"></iframe>
                             </div>
                         </div>
                     </div>

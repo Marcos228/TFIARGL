@@ -45,7 +45,7 @@
                                 <asp:Label ID="lblfechadesde" runat="server" Text="Fecha Desde:" CssClass=" col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input runat="server" clientidmode="Static" class="form-control" type="text" id="datepicker1" name="datepicker1" readonly="true" />
+                                        <input runat="server" clientidmode="Static" class="form-control Nodisable" type="text" id="datepicker1" name="datepicker1" readonly="true" />
                                         <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
                                         </span>
 
@@ -111,6 +111,30 @@
                                     <div class="input-group">
                                         <asp:TextBox ID="txtcantidad" runat="server" CssClass="form-control"></asp:TextBox>
                                         <span class="input-group-addon" id="basic-addon14"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <asp:Label ID="lblyoutube" runat="server" Text="Youtube:" CssClass=" col-sm-4 control-label labelform"></asp:Label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <asp:TextBox ID="txtyoutube" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <span class="input-group-addon" id="basic-addon17"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <asp:Label ID="lbltwitch" runat="server" Text="Twitch:" CssClass=" col-sm-4 control-label labelform"></asp:Label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <asp:TextBox ID="txttwitch" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <span class="input-group-addon" id="basic-addon18"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
                                         </span>
 
                                     </div>

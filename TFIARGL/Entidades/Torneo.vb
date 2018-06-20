@@ -141,4 +141,23 @@
         End Set
     End Property
 
+    Private _Youtube As String
+    Public Property Youtube() As String
+        Get
+            Return _Youtube
+        End Get
+        Set(ByVal value As String)
+            _Youtube = value
+        End Set
+    End Property
+    Private _Twitch As String
+    Public Property Twitch() As String
+        Get
+            Return _Twitch
+        End Get
+        Set(ByVal value As String)
+            _Twitch = value
+        End Set
+    End Property
+
 End Class

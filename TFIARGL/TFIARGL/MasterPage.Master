@@ -29,7 +29,7 @@
              <asp:Image ID="LogoMenu" runat="server" ImageUrl="Imagenes/banner.jpg" CssClass="img-responsive"/>
             </div>
             <div class="row fondoClaro bordeMenu">
-                <div class="col-md-12">
+                <div class="col-md-12 MenuFrente">
                     <asp:Menu ID="Menu" runat="server" Orientation="Horizontal" Font-Bold="true" Font-Size="12px" ForeColor="#336699" Height="30px">
                         <StaticSelectedStyle BackColor="#FFFFFF" />
                         <StaticMenuItemStyle HorizontalPadding="10px" VerticalPadding="7px" />

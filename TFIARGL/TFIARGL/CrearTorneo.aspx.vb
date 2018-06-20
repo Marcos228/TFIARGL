@@ -233,9 +233,9 @@ Public Class CrearTorneo
             Dim Fin As Date = datepicker4.Value
             Dim valor = DateDiff(DateInterval.Hour, Inicio, Desde)
 
-            If DateDiff(DateInterval.Hour, Desde, Hasta) > 72 And DateDiff(DateInterval.Hour, Inicio, Hasta) > 72 And DateDiff(DateInterval.Hour, Fin, Hasta) > 72 Then
+            If DateDiff(DateInterval.Hour, Desde, Hasta) > 0 And DateDiff(DateInterval.Hour, Inicio, Hasta) > 0 And DateDiff(DateInterval.Hour, Fin, Hasta) > 0 Then
                 If DateDiff(DateInterval.Hour, Inicio, Desde) <= 0 And DateDiff(DateInterval.Hour, Fin, Desde) <= 0 Then
-                    If DateDiff(DateInterval.Hour, Inicio, Fin) > 48 Then
+                    If DateDiff(DateInterval.Hour, Inicio, Fin) > 0 Then
                         Return True
                     End If
                 End If
@@ -303,22 +303,29 @@ Public Class CrearTorneo
             End If
             If ValidarFechas(IdiomaActual) Then
                 If txtnombre.Text <> "" And ValidarNumero(txtprecio.Text) And ValidarNumero(txtcantidad.Text) Then
-
-                    Dim TorneoNew As New Entidades.Torneo With {.Nombre = txtnombre.Text,
+                    If ValidarURLs(txtyoutube.Text, txttwitch.Text) Then
+                        Dim TorneoNew As New Entidades.Torneo With {.Nombre = txtnombre.Text,
                                         .Fecha_Inicio = datepicker1.Value, .Fecha_Fin = datepicker2.Value,
                                         .Fecha_Inicio_Inscripcion = datepicker3.Value, .Fecha_Fin_Inscripcion = datepicker4.Value,
                                         .Game = New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, .Precio_Inscripcion = CInt(txtprecio.Text), .CantidadParticipantes = CInt(txtcantidad.Text)}
-                    TorneoNew.Sponsors = TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor))
-                    TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
-                    If GestorTorneo.AltaTorneo(TorneoNew) Then
-                        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                        Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddTorneoSuccess1").Traduccion & TorneoNew.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-                        Negocio.BitacoraBLL.CrearBitacora(Bitac)
-                        Me.success.Visible = True
-                        Me.alertvalid.Visible = False
+                        TorneoNew.Youtube = txtyoutube.Text
+                        TorneoNew.Twitch = txttwitch.Text
+                        TorneoNew.Sponsors = TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor))
+                        TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
+                        If GestorTorneo.AltaTorneo(TorneoNew) Then
+                            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddTorneoSuccess1").Traduccion & TorneoNew.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                            Me.success.Visible = True
+                            Me.alertvalid.Visible = False
+                        Else
+                            Me.alertvalid.Visible = True
+                            Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddPerfJugError1").Traduccion
+                            Me.success.Visible = False
+                        End If
                     Else
                         Me.alertvalid.Visible = True
-                        Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddPerfJugError1").Traduccion
+                        Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "AddTorneoError4").Traduccion
                         Me.success.Visible = False
                     End If
                 Else
@@ -333,4 +340,13 @@ Public Class CrearTorneo
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
+
+    Private Function ValidarURLs(youtube As String, twitch As String) As Boolean
+        If youtube.Contains("https://www.youtube.com") And twitch.Contains("https://player.twitch.tv") Then
+            Return True
+        Else
+            Return False
+        End If
+        Return True
+    End Function
 End Class
