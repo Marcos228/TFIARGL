@@ -176,6 +176,15 @@ Partial Public Class EnviarInvitacion
     Protected WithEvents btnBuscar As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
+    '''Control btnrecomendar.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btnrecomendar As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
     '''Control Equipo.
     '''</summary>
     '''<remarks>

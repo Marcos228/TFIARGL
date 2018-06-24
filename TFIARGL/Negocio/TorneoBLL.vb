@@ -17,6 +17,20 @@ Public Class TorneoBLL
         End Try
     End Function
 
+    Public Function ModificarTorneo(torneoNew As Torneo) As Boolean
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            If ValidarNombreTorneo(torneoNew) Then
+                Return TorneDAL.ModificarTorneo(torneoNew)
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function ValidarNombreTorneo(torn As Entidades.Torneo) As Boolean
         Try
             Dim TorneDAL As New DAL.TorneoDAL
@@ -39,6 +53,15 @@ Public Class TorneoBLL
             End If
         Catch EquipoNo As ExceptionEquipoIncompleto
             Throw EquipoNo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function TraerTorneosModificables() As List(Of Torneo)
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            Return TorneDAL.TraerTorneosModificables()
         Catch ex As Exception
             Throw ex
         End Try
@@ -269,4 +292,5 @@ Public Class TorneoBLL
                 Return Fases.Final
         End Select
     End Function
+
 End Class

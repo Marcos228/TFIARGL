@@ -94,6 +94,9 @@
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
     <Content Include="ABMSponsor.aspx" />
+    <Content Include="CSS\jquery.bracket.min.css" />
+    <Content Include="JS\jquery.bracket.min.js" />
+    <Content Include="ModificarTorneo.aspx" />
     <Content Include="VisualizarRanking.aspx" />
     <Content Include="CSS\jquery.ui.timepicker.css" />
     <Content Include="IMAGENES\_banner.jpg" />
@@ -214,6 +217,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Clases Vista\EstadisticaVista.vb" />
+    <Compile Include="ModificarTorneo.aspx.designer.vb">
+      <DependentUpon>ModificarTorneo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ModificarTorneo.aspx.vb">
+      <DependentUpon>ModificarTorneo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="VisualizarRanking.aspx.designer.vb">
       <DependentUpon>VisualizarRanking.aspx</DependentUpon>
     </Compile>

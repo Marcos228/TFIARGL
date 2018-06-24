@@ -34,6 +34,15 @@ Public Class EquipoBLL
         End Try
     End Function
 
+    Public Function TraerEquiposSolicitud(game As Game) As List(Of Equipo)
+        Try
+            Dim DALEquipo As New DAL.EquipoDAL
+            Return DALEquipo.TraerEquiposSolicitud(game)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function TraeSolicitudesEquipo(jugador As Jugador) As List(Of Solicitudes)
         Try
             Dim DALEquipo As New DAL.EquipoDAL
@@ -42,6 +51,8 @@ Public Class EquipoBLL
             Throw ex
         End Try
     End Function
+
+
 
     Public Function TraerEquipoJugador(iD_Jugador As Integer) As Equipo
         Try
@@ -98,6 +109,8 @@ Public Class EquipoBLL
             Throw ex
         End Try
     End Sub
+
+
 
     'Public Function ActualizaImagen(ByVal imagen As Byte(), ByVal ID_Game As Integer) As Boolean
     '    Try

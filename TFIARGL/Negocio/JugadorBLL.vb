@@ -43,7 +43,14 @@ Public Class JugadorBLL
             Throw ex
         End Try
     End Function
-
+    Public Function TraerJugadoresSolicitud(game As Game) As List(Of Jugador)
+        Try
+            Dim DALJugador As New DAL.JugadorDAL
+            Return DALJugador.TraerJugadoresSolicitud(game)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function TraeSolicitudesJugador(jugador As Jugador) As List(Of Solicitudes)
         Try
@@ -53,4 +60,6 @@ Public Class JugadorBLL
             Throw ex
         End Try
     End Function
+
+
 End Class

@@ -48,6 +48,71 @@ Public Class TorneoDAL
         End Try
     End Function
 
+    Public Function ModificarTorneo(torneoNew As Torneo) As Boolean
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("update Torneo set Fecha_Inicio=@Fecha_Inicio, Fecha_Fin=@Fecha_Fin,Nombre=@Nombre,Precio_Inscripcion=@Precio_Inscripcion,Fecha_Inicio_Inscripcion=@Fecha_Inicio_Inscripcion,Fecha_Fin_Inscripcion=@Fecha_Fin_Inscripcion,Cantidad_Inscripcion=@cantidad,Link_Youtube=@Youtube,Link_Twitch=@Twitch,Fechas_Publicas=@Publicas where ID_Torneo=@ID_Torneo")
+            With Command.Parameters
+                .Add(New SqlParameter("@Fecha_Inicio", torneoNew.Fecha_Inicio))
+                .Add(New SqlParameter("@Fecha_Fin", torneoNew.Fecha_Fin))
+                .Add(New SqlParameter("@ID_Game", torneoNew.Game.ID_Game))
+                .Add(New SqlParameter("@Nombre", torneoNew.Nombre))
+                .Add(New SqlParameter("@Precio_Inscripcion", torneoNew.Precio_Inscripcion))
+                .Add(New SqlParameter("@Fecha_Inicio_Inscripcion", torneoNew.Fecha_Inicio_Inscripcion))
+                .Add(New SqlParameter("@Fecha_Fin_Inscripcion", torneoNew.Fecha_Fin_Inscripcion))
+                .Add(New SqlParameter("@cantidad", torneoNew.CantidadParticipantes))
+                .Add(New SqlParameter("@Youtube", torneoNew.Youtube))
+                .Add(New SqlParameter("@Twitch", torneoNew.Twitch))
+                .Add(New SqlParameter("@Publicas", False))
+                .Add(New SqlParameter("@ID_Torneo", torneoNew.ID_Torneo))
+            End With
+            Acceso.Escritura(Command)
+            Command.Dispose()
+
+            Dim CommandE1 As SqlCommand = Acceso.MiComando("Delete Torneo_Sponsor where ID_Torneo=@ID_torneo")
+            With CommandE1.Parameters
+                .Add(New SqlParameter("@ID_torneo", torneoNew.ID_Torneo))
+            End With
+            Acceso.Escritura(CommandE1)
+            CommandE1.Dispose()
+
+            For Each spons As Entidades.Sponsor In torneoNew.Sponsors
+                Dim CommandJ As SqlCommand = Acceso.MiComando("insert into Torneo_Sponsor (ID_torneo,ID_Sponsor) values (@ID_torneo,@ID_Sponsor)")
+                With CommandJ.Parameters
+                    .Add(New SqlParameter("@ID_torneo", torneoNew.ID_Torneo))
+                    .Add(New SqlParameter("@ID_Sponsor", spons.ID_Sponsor))
+                End With
+                Acceso.Escritura(CommandJ)
+                CommandJ.Dispose()
+            Next
+
+            Dim CommandE2 As SqlCommand = Acceso.MiComando("Delete Premios where ID_Torneo=@ID_torneo")
+            With CommandE2.Parameters
+                .Add(New SqlParameter("@ID_torneo", torneoNew.ID_Torneo))
+            End With
+            Acceso.Escritura(CommandE2)
+            CommandE2.Dispose()
+
+
+            For Each premio As Entidades.Premio In torneoNew.Premios
+                Dim CommandP As SqlCommand = Acceso.MiComando("insert into Premios (ID_Torneo,Nombre,ID_Posicion,Descripcion,Valor) values (@ID_torneo,@Nombre,@ID_Posicion,@Descripcion,@Valor)")
+                With CommandP.Parameters
+                    .Add(New SqlParameter("@ID_torneo", torneoNew.ID_Torneo))
+                    .Add(New SqlParameter("@Nombre", premio.Nombre))
+                    .Add(New SqlParameter("@ID_Posicion", premio.Posicion))
+                    .Add(New SqlParameter("@Descripcion", premio.Descripcion))
+                    .Add(New SqlParameter("@Valor", premio.Valor))
+                End With
+                Acceso.Escritura(CommandP)
+                CommandP.Dispose()
+            Next
+
+            Return True
+
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function ValidarNombreTorneo(torn As Torneo) As Boolean
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Select ID_Torneo from Torneo where Nombre=@Nombre")
@@ -57,6 +122,9 @@ Public Class TorneoDAL
             Dim dt As DataTable = Acceso.Lectura(Command)
             Command.Dispose()
             If dt.Rows.Count > 0 Then
+                If dt.Rows(0)("ID_Torneo") = torn.ID_Torneo Then
+                    Return True
+                End If
                 Return False
             Else
                 Return True
@@ -83,6 +151,7 @@ Public Class TorneoDAL
         End Try
     End Function
 
+
     Public Sub TraerEquiposInscriptos(torneosorteo As Torneo)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("select * from Torneo_Equipo where id_torneo=@id_torneo")
@@ -102,6 +171,23 @@ Public Class TorneoDAL
             Throw ex
         End Try
     End Sub
+
+    Public Function TraerTorneosModificables() As List(Of Torneo)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Torneo as T where Fecha_Inicio_Inscripcion<GETDATE() and not exists(Select ID_Partida from Partida as P where P.ID_Torneo =T.ID_Torneo)")
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListTorneo As New List(Of Entidades.Torneo)
+            For Each _dr As DataRow In dt.Rows
+                Dim torn As New Entidades.Torneo
+                FormatearTorneo(torn, _dr)
+                ListTorneo.Add(torn)
+            Next
+            Return ListTorneo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function TraerTorneosSorteo() As List(Of Torneo)
         Try
@@ -218,6 +304,8 @@ Public Class TorneoDAL
             torneo.CantidadParticipantes = row("cantidad_inscripcion")
             torneo.Twitch = row("Link_Twitch")
             torneo.Youtube = row("Link_Youtube")
+            torneo.Sponsors = (New SponsorDAL).TraerSponsorsTorneo(row("ID_Torneo"))
+
         Catch ex As Exception
             Throw ex
         End Try

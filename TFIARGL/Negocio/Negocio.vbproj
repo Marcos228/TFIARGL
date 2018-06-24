@@ -82,6 +82,7 @@
     <Compile Include="PuntajeOverwatch.vb" />
     <Compile Include="PuntajeCSGO.vb" />
     <Compile Include="Ranking.vb" />
+    <Compile Include="Recomendador.vb" />
     <Compile Include="SponsorBLL.vb" />
     <Compile Include="EquipoBLL.vb" />
     <Compile Include="TorneoBLL.vb" />

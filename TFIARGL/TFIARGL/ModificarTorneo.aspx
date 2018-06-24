@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/MasterPage.Master" CodeBehind="CrearTorneo.aspx.vb" Inherits="Vista.CrearTorneo" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/MasterPage.Master" CodeBehind="ModificarTorneo.aspx.vb" Inherits="Vista.ModificarTorneo" MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- <script type="text/javascript" src="JS/ClienteValid.js"></script>-->
@@ -20,23 +20,67 @@
             <label runat="server" id="textovalid" class="text-danger"></label>
         </div>
         <div id="success" runat="server" name="success" class="alert alert-success  text-center" visible="false">
-            <label id="lblSuccessAddTorneo" class="text-success">El torneo se creó correctamente.</label>
+            <label id="lblSuccessModTorneo" class="text-success">El torneo se modificó correctamente.</label>
         </div>
 
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-12 ">
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
-                        <asp:Label ID="lblPanelAddTorneo" runat="server" Text="Crear Torneo" CssClass="TituloPanel"></asp:Label>
+                        <asp:Label ID="lblPanelModTorneo" runat="server" Text="Modificar Torneo" CssClass="TituloPanel"></asp:Label>
                     </div>
                     <div id="Panel" runat="server" class="panel-body FondoPanel">
                         <br />
                         <div id="Datos" runat="server" class="form-horizontal has-success">
+                                <div class="form-group">
+                                <div class="col-md-12">
+                                    <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_torneos" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_torneos_PageIndexChanging" RowStyle-Height="40px">
+                                        <HeaderStyle CssClass="thead-dark" />
+                                        <PagerTemplate>
+                                            <div class="col-md-4 text-left">
+                                                <asp:Label ID="lblmostrarpag" runat="server" Text="Mostrar Pagina"></asp:Label>
+                                                <asp:DropDownList ID="ddlPaging" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPaging_SelectedIndexChanged3" />
+                                                <asp:Label ID="lblde" runat="server" Text="de"></asp:Label>
+                                                <asp:Label ID="lbltotalpages" runat="server" Text=""></asp:Label>
+                                            </div>
+                                            <div class="col-md-6 col-md-offset-2">
+                                                <asp:Label ID="lblMostrar" runat="server" Text="Mostrar"></asp:Label>
+                                                <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPageSize_SelectedPageSizeChanged3">
+                                                    <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                                    <asp:ListItem Text="5" Value="5"></asp:ListItem>
+                                                    <asp:ListItem Text="10" Value="10"></asp:ListItem>
+                                                    <asp:ListItem Text="20" Value="20"></asp:ListItem>
+                                                    <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                                                    <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                                                </asp:DropDownList>
+                                                <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina"></asp:Label>
+                                            </div>
+                                        </PagerTemplate>
+                                        <Columns>
+                                            <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                                            <asp:BoundField DataField="Game.Nombre" HeaderText="Juego" />
+                                            <asp:BoundField DataField="Fecha_Inicio" HeaderText="Fecha Creacion" DataFormatString="{0:dd-MM-yyyy}" />
+                                            <asp:BoundField DataField="Fecha_Fin" HeaderText="Fecha Fin" DataFormatString="{0:dd-MM-yyyy}" />
+                                            <asp:BoundField DataField="Fecha_Inicio_Inscripcion" HeaderText="Fecha Inicio Inscripcion" DataFormatString="{0:dd-MM-yyyy}" />
+                                            <asp:BoundField DataField="Fecha_Fin_Inscripcion" HeaderText="Fecha Fin Inscripcion" DataFormatString="{0:dd-MM-yyyy}" />
+                                            <asp:BoundField DataField="Precio_Inscripcion" HeaderText="Precio" />
+                                            <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                <ItemTemplate>
+                                                    <div>
+                                                        <asp:ImageButton ID="btn_Seleccionar" runat="server" CommandName="S" ImageUrl="~/Imagenes/arrow.png" Height="18px" />
+                                                    </div>
+                                                </ItemTemplate>
+                                                <HeaderStyle Width="100px"></HeaderStyle>
+                                            </asp:TemplateField>
+                                        </Columns>
+                                    </asp:GridView>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <asp:Label ID="lblnombre" runat="server" Text="Nombre:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <asp:TextBox ID="txtnombre" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="txtnombre" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
                                         <span class="input-group-addon" id="basic-addon8"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
                                     </div>
                                 </div>
@@ -66,7 +110,7 @@
                                 <asp:Label ID="lbljuego" runat="server" Text="Juego:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre" ></asp:DropDownList>
+                                        <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre" Enabled="false" ></asp:DropDownList>
                                         <span class="input-group-addon" id="basic-addon12"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></span>
                                     </div>
                                 </div>
@@ -264,7 +308,7 @@
                             <br />
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4">
-                                    <asp:Button ClientIDMode="Static" ID="btnCrear" name="btnCrear" runat="server" Text="Crear" CssClass="btn btn-block btn-success" />
+                                    <asp:Button ClientIDMode="Static" ID="btnCrear" name="btnModificar" runat="server" Text="Modificar" CssClass="btn btn-block btn-success" />
                                 </div>
                             </div>
                         </div>
@@ -272,6 +316,6 @@
                 </div>
             </div>
         </div>
-        <asp:HiddenField ID="id_game" runat="server" />
+        <asp:HiddenField ID="id_torneo" runat="server" />
     </div>
 </asp:Content>

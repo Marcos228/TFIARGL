@@ -8,16 +8,19 @@
     <title>ARGLeague</title>
 
     <link href="CSS/bootstrap-theme.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="/CSS/jquery-ui.css"/>
+    <link rel="stylesheet" href="/CSS/jquery-ui.css" />
     <link href="CSS/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="CSS/font-awesome.css" rel="stylesheet" type="text/css" />
     <link href="CSS/EstilosMaestra.css" rel="stylesheet" type="text/css" />
     <link href="CSS/MisEstilos.css" rel="stylesheet" type="text/css" />
-        <link href="CSS/jquery.ui.timepicker.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="JS/jquery-1.10.2.js"></script>
+    <link href="CSS/jquery.ui.timepicker.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/jquery.bracket.min.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
     <script type="text/javascript" src="JS/bootstrap.js"></script>
-        <script type="text/javascript" src="JS/jquery-ui.js"></script>
-        <script type="text/javascript" src="JS/jquery.ui.timepicker.js"></script>
+    <script type="text/javascript" src="JS/jquery-ui.js"></script>
+    <script type="text/javascript" src="JS/jquery.ui.timepicker.js"></script>
+    <script type="text/javascript" src="JS/jquery.bracket.min.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 
@@ -26,7 +29,7 @@
     <form id="Master" runat="server">
         <div class="container-fluid FondoPagina">
             <div class="row fondoGris bordeImagen">
-             <asp:Image ID="LogoMenu" runat="server" ImageUrl="Imagenes/banner.jpg" CssClass="img-responsive"/>
+                <asp:Image ID="LogoMenu" runat="server" ImageUrl="Imagenes/banner.jpg" CssClass="img-responsive" />
             </div>
             <div class="row fondoClaro bordeMenu">
                 <div class="col-md-12 MenuFrente">
@@ -46,7 +49,9 @@
             <div class="row fondoClaro">
                 <br />
                 <div class="col-md-8 col-md-offset-2 text-center">
-                    <div class="textoCopyright">   <asp:Label ID="lblcopyright" runat="server" Text="Trabajo Práctico - Trabajo Final de Ingenieria - Tassara - 2018"></asp:Label></div>
+                    <div class="textoCopyright">
+                        <asp:Label ID="lblcopyright" runat="server" Text="Trabajo Práctico - Trabajo Final de Ingenieria - Tassara - 2018"></asp:Label>
+                    </div>
                 </div>
                 <br />
                 <br />

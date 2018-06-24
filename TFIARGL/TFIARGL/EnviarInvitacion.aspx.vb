@@ -350,10 +350,50 @@ Public Class EnviarInvitacion
         End If
     End Sub
 
+
+    Private Sub CargarJugadorRecomendados()
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
+
+        Dim lista As List(Of Entidades.Jugador)
+        Dim Gestor As New Negocio.JugadorBLL
+        lista = Gestor.TraerJugadoresSolicitud(New Entidades.Game With {.ID_Game = lstgame.SelectedValue})
+        Dim Stan As New Negocio.Recomendador
+        Dim Gestoreq As New Negocio.EquipoBLL
+        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        Dim Equipo As Entidades.Equipo = Gestoreq.TraerEquipoJugador(clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = lstgame.SelectedValue).ID_Jugador)
+        lista = Stan.RecomendarJugadores(lista, Equipo)
+
+        If lista.Count > 0 Then
+            Session("Jugadores") = lista
+            Me.gv_Jugadores.DataSource = lista
+            Me.gv_Jugadores.DataBind()
+            Me.alertvalid.Visible = False
+        Else
+            Me.alertvalid.Visible = True
+                Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "EnvInvitacionError2").Traduccion
+                Me.success.Visible = False
+            End If
+    End Sub
+
     Protected Sub btnBuscar_Click(sender As Object, e As EventArgs) Handles btnBuscar.Click
         Try
             CargarJugador()
             CargarSolicitudes()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Protected Sub btnrecomendar_Click(sender As Object, e As EventArgs) Handles btnrecomendar.Click
+        Try
+            CargarJugadorRecomendados()
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

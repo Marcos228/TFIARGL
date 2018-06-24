@@ -53,6 +53,26 @@ Public Class SponsorDAL
         End Try
     End Function
 
+    Friend Function TraerSponsorsTorneo(id_torneo As Integer) As List(Of Sponsor)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select S.* from Sponsor as S inner join Torneo_Sponsor as TS on Ts.ID_Sponsor=S.ID_Sponsor where TS.ID_Torneo=@ID_Torneo ")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Torneo", id_torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListSpon As New List(Of Entidades.Sponsor)
+            For Each _dr As DataRow In dt.Rows
+                Dim spons As New Entidades.Sponsor
+                FormatearSponsor(spons, _dr)
+                ListSpon.Add(spons)
+            Next
+            Return ListSpon
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function ValidaNombre(spons As Sponsor) As Boolean
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Select ID_Sponsor from  Sponsor where  cuil=@cuil and nombre=@nombre")
@@ -103,5 +123,6 @@ Public Class SponsorDAL
             Throw ex
         End Try
     End Sub
+
 
 End Class

@@ -29,6 +29,8 @@ Public Class EquipoDAL
         End Try
     End Function
 
+
+
     Public Function TraeSolicitudesEquipo(jugador As Jugador) As List(Of Solicitudes)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("SELECT SI.* FROM Solicitud_Invitacion as SI inner join Jugador_Equipo as JE on SI.ID_Equipo=Je.ID_Equipo where JE.ID_Jugador=@ID_Jugador and SI.Jug_a_Equipo =1 and si.Estado = 0")
@@ -55,13 +57,6 @@ Public Class EquipoDAL
         End Try
     End Function
 
-    Public Function TraerUsuariosEquipo(equipo As Entidades.Equipo) As List(Of UsuarioEntidad)
-        Try
-
-        Catch ex As Exception
-            Throw ex
-        End Try
-    End Function
 
     Public Sub RechazarSolicitud(solicitud As Solicitudes)
         Try
@@ -231,6 +226,26 @@ Public Class EquipoDAL
             Dim Command As SqlCommand = Acceso.MiComando("Select * from Equipo where id_game=@id_game and nombre like Concat('%',@nombre,'%')")
             With Command.Parameters
                 .Add(New SqlParameter("@nombre", nombre))
+                .Add(New SqlParameter("@ID_Game", gam.ID_Game))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim Listaequipo As New List(Of Entidades.Equipo)
+            For Each _dr As DataRow In dt.Rows
+                Dim equipo As New Entidades.Equipo
+                FormatearEquipo(equipo, _dr)
+                Listaequipo.Add(equipo)
+            Next
+            Return Listaequipo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function TraerEquiposSolicitud(gam As Object) As List(Of Equipo)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select * from Equipo where id_game=@id_game")
+            With Command.Parameters
                 .Add(New SqlParameter("@ID_Game", gam.ID_Game))
             End With
             Dim dt As DataTable = Acceso.Lectura(Command)

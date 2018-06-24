@@ -47,6 +47,45 @@ Public Class PartidaDAL
         End Try
     End Sub
 
+    Public Function TraerPartidasEquipo(equi As Equipo) As List(Of Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select * from Partida as P where (p.ID_Equipo_Local=@ID_Equipo or p.ID_Equipo_Visitante=@ID_equipo) and Ganador_Local is not Null")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Equipo", equi.ID_Equipo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListaPArtida As New List(Of Entidades.Partida)
+            For Each _dr As DataRow In dt.Rows
+                Dim partida As New Entidades.Partida
+                FormatearPartida(partida, _dr)
+                ListaPArtida.Add(partida)
+            Next
+            Return ListaPArtida
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function TraerPartidasJugador(jugador As Jugador) As List(Of Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select P.* from Partida as P inner join Jugador_Equipo as JE on P.ID_Equipo_Local=JE.ID_Equipo where (JE.ID_Jugador=@ID_Jugador) and Ganador_Local is not Null union select P.* from Partida as P inner join Jugador_Equipo as JE on P.ID_Equipo_Visitante=JE.ID_Equipo where (JE.ID_Jugador=@ID_Jugador) and Ganador_Local is not Null")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Jugador", jugador.ID_Jugador))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListaPArtida As New List(Of Entidades.Partida)
+            For Each _dr As DataRow In dt.Rows
+                Dim partida As New Entidades.Partida
+                FormatearPartida(partida, _dr)
+                ListaPArtida.Add(partida)
+            Next
+            Return ListaPArtida
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function TraerPartidasAnio(game As Game, anio As Integer) As List(Of Partida)
         Try

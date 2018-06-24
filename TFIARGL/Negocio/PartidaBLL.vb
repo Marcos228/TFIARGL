@@ -40,6 +40,43 @@ Public Class PartidaBLL
 
     End Function
 
+    Friend Function TraerEstadisticas(equi As Equipo) As List(Of Partida)
+        Try
+            Dim DALPartida As New DAL.PartidaDAL
+            Dim EstadisticaBLL As New EstadisticaBLL
+
+            Dim listaretorno As List(Of Entidades.Partida) = DALPartida.TraerPartidasEquipo(equi)
+
+            For Each Partida In listaretorno
+                EstadisticaBLL.TraerEstadisticasPartida(Partida)
+            Next
+
+            Return listaretorno
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+    End Function
+
+    Friend Function TraerEstadisticas(jugador As Jugador) As List(Of Partida)
+        Try
+            Dim DALPartida As New DAL.PartidaDAL
+            Dim EstadisticaBLL As New EstadisticaBLL
+
+            Dim listaretorno As List(Of Entidades.Partida) = DALPartida.TraerPartidasJugador(jugador)
+
+            For Each Partida In listaretorno
+                EstadisticaBLL.TraerEstadisticasPartida(Partida)
+            Next
+
+            Return listaretorno
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+    End Function
+
+
     Public Function FinalizarPartida(ByRef part As Entidades.Partida) As Boolean
         Try
             Dim DALPartida As New DAL.PartidaDAL

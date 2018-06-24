@@ -1,20 +1,42 @@
 ﻿Imports System.IO
 Imports System.Web.HttpContext
-Public Class CrearTorneo
+Public Class ModificarTorneo
     Inherits System.Web.UI.Page
 
-    Private Sub CrearEquipo_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub ModificarEquipo_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not IsPostBack Then
             Session("SponsorsSeleccionados") = New List(Of Entidades.Sponsor)
             Session("Premios") = New List(Of Entidades.Premio)
             If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
-                CargarJuegos()
+                CargarTorneos()
                 CargarSponsors()
                 CargarPosiciones()
             End If
         End If
+    End Sub
+
+    Private Sub CargarTorneos()
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
+        Dim lista As List(Of Entidades.Torneo)
+        Dim Gestor As New Negocio.TorneoBLL
+        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        lista = Gestor.TraerTorneosModificables()
+        Me.gv_torneos.DataSource = lista
+        Me.gv_torneos.DataBind()
+        If lista.Count = 0 Then
+            Me.alertvalid.Visible = True
+            Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "CarPartidaError1").Traduccion
+        Else
+            Session("Torneos") = lista
+        End If
 
     End Sub
+
     Private Sub CargarSponsors()
         Dim lista As List(Of Entidades.Sponsor)
         Dim Gestor As New Negocio.SponsorBLL
@@ -211,14 +233,51 @@ Public Class CrearTorneo
         End Try
     End Sub
 
-    Private Sub CargarJuegos()
+    Private Sub gv_torneos_DataBound(sender As Object, e As EventArgs) Handles gv_torneos.DataBound
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-            Dim GestorJuegos As New Negocio.GameBLL
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Juegos As List(Of Entidades.Game) = GestorJuegos.TraerJuegos(clienteLogeado)
-            Me.lstgame.DataSource = Juegos
-            Me.lstgame.DataBind()
+            Dim ddl As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Dim ddlpage As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
+            Dim txttotal As Label = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
+
+            ddlpage.ClearSelection()
+            ddlpage.Items.FindByValue(gv_torneos.PageSize).Selected = True
+
+            txttotal.Text = gv_torneos.PageCount
+
+            For cnt As Integer = 0 To gv_torneos.PageCount - 1
+                Dim curr As Integer = cnt + 1
+                Dim item As New ListItem(curr.ToString())
+                If cnt = gv_torneos.PageIndex Then
+                    item.Selected = True
+                End If
+
+                ddl.Items.Add(item)
+
+            Next cnt
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            For Each row As GridViewRow In gv_torneos.Rows
+                Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                imagen3.CommandArgument = row.RowIndex
+            Next
+
+            With gv_torneos.HeaderRow
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaInicio").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaFin").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaInicioInscripcion").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaFinInscripcion").Traduccion
+                .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPrecio").Traduccion
+                .Cells(7).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+            End With
+
+            gv_torneos.BottomPagerRow.Visible = True
+            gv_torneos.BottomPagerRow.CssClass = "table-bottom-dark"
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -226,6 +285,106 @@ Public Class CrearTorneo
         End Try
 
     End Sub
+
+    Private Sub gv_torneos_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_torneos.RowCommand
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+
+            Select Case e.CommandName.ToString
+                Case "S"
+                    Dim Torneo As Entidades.Torneo = TryCast(Session("Torneos"), List(Of Entidades.Torneo))(e.CommandArgument + (gv_torneos.PageIndex * gv_torneos.PageSize))
+                    For Each r As GridViewRow In gv_torneos.Rows
+                        r.BackColor = Drawing.Color.FromName("#c3e6cb")
+                    Next
+                    gv_torneos.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
+                    Me.id_torneo.Value = Torneo.ID_Torneo
+                    Me.txtnombre.Text = Torneo.Nombre
+                    Me.txtprecio.Text = Torneo.Precio_Inscripcion
+                    Me.txtyoutube.Text = Torneo.Youtube
+                    Me.txttwitch.Text = Torneo.Twitch
+                    Me.txtcantidad.Text = Torneo.CantidadParticipantes
+                    Me.datepicker1.Value = Torneo.Fecha_Inicio.Date
+                    Me.datepicker2.Value = Torneo.Fecha_Fin.Date
+                    Me.datepicker3.Value = Torneo.Fecha_Inicio_Inscripcion.Date
+                    Me.datepicker4.Value = Torneo.Fecha_Fin_Inscripcion.Date
+                    Dim listajuego As New List(Of Entidades.Game)
+                    listajuego.Add(Torneo.Game)
+                    Me.lstgame.DataSource = listajuego
+                    Me.lstgame.DataBind()
+
+                    TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor)).Clear()
+
+                    Dim ListaSponsor As List(Of Entidades.Sponsor) = Session("Sponsors")
+
+                    For Each row As GridViewRow In gv_sponsors.Rows
+                        If Torneo.Sponsors.Any(Function(p) p.ID_Sponsor = ListaSponsor(row.RowIndex).ID_Sponsor) Then
+                            gv_sponsors.Rows.Item(row.RowIndex).BackColor = Drawing.Color.Cyan
+                            Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(gv_sponsors.Rows.Item(row.RowIndex).FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                            imagen3.ImageUrl = "~/Imagenes/clear.png"
+                            TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor)).Add(ListaSponsor(row.RowIndex))
+                        Else
+                            gv_sponsors.Rows.Item(row.RowIndex).BackColor = Drawing.Color.FromName("#c3e6cb")
+                            Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(gv_sponsors.Rows.Item(row.RowIndex).FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                            imagen3.ImageUrl = "~/Imagenes/check.png"
+                        End If
+                    Next
+
+
+                    TryCast(Session("Premios"), List(Of Entidades.Premio)).Clear()
+                    For Each Premio In Torneo.Premios
+                        TryCast(Session("Premios"), List(Of Entidades.Premio)).Add(Premio)
+                    Next
+                    gv_premios.DataSource = Session("Premios")
+                    gv_premios.DataBind()
+                    CargarPosiciones()
+                    Session("TorneoSeleccionado") = Torneo
+            End Select
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Protected Sub gv_torneos_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
+        Try
+            CargarTorneos()
+            gv_torneos.PageIndex = e.NewPageIndex
+            gv_torneos.DataBind()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+
+    End Sub
+    Protected Sub ddlPaging_SelectedIndexChanged3(sender As Object, e As EventArgs)
+        Try
+            Dim ddl As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            gv_torneos.SetPageIndex(ddl.SelectedIndex)
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+    Protected Sub ddlPageSize_SelectedPageSizeChanged3(sender As Object, e As EventArgs)
+        Try
+            Dim ddl As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
+            gv_torneos.PageSize = ddl.SelectedValue
+            CargarTorneos()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
     Private Function ValidarFechas(idio As Entidades.IdiomaEntidad) As Boolean
         If datepicker1.Value <> "" And datepicker2.Value <> "" And datepicker3.Value <> "" And datepicker4.Value <> "" Then
             Dim Desde As Date = datepicker1.Value
@@ -294,9 +453,9 @@ Public Class CrearTorneo
 
     Protected Sub btnCrear_Click(sender As Object, e As EventArgs) Handles btnCrear.Click
         Try
-
             Dim GestorTorneo As New Negocio.TorneoBLL
             Dim IdiomaActual As Entidades.IdiomaEntidad
+
             If IsNothing(Current.Session("Cliente")) Then
                 IdiomaActual = Application("Español")
             Else
@@ -305,15 +464,19 @@ Public Class CrearTorneo
             If ValidarFechas(IdiomaActual) Then
                 If txtnombre.Text <> "" And ValidarNumero(txtprecio.Text) And ValidarNumero(txtcantidad.Text) Then
                     If ValidarURLs(txtyoutube.Text, txttwitch.Text) Then
-                        Dim TorneoNew As New Entidades.Torneo With {.Nombre = txtnombre.Text,
-                                        .Fecha_Inicio = datepicker1.Value, .Fecha_Fin = datepicker2.Value,
-                                        .Fecha_Inicio_Inscripcion = datepicker3.Value, .Fecha_Fin_Inscripcion = datepicker4.Value,
-                                        .Game = New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, .Precio_Inscripcion = CInt(txtprecio.Text), .CantidadParticipantes = CInt(txtcantidad.Text)}
+                        Dim TorneoNew As Entidades.Torneo = Session("TorneoSeleccionado")
+                        TorneoNew.CantidadParticipantes = txtcantidad.Text
+                        TorneoNew.Fecha_Fin = datepicker2.Value
+                        TorneoNew.Fecha_Fin_Inscripcion = datepicker4.Value
+                        TorneoNew.Fecha_Inicio = datepicker1.Value
+                        TorneoNew.Fecha_Inicio_Inscripcion = datepicker3.Value
+                        TorneoNew.Nombre = txtnombre.Text
+                        TorneoNew.Precio_Inscripcion = txtprecio.Text
                         TorneoNew.Youtube = txtyoutube.Text
                         TorneoNew.Twitch = txttwitch.Text
                         TorneoNew.Sponsors = TryCast(Session("SponsorsSeleccionados"), List(Of Entidades.Sponsor))
                         TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
-                        If GestorTorneo.AltaTorneo(TorneoNew) Then
+                        If GestorTorneo.ModificarTorneo(TorneoNew) Then
                             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
                             Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddTorneoSuccess1").Traduccion & TorneoNew.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                             Negocio.BitacoraBLL.CrearBitacora(Bitac)

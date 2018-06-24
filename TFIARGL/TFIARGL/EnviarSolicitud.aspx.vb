@@ -343,6 +343,33 @@ Public Class EnviarSolicitud
         End If
     End Sub
 
+    Private Sub CargarEquiposRecomendados()
+        Dim IdiomaActual As Entidades.IdiomaEntidad
+        If IsNothing(Current.Session("Cliente")) Then
+            IdiomaActual = Application("Español")
+        Else
+            IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        End If
+
+        Dim lista As List(Of Entidades.Equipo)
+        Dim Gestor As New Negocio.EquipoBLL
+        lista = Gestor.TraerEquiposSolicitud(New Entidades.Game With {.ID_Game = lstgame.SelectedValue})
+        Dim Stan As New Negocio.Recomendador
+        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        Dim Jugador As Entidades.Jugador = clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = lstgame.SelectedValue)
+        lista = Stan.RecomendarEquipo(Jugador, lista)
+
+        If lista.Count > 0 Then
+            Session("Equipos") = lista
+            Me.gv_Equipos.DataSource = lista
+            Me.gv_Equipos.DataBind()
+        Else
+            Me.alertvalid.Visible = True
+            Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "EnvSolicitudError2").Traduccion
+            Me.success.Visible = False
+        End If
+    End Sub
+
     Protected Sub btnBuscar_Click(sender As Object, e As EventArgs) Handles btnBuscar.Click
         Try
             CargarEquipos()
@@ -353,4 +380,13 @@ Public Class EnviarSolicitud
         End Try
     End Sub
 
+    Protected Sub btnrecomendar_Click(sender As Object, e As EventArgs) Handles btnrecomendar.Click
+        Try
+            CargarEquiposRecomendados()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
 End Class

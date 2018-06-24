@@ -6,6 +6,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+
     <script src="http://player.twitch.tv/js/embed/v1.js"></script>
     <div id="<player div ID>"></div>
     <script type="text/javascript">
@@ -21,7 +22,7 @@
     </script>
     <script type="text/javascript">
                                 function openWin() {
-    window.open("https://www.mercadopago.com/mla/checkout/start?pref_id=244721774-f40bff85-3c32-4c24-bd51-a1315fd0e884");
+                                        window.open("https://www.mercadopago.com/mla/checkout/start?pref_id=244721774-f40bff85-3c32-4c24-bd51-a1315fd0e884");
 }
                               
     </script>
@@ -67,8 +68,53 @@
                 <br />
                 <br />
                 <br />
+                <div>
+                         <h3 id="H3partidas" class="text-center" runat="server"></h3>
+                    <asp:GridView CssClass="table table-bordered table-responsive" ID="gv_partidas" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_partidas_PageIndexChanging" RowStyle-Height="40px">
+                        <HeaderStyle CssClass="thead-dark" />
+                        <PagerTemplate>
+                            <div class="col-md-4 text-left">
+                                <asp:Label ID="lblmostrarpag" runat="server" Text="Mostrar Pagina"></asp:Label>
+                                <asp:DropDownList ID="ddlPaging" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPaging_SelectedIndexChanged" />
+                                <asp:Label ID="lblde" runat="server" Text="de"></asp:Label>
+                                <asp:Label ID="lbltotalpages" runat="server" Text=""></asp:Label>
+                            </div>
+                            <div class="col-md-6 col-md-offset-2">
+                                <asp:Label ID="lblMostrar" runat="server" Text="Mostrar"></asp:Label>
+                                <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPageSize_SelectedPageSizeChanged">
+                                    <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                    <asp:ListItem Text="5" Value="5"></asp:ListItem>
+                                    <asp:ListItem Text="10" Value="10"></asp:ListItem>
+                                    <asp:ListItem Text="20" Value="20"></asp:ListItem>
+                                    <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                                    <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                                </asp:DropDownList>
+                                <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina"></asp:Label>
+                            </div>
+                        </PagerTemplate>
+                        <Columns>
+                            <asp:BoundField DataField="Fase" HeaderText="Fase" />
+                            <asp:BoundField DataField="FechaHora" HeaderText="Fecha" DataFormatString="{0:dd-MM-yyyy HH:mm:ss }" />
+                            <asp:BoundField DataField="Equipos(0).Nombre" HeaderText="Equipo Local" />
+                            <asp:BoundField DataField="Equipos(1).Nombre" HeaderText="Equipo Visitante" />
+                            <asp:BoundField DataField="Ganador.Nombre" HeaderText="Ganador" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
+                <div>
+                        <h3 id="H3premios" class="text-center" runat="server"></h3>
+                    <asp:GridView CssClass="table table-bordered table-responsive table-Secondary " ID="gv_premios" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" RowStyle-Height="40px">
+                        <HeaderStyle CssClass="thead-dark" />
+                        <Columns>
+                            <asp:BoundField DataField="Nombre" HeaderText="Premio" />
+                            <asp:BoundField DataField="Posicion" HeaderText="Posicion" />
+                            <asp:BoundField DataField="Descripcion" HeaderText="Descripcion" />
+                            <asp:BoundField DataField="valor" HeaderText="Valor" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
                 <br />
-                <br />
+
                 <div class="row ">
                     <div class="">
                         <div class="col-md-6">
@@ -84,9 +130,9 @@
                     </div>
                 </div>
                 <br />
-                        <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
-            <label runat="server" id="textovalid" class="text-danger"></label>
-        </div>
+                <div id="alertvalid" runat="server" name="alertvalid" class="alert alert-danger  text-center" visible="false">
+                    <label runat="server" id="textovalid" class="text-danger"></label>
+                </div>
                 <br />
                 <div id="btnins" runat="server" class="row">
                     <div class="col-md-4 col-md-offset-4">
@@ -97,4 +143,5 @@
         </div>
     </div>
     <asp:HiddenField ID="id_game" runat="server" />
+    <asp:HiddenField ID="id_torneo" runat="server" />
 </asp:Content>

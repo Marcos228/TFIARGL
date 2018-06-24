@@ -41,6 +41,26 @@ Public Class JugadorDAL
         End Try
     End Function
 
+    Public Function TraerJugadoresSolicitud(game As Game) As List(Of Jugador)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("Select * from Jugador where id_game=@id_game and not exists(select ID_Jugador from Jugador_Equipo where Jugador_Equipo.ID_Jugador=Jugador.ID_Jugador and Jugador_Equipo.Fecha_fin is null)")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Game", game.ID_Game))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim Listajugador As New List(Of Entidades.Jugador)
+            For Each _dr As DataRow In dt.Rows
+                Dim juga As New Entidades.Jugador
+                FormatearJugador(juga, _dr)
+                Listajugador.Add(juga)
+            Next
+            Return Listajugador
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function TraerJugadoresSolicitud(nombre As String, game As Game) As List(Of Jugador)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Select * from Jugador where id_game=@id_game and nickname like Concat('%',@nombre,'%') and not exists(select ID_Jugador from Jugador_Equipo where Jugador_Equipo.ID_Jugador=Jugador.ID_Jugador and Jugador_Equipo.Fecha_fin is null)")
