@@ -72,6 +72,14 @@ Public Class VisualizarRanking
     End Sub
     Private Sub gv_Jugadores_DataBound(sender As Object, e As EventArgs) Handles gv_jugadores.DataBound
         Try
+
+
+            Try
+                Dim ddl2 As DropDownList = CType(gv_jugadores.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
             Dim ddl As DropDownList = CType(gv_jugadores.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_jugadores.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_jugadores.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -99,13 +107,15 @@ Public Class VisualizarRanking
             End If
 
             For Each row As GridViewRow In gv_jugadores.Rows
-                row.Cells(0).Text = row.RowIndex +1
+                row.Cells(0).Text = row.RowIndex + 1
             Next
 
             With gv_jugadores.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNickname").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderRol").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPosicion").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJugador").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderRol").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPuntos").Traduccion
             End With
 
             gv_jugadores.BottomPagerRow.Visible = True
@@ -120,6 +130,13 @@ Public Class VisualizarRanking
 
     Private Sub gv_Equipos_DataBound(sender As Object, e As EventArgs) Handles gv_equipos.DataBound
         Try
+
+            Try
+                Dim ddl2 As DropDownList = CType(gv_equipos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
             Dim ddl As DropDownList = CType(gv_equipos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_equipos.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_equipos.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -150,10 +167,11 @@ Public Class VisualizarRanking
             Next
 
             With gv_equipos.HeaderRow
-                '.Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
-                '.Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaAlta").Traduccion
-                '.Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderHistoria").Traduccion
-                '.Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPosicion").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderEquipo").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaAlta").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPuntos").Traduccion
             End With
 
             gv_equipos.BottomPagerRow.Visible = True

@@ -108,7 +108,7 @@
                         <Columns>
                             <asp:BoundField DataField="Nombre" HeaderText="Premio" />
                             <asp:BoundField DataField="Posicion" HeaderText="Posicion" />
-                            <asp:BoundField DataField="Descripcion" HeaderText="Descripcion" />
+                            <asp:BoundField DataField="Tipo_Premio" HeaderText="Tipo Premio" />
                             <asp:BoundField DataField="valor" HeaderText="Valor" />
                         </Columns>
                     </asp:GridView>

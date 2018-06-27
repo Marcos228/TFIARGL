@@ -64,7 +64,7 @@ Public Class VisualizarTorneo
             End If
             Dim lista As List(Of Entidades.Partida)
             Dim Gestor As New Negocio.PartidaBLL
-            lista = Gestor.TraerPartidasTorneo(Me.id_torneo.Value)
+            lista = Gestor.TraerPartidasTorneoVisualizacion(Me.id_torneo.Value)
             If lista.Count > 0 Then
                 Me.H3partidas.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "lbltorneo").Traduccion
             End If
@@ -105,6 +105,11 @@ Public Class VisualizarTorneo
 
     Private Sub gv_partidas_DataBound(sender As Object, e As EventArgs) Handles gv_partidas.DataBound
         Try
+            Try
+                Dim ddl2 As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
             Dim ddl As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)

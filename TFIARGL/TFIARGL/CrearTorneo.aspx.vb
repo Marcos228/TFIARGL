@@ -40,10 +40,27 @@ Public Class CrearTorneo
         Else
             Ocultable.Visible = True
         End If
+
+        Me.lsttipopremio.Items.Clear()
+        Dim tipo2 As New Entidades.Tipo_Premios
+        Dim itemValues2 As Array = System.Enum.GetValues(tipo2.GetType)
+        Dim itemNames2 As Array = System.Enum.GetNames(tipo2.GetType)
+
+        For i As Integer = 0 To itemNames2.Length - 1
+            Dim item As New ListItem(itemNames2(i), itemValues2(i))
+            Me.lsttipopremio.Items.Add(item)
+        Next
+
     End Sub
 
     Private Sub gv_Sponsors_DataBound(sender As Object, e As EventArgs) Handles gv_sponsors.DataBound
         Try
+            Try
+                Dim ddl2 As DropDownList = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
             Dim ddl As DropDownList = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -268,14 +285,13 @@ Public Class CrearTorneo
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
-            If txtnombrepremio.Text <> "" And txtdescripcion.Text <> "" And ValidarNumero(txtvalor.Text) Then
-                Dim Premio2 As New Entidades.Premio With {.Nombre = txtnombrepremio.Text, .Posicion = lstposicion.SelectedValue, .Descripcion = txtdescripcion.Text, .Valor = txtvalor.Text}
+            If txtnombrepremio.Text <> "" And ValidarNumero(txtvalor.Text) Then
+                Dim Premio2 As New Entidades.Premio With {.Nombre = txtnombrepremio.Text, .Posicion = lstposicion.SelectedValue, .Tipo_Premio = lsttipopremio.SelectedValue, .Valor = txtvalor.Text}
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Add(Premio2)
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Sort()
                 gv_premios.DataSource = Session("Premios")
                 gv_premios.DataBind()
                 CargarPosiciones()
-                txtdescripcion.Text = ""
                 txtnombrepremio.Text = ""
                 txtvalor.Text = ""
             Else

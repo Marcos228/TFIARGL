@@ -62,10 +62,37 @@ Public Class ModificarTorneo
         Else
             Ocultable.Visible = True
         End If
-    End Sub
 
+        Me.lsttipopremio.Items.Clear()
+        Dim tipo2 As New Entidades.Tipo_Premios
+        Dim itemValues2 As Array = System.Enum.GetValues(tipo2.GetType)
+        Dim itemNames2 As Array = System.Enum.GetNames(tipo2.GetType)
+
+        For i As Integer = 0 To itemNames2.Length - 1
+            Dim item As New ListItem(itemNames2(i), itemValues2(i))
+            Me.lsttipopremio.Items.Add(item)
+        Next
+
+    End Sub
+    Private Sub CargarPArtidas(ByRef Torneo As Entidades.Torneo)
+        Try
+            Me.gv_partidas.DataSource = Torneo.Partidas
+            Me.gv_partidas.DataBind()
+            Me.datosPar.Visible = True
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+
+    End Sub
     Private Sub gv_Sponsors_DataBound(sender As Object, e As EventArgs) Handles gv_sponsors.DataBound
         Try
+            Try
+                Dim ddl2 As DropDownList = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
             Dim ddl As DropDownList = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_sponsors.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -116,6 +143,7 @@ Public Class ModificarTorneo
 
     Private Sub gv_premios_DataBound(sender As Object, e As EventArgs) Handles gv_premios.DataBound
         Try
+
             Dim IdiomaActual As Entidades.IdiomaEntidad
             If IsNothing(Current.Session("Cliente")) Then
                 IdiomaActual = Application("Español")
@@ -130,7 +158,7 @@ Public Class ModificarTorneo
             With gv_premios.HeaderRow
                 .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderNombre").Traduccion
                 .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPosicion").Traduccion
-                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderDescripcion").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderTipoPremio").Traduccion
                 .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderValor").Traduccion
                 .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
@@ -235,6 +263,11 @@ Public Class ModificarTorneo
 
     Private Sub gv_torneos_DataBound(sender As Object, e As EventArgs) Handles gv_torneos.DataBound
         Try
+            Try
+                Dim ddl2 As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
             Dim ddl As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -342,6 +375,15 @@ Public Class ModificarTorneo
                     gv_premios.DataSource = Session("Premios")
                     gv_premios.DataBind()
                     CargarPosiciones()
+
+                    Dim Gestor As New Negocio.PartidaBLL
+                    Torneo.Partidas = Gestor.TraerPartidasTorneo(Torneo.ID_Torneo)
+                    If Torneo.Partidas.Count > 0 Then
+                        CargarPArtidas(Torneo)
+                    Else
+                        Me.datosPar.Visible = False
+                    End If
+
                     Session("TorneoSeleccionado") = Torneo
             End Select
         Catch ex As Exception
@@ -385,6 +427,135 @@ Public Class ModificarTorneo
         End Try
     End Sub
 
+    Private Sub gv_partidas_DataBound(sender As Object, e As EventArgs) Handles gv_partidas.DataBound
+        Try
+
+            Try
+                Dim ddl2 As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
+
+            Dim ddl As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Dim ddlpage As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
+            Dim txttotal As Label = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
+
+            ddlpage.ClearSelection()
+            ddlpage.Items.FindByValue(gv_partidas.PageSize).Selected = True
+
+            txttotal.Text = gv_partidas.PageCount
+
+            For cnt As Integer = 0 To gv_partidas.PageCount - 1
+                Dim curr As Integer = cnt + 1
+                Dim item As New ListItem(curr.ToString())
+                If cnt = gv_partidas.PageIndex Then
+                    item.Selected = True
+                End If
+
+                ddl.Items.Add(item)
+
+            Next cnt
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Dim noasignados As Boolean = False
+            For Each row As GridViewRow In gv_partidas.Rows
+                If row.Cells(2).Text = "01-01-0001 00:00:00 " Then
+                    noasignados = True
+                    row.Cells(2).Text = "Sin Asignar"
+                End If
+                Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                imagen3.CommandArgument = row.RowIndex
+            Next
+
+            With gv_partidas.HeaderRow
+
+                .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderID").Traduccion
+                .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFase").Traduccion
+                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFecha").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
+            End With
+
+            gv_partidas.BottomPagerRow.Visible = True
+            gv_partidas.BottomPagerRow.CssClass = "table-bottom-dark"
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+
+    End Sub
+
+    Private Sub gv_partidas_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_partidas.RowCommand
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+
+            Select Case e.CommandName.ToString
+                Case "S"
+                    Dim Partida As Entidades.Partida = TryCast(Session("TorneoSeleccionado"), Entidades.Torneo).Partidas(e.CommandArgument + (gv_partidas.PageIndex * gv_partidas.PageSize))
+                    For Each r As GridViewRow In gv_partidas.Rows
+                        r.BackColor = Drawing.Color.FromName("#c3e6cb")
+                    Next
+                    If Partida.FechaHora <> Date.MinValue Then
+                        Me.datepicker5.Value = Partida.FechaHora.Date
+                        Me.timepicker1.Value = Partida.FechaHora.Hour & ":" & Partida.FechaHora.Minute
+                    Else
+                        Me.timepicker1.Value = ""
+                    End If
+                    gv_partidas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
+                    Session("Partida") = Partida
+            End Select
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Protected Sub gv_partidas_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
+        Try
+            CargarPArtidas(Session("TorneoSeleccionado"))
+            gv_partidas.PageIndex = e.NewPageIndex
+            gv_partidas.DataBind()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+
+    End Sub
+    Protected Sub ddlPaging_SelectedIndexChanged4(sender As Object, e As EventArgs)
+        Try
+            Dim ddl As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            gv_partidas.SetPageIndex(ddl.SelectedIndex)
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+    Protected Sub ddlPageSize_SelectedPageSizeChanged4(sender As Object, e As EventArgs)
+        Try
+            Dim ddl As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
+            gv_partidas.PageSize = ddl.SelectedValue
+            CargarPArtidas(Session("TorneoSeleccionado"))
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+
     Private Function ValidarFechas(idio As Entidades.IdiomaEntidad) As Boolean
         If datepicker1.Value <> "" And datepicker2.Value <> "" And datepicker3.Value <> "" And datepicker4.Value <> "" Then
             Dim Desde As Date = datepicker1.Value
@@ -427,14 +598,13 @@ Public Class ModificarTorneo
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
-            If txtnombrepremio.Text <> "" And txtdescripcion.Text <> "" And ValidarNumero(txtvalor.Text) Then
-                Dim Premio2 As New Entidades.Premio With {.Nombre = txtnombrepremio.Text, .Posicion = lstposicion.SelectedValue, .Descripcion = txtdescripcion.Text, .Valor = txtvalor.Text}
+            If txtnombrepremio.Text <> "" And ValidarNumero(txtvalor.Text) Then
+                Dim Premio2 As New Entidades.Premio With {.Nombre = txtnombrepremio.Text, .Posicion = lstposicion.SelectedValue, .Tipo_Premio = lsttipopremio.SelectedValue, .Valor = txtvalor.Text}
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Add(Premio2)
                 TryCast(Session("Premios"), List(Of Entidades.Premio)).Sort()
                 gv_premios.DataSource = Session("Premios")
                 gv_premios.DataBind()
                 CargarPosiciones()
-                txtdescripcion.Text = ""
                 txtnombrepremio.Text = ""
                 txtvalor.Text = ""
             Else
@@ -451,7 +621,7 @@ Public Class ModificarTorneo
 
     End Sub
 
-    Protected Sub btnCrear_Click(sender As Object, e As EventArgs) Handles btnCrear.Click
+    Protected Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
         Try
             Dim GestorTorneo As New Negocio.TorneoBLL
             Dim IdiomaActual As Entidades.IdiomaEntidad
@@ -478,7 +648,7 @@ Public Class ModificarTorneo
                         TorneoNew.Premios = TryCast(Session("Premios"), List(Of Entidades.Premio))
                         If GestorTorneo.ModificarTorneo(TorneoNew) Then
                             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddTorneoSuccess1").Traduccion & TorneoNew.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraModTorneoSuccess1").Traduccion & TorneoNew.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion & ".", Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                             Negocio.BitacoraBLL.CrearBitacora(Bitac)
                             Me.success.Visible = True
                             Me.alertvalid.Visible = False
@@ -513,4 +683,64 @@ Public Class ModificarTorneo
         End If
         Return True
     End Function
+
+    Protected Sub btnAsignar_Click(sender As Object, e As EventArgs) Handles btnAsignar.Click
+        Try
+
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            If datepicker5.Value <> "" And timepicker1.Value <> "" Then
+                Dim Partida As Entidades.Partida = TryCast(Session("Partida"), Entidades.Partida)
+                Partida.FechaHora = datepicker5.Value & " " & timepicker1.Value
+                Dim gestorPartida As New Negocio.PartidaBLL
+                gestorPartida.AgregarHorarioPartida(Partida)
+                CargarPArtidas(Session("TorneoSeleccionado"))
+
+                Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSorTorneoSuccess2").Traduccion & " " & Partida.ID_Partida & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Negocio.BitacoraBLL.CrearBitacora(Bitac)
+                Me.success.Visible = True
+                Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "SorTorneoSuccess").Traduccion
+                Me.alertvalid.Visible = False
+            Else
+                Me.alertvalid.Visible = True
+                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
+                Me.success.Visible = False
+            End If
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Protected Sub btnconfirmarFechas_Click(sender As Object, e As EventArgs) Handles btnconfirmarFechas.Click
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Dim gestor As New Negocio.TorneoBLL
+            Dim TorneoConfirmar As Entidades.Torneo = Session("TorneoSeleccionado")
+            gestor.ConfirmarFechasTorneo(TorneoConfirmar)
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraFechasTorneoSuccess").Traduccion & TorneoConfirmar.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            Me.success.Visible = True
+            Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FechasTorneoSuccess").Traduccion
+            Me.alertvalid.Visible = False
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
 End Class

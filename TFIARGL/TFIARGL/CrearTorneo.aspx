@@ -66,7 +66,7 @@
                                 <asp:Label ID="lbljuego" runat="server" Text="Juego:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre" ></asp:DropDownList>
+                                        <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre"></asp:DropDownList>
                                         <span class="input-group-addon" id="basic-addon12"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></span>
                                     </div>
                                 </div>
@@ -201,12 +201,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <asp:Label ID="lbldescripcion" runat="server" Text="Descripcion:" CssClass="control-label labelform"></asp:Label>
+                                                <asp:Label ID="lbltipopremio" runat="server" Text="Tipo Premio:" CssClass="control-label labelform"></asp:Label>
                                                 <div class="input-group">
-                                                    <asp:TextBox ID="txtdescripcion" runat="server" CssClass="form-control"></asp:TextBox>
-                                                    <span class="input-group-addon" id="basic-addon21"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                                                    </span>
-
+                                                    <asp:DropDownList ID="lsttipopremio" runat="server" CssClass="form-control"></asp:DropDownList>
+                                                    <span class="input-group-addon" id="basic-addon25"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -244,7 +242,7 @@
                                                     <Columns>
                                                         <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
                                                         <asp:BoundField DataField="Posicion" HeaderText="Posicion" />
-                                                        <asp:BoundField DataField="Descripcion" HeaderText="Descripcion" />
+                                                        <asp:BoundField DataField="Tipo_Premio" HeaderText="Tipo Premio" />
                                                         <asp:BoundField DataField="valor" HeaderText="Valor" />
                                                         <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
                                                             <ItemTemplate>

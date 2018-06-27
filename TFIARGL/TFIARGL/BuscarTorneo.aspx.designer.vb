@@ -11,34 +11,34 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class index
+Partial Public Class BuscarTorneo
     
     '''<summary>
-    '''Control carusel.
+    '''Control alertvalid.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents carusel As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents alertvalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control datos.
+    '''Control textovalid.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents datos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblTorneosParticipativos.
+    '''Control lblPanelBusTorneo.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblTorneosParticipativos As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelBusTorneo As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control Panel.
@@ -50,6 +50,15 @@ Partial Public Class index
     Protected WithEvents Panel As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
+    '''Control Datos.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents Datos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
     '''Control gv_torneos.
     '''</summary>
     '''<remarks>
@@ -57,4 +66,13 @@ Partial Public Class index
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
     Protected WithEvents gv_torneos As Global.System.Web.UI.WebControls.GridView
+    
+    '''<summary>
+    '''Control id_game.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents id_game As Global.System.Web.UI.WebControls.HiddenField
 End Class

@@ -26,6 +26,8 @@ Public Class MasterPage
             Me.Menu.Items.Add(New MenuItem("Home", "Home", Nothing, "/Default.aspx"))
             Me.Menu.Items.Add(New MenuItem("Empresa", "Institucional", Nothing, "/Institucional.aspx"))
             Me.Menu.Items.Add(New MenuItem("Cambiar Idioma", "SeleccionarIdioma", Nothing, "/SeleccionarIdioma.aspx"))
+            Me.Menu.Items.Add(New MenuItem("Buscar Torneo", "BuscarTorneo", Nothing, "/BuscarTorneo.aspx"))
+            Me.Menu.Items.Add(New MenuItem("Ranking", "Ranking", Nothing, "/VisualizarRanking.aspx"))
             Me.Menu.Items.Add(New MenuItem("Login", "Login", Nothing, "/Login.aspx"))
         End If
         Dim PermisosInvitado As New Entidades.PermisoCompuestoEntidad
@@ -40,6 +42,8 @@ Public Class MasterPage
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/ConfirmarRecupero.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/SeleccionarIdioma.aspx"})
         PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/VisualizarRanking.aspx"})
+        PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/BuscarTorneo.aspx"})
+               PermisosInvitado.Hijos.Add(New Entidades.PermisoEntidad With {.URL = "/VisualizarTorneo.aspx"})
 
         UsuarioInvitado.Perfil = PermisosInvitado
         Dim GestorIdioma As New Negocio.IdiomaBLL
@@ -147,6 +151,7 @@ Public Class MasterPage
 
         Me.Menu.Items.Add(New MenuItem("Administración Torneos", "AdminTor"))
         Me.Menu.Items.Item(5).ChildItems.Add(New MenuItem("Crear Torneo", "CrearTorneo", Nothing, "/CrearTorneo.aspx"))
+        Me.Menu.Items.Item(5).ChildItems.Add(New MenuItem("Modificar Torneo", "ModificarTorneo", Nothing, "/ModificarTorneo.aspx"))
         Me.Menu.Items.Item(5).ChildItems.Add(New MenuItem("Administracion Sponsors", "ABMSponsor", Nothing, "/ABMSponsor.aspx"))
         Me.Menu.Items.Item(5).ChildItems.Add(New MenuItem("Confirmar Pagos", "ConfirmarPagos", Nothing, "/ConfirmarPagos.aspx"))
         Me.Menu.Items.Item(5).ChildItems.Add(New MenuItem("Sortear Torneo", "SortearTorneo", Nothing, "/SortearTorneo.aspx"))

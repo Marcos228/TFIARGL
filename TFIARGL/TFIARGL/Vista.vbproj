@@ -95,6 +95,7 @@
     <Content Include="AccesoRestringido.aspx" />
     <Content Include="ABMSponsor.aspx" />
     <Content Include="CSS\jquery.bracket.min.css" />
+    <Content Include="BuscarTorneo.aspx" />
     <Content Include="JS\jquery.bracket.min.js" />
     <Content Include="ModificarTorneo.aspx" />
     <Content Include="VisualizarRanking.aspx" />
@@ -217,6 +218,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Clases Vista\EstadisticaVista.vb" />
+    <Compile Include="BuscarTorneo.aspx.designer.vb">
+      <DependentUpon>BuscarTorneo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BuscarTorneo.aspx.vb">
+      <DependentUpon>BuscarTorneo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="ModificarTorneo.aspx.designer.vb">
       <DependentUpon>ModificarTorneo.aspx</DependentUpon>
     </Compile>

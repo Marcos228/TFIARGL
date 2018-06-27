@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <asp:Label ID="lblrol" runat="server" Text="Rol:" CssClass="control-label labelform"></asp:Label>
+                                <asp:Label ID="lblroljugador" runat="server" Text="Rol:" CssClass="control-label labelform"></asp:Label>
                                 <div class="input-group">
                                     <asp:DropDownList ID="lstrol" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Rol" DataTextField="Nombre"></asp:DropDownList>
                                     <span class="input-group-addon" id="basic-addon13"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></span>

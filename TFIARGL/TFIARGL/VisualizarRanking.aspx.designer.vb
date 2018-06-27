@@ -68,13 +68,13 @@ Partial Public Class VisualizarRanking
     Protected WithEvents lstgame As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''Control lblrol.
+    '''Control lblroljugador.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblrol As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblroljugador As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
     '''Control lstrol.

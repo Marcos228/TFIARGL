@@ -161,11 +161,34 @@ Public Class PartidaDAL
         End Try
     End Function
 
+    Public Function TraerPartidasTorneoVisualizacion(id_torneo As Integer) As List(Of Partida)
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("select P.ID_Partida,P.ID_Torneo,P.ID_Equipo_Local,P.ID_Equipo_Visitante,P.ID_Fase,P.Resultado,P.Ganador_Local,IIF(T.Fechas_Publicas=0,null,P.FechaHora) as FechaHora from Partida as P inner join Torneo as T on T.ID_Torneo=P.ID_Torneo  where P.ID_Torneo=@ID_Torneo")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Torneo", id_torneo))
+            End With
+            Dim dt As DataTable = Acceso.Lectura(Command)
+            Command.Dispose()
+            Dim ListaPArtida As New List(Of Entidades.Partida)
+            For Each _dr As DataRow In dt.Rows
+                Dim partida As New Entidades.Partida
+                FormatearPartida(partida, _dr)
+                ListaPArtida.Add(partida)
+            Next
+            Return ListaPArtida
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Private Sub FormatearPartida(partida As Partida, row As DataRow)
         Try
             partida.ID_Partida = Row("ID_Partida")
-            partida.Fase = Row("ID_Fase")
-            partida.FechaHora = Row("FechaHora")
+            partida.Fase = row("ID_Fase")
+            If Not IsDBNull(row("FechaHora")) Then
+                partida.FechaHora = row("FechaHora")
+            End If
+
             If Not IsDBNull(row("Resultado")) Then
                 partida.Resultado = row("Resultado")
             End If

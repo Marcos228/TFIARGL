@@ -311,22 +311,22 @@ Partial Public Class CrearTorneo
     Protected WithEvents txtnombrepremio As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Control lbldescripcion.
+    '''Control lbltipopremio.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lbldescripcion As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lbltipopremio As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control txtdescripcion.
+    '''Control lsttipopremio.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents txtdescripcion As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents lsttipopremio As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
     '''Control lblposicion.

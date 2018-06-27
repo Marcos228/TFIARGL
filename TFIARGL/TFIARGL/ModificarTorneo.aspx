@@ -11,6 +11,8 @@
             $("#datepicker2").datepicker();
             $("#datepicker3").datepicker();
             $("#datepicker4").datepicker();
+            $("#datepicker5").datepicker();
+            $("#timepicker1").timepicker();
         });
 
     </script>
@@ -32,7 +34,7 @@
                     <div id="Panel" runat="server" class="panel-body FondoPanel">
                         <br />
                         <div id="Datos" runat="server" class="form-horizontal has-success">
-                                <div class="form-group">
+                            <div class="form-group">
                                 <div class="col-md-12">
                                     <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_torneos" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_torneos_PageIndexChanging" RowStyle-Height="40px">
                                         <HeaderStyle CssClass="thead-dark" />
@@ -110,7 +112,7 @@
                                 <asp:Label ID="lbljuego" runat="server" Text="Juego:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre" Enabled="false" ></asp:DropDownList>
+                                        <asp:DropDownList ID="lstgame" runat="server" CssClass="form-control" AutoPostBack="true" DataValueField="ID_Game" DataTextField="Nombre" Enabled="false"></asp:DropDownList>
                                         <span class="input-group-addon" id="basic-addon12"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></span>
                                     </div>
                                 </div>
@@ -245,12 +247,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <asp:Label ID="lbldescripcion" runat="server" Text="Descripcion:" CssClass="control-label labelform"></asp:Label>
+                                                <asp:Label ID="lbltipopremio" runat="server" Text="Tipo Premio:" CssClass="control-label labelform"></asp:Label>
                                                 <div class="input-group">
-                                                    <asp:TextBox ID="txtdescripcion" runat="server" CssClass="form-control"></asp:TextBox>
-                                                    <span class="input-group-addon" id="basic-addon21"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
-                                                    </span>
-
+                                                    <asp:DropDownList ID="lsttipopremio" runat="server" CssClass="form-control"></asp:DropDownList>
+                                                    <span class="input-group-addon" id="basic-addon25"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -281,6 +281,8 @@
                                     </div>
                                     <br />
                                     <div class="form-group">
+                                        <br />
+                                        <br />
                                         <div>
                                             <div>
                                                 <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_premios" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" RowStyle-Height="40px">
@@ -288,7 +290,7 @@
                                                     <Columns>
                                                         <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
                                                         <asp:BoundField DataField="Posicion" HeaderText="Posicion" />
-                                                        <asp:BoundField DataField="Descripcion" HeaderText="Descripcion" />
+                                                        <asp:BoundField DataField="Tipo_Premio" HeaderText="Tipo Premio" />
                                                         <asp:BoundField DataField="valor" HeaderText="Valor" />
                                                         <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
                                                             <ItemTemplate>
@@ -308,7 +310,91 @@
                             <br />
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4">
-                                    <asp:Button ClientIDMode="Static" ID="btnCrear" name="btnModificar" runat="server" Text="Modificar" CssClass="btn btn-block btn-success" />
+                                    <asp:Button ClientIDMode="Static" ID="btnModificar" name="btnModificar" runat="server" Text="Modificar" CssClass="btn btn-block btn-success" />
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+
+                            <div runat="server" id="datosPar" visible="false">
+                                <div class="form-group">
+                                    <asp:Label ID="lblAsignarFechas" runat="server" Text="Asignar Fechas:" CssClass=" col-sm-4 control-label labelform"></asp:Label>
+                                    <br />
+                                    <br />
+                                    <div class="col-md-12">
+                                        <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_partidas" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_partidas_PageIndexChanging" RowStyle-Height="40px">
+                                            <HeaderStyle CssClass="thead-dark" />
+                                            <PagerTemplate>
+                                                <div class="col-md-4 text-left">
+                                                    <asp:Label ID="lblmostrarpag" runat="server" Text="Mostrar Pagina"></asp:Label>
+                                                    <asp:DropDownList ID="ddlPaging" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPaging_SelectedIndexChanged4" />
+                                                    <asp:Label ID="lblde" runat="server" Text="de"></asp:Label>
+                                                    <asp:Label ID="lbltotalpages" runat="server" Text=""></asp:Label>
+                                                </div>
+                                                <div class="col-md-6 col-md-offset-2">
+                                                    <asp:Label ID="lblMostrar" runat="server" Text="Mostrar"></asp:Label>
+                                                    <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" CssClass="margenPaginacion" OnSelectedIndexChanged="ddlPageSize_SelectedPageSizeChanged4">
+                                                        <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                                        <asp:ListItem Text="5" Value="5"></asp:ListItem>
+                                                        <asp:ListItem Text="10" Value="10"></asp:ListItem>
+                                                        <asp:ListItem Text="20" Value="20"></asp:ListItem>
+                                                        <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                                                        <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                                                    </asp:DropDownList>
+                                                    <asp:Label ID="lblRegistrosPag" runat="server" Text="Registros por Pagina"></asp:Label>
+                                                </div>
+                                            </PagerTemplate>
+                                            <Columns>
+                                                <asp:BoundField DataField="ID_Partida" HeaderText="ID" />
+                                                <asp:BoundField DataField="Fase" HeaderText="Fase" />
+                                                <asp:BoundField DataField="FechaHora" HeaderText="Fecha" DataFormatString="{0:dd-MM-yyyy HH:mm:ss }" />
+                                                <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                    <ItemTemplate>
+                                                        <div>
+                                                            <asp:ImageButton ID="btn_Seleccionar" runat="server" CommandName="S" ImageUrl="~/Imagenes/arrow.png" Height="18px" />
+                                                        </div>
+                                                    </ItemTemplate>
+                                                    <HeaderStyle Width="100px"></HeaderStyle>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <asp:Label ID="lblfecha" runat="server" Text="Fecha:" CssClass=" col-sm-4 control-label labelform"></asp:Label>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <input runat="server" clientidmode="Static" class="form-control" type="text" id="datepicker5" name="datepicker5" readonly="true" />
+                                            <span class="input-group-addon" id="basic-addon52"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <asp:Label ID="lblHora" runat="server" Text="Hora:" CssClass=" col-sm-4 control-label labelform"></asp:Label>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <input runat="server" clientidmode="Static" class="form-control" type="text" id="timepicker1" name="timepicker1" readonly="true" />
+                                            <span class="input-group-addon" id="basic-addon51"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="Div1" runat="server" class="row">
+                                    <div class="col-md-4 col-md-offset-4">
+                                        <asp:Button ClientIDMode="Static" ID="btnAsignar" name="btnAsignar" runat="server" Text="Asignar" CssClass="btn btn-block btn-success" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div id="Div2" runat="server" class="row">
+                                <div class="col-md-4 col-md-offset-4">
+                                    <asp:Button ClientIDMode="Static" ID="btnconfirmarFechas" name="btnAsignar" runat="server" Text="Confirmar Fechas" CssClass="btn btn-block btn-success" />
                                 </div>
                             </div>
                         </div>

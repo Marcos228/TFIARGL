@@ -92,6 +92,11 @@ Public Class EnviarSolicitud
 
     Private Sub gv_Equipos_DataBound(sender As Object, e As EventArgs) Handles gv_Equipos.DataBound
         Try
+            Try
+                Dim ddl2 As DropDownList = CType(gv_Equipos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
             Dim ddl As DropDownList = CType(gv_Equipos.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_Equipos.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_Equipos.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -141,6 +146,13 @@ Public Class EnviarSolicitud
 
     Private Sub gv_solicitudes_DataBound(sender As Object, e As EventArgs) Handles gv_Solicitudes.DataBound
         Try
+
+            Try
+                Dim ddl2 As DropDownList = CType(gv_Solicitudes.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
             Dim ddl As DropDownList = CType(gv_Solicitudes.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_Solicitudes.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_Solicitudes.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)

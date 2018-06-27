@@ -31,6 +31,15 @@ Public Class TorneoBLL
         End Try
     End Function
 
+    Public Function TraerTodosTorneos() As List(Of Torneo)
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            Return TorneDAL.TraerTodosTorneos
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function ValidarNombreTorneo(torn As Entidades.Torneo) As Boolean
         Try
             Dim TorneDAL As New DAL.TorneoDAL
@@ -40,6 +49,14 @@ Public Class TorneoBLL
         End Try
     End Function
 
+    Public Sub ConfirmarFechasTorneo(torn As Entidades.Torneo)
+        Try
+            Dim TorneDAL As New DAL.TorneoDAL
+            TorneDAL.ConfirmarFechasTorneo(torn)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Sub
     Public Function TraerTorneosInscripcion(game As Entidades.Game, jugad As Entidades.Jugador) As List(Of Torneo)
         Try
             Dim TorneDAL As New DAL.TorneoDAL
@@ -53,6 +70,19 @@ Public Class TorneoBLL
             End If
         Catch EquipoNo As ExceptionEquipoIncompleto
             Throw EquipoNo
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
+    Public Function TraerTorneosVisualizar(clienteLogeado As UsuarioEntidad) As List(Of Torneo)
+        Try
+            Dim listaretorno As New List(Of Torneo)
+            Dim TorneDAL As New DAL.TorneoDAL
+            For Each Jugador As Entidades.Jugador In clienteLogeado.Perfiles_Jugador
+                listaretorno.AddRange(TorneDAL.TraerTorneosVisualizar(Jugador))
+            Next
+            Return listaretorno
         Catch ex As Exception
             Throw ex
         End Try
@@ -220,40 +250,6 @@ Public Class TorneoBLL
 
     End Sub
 
-    'Private Sub LLenarPartidas(primeraFaseTorneo As Fases, torneoSorteo As Torneo, cantidadpartidas As Integer)
-    '    Try
-    '        Dim partidasvacias As Integer = 0
-    '        Select Case primeraFaseTorneo
-    '            Case Fases.Final
-    '                partidasvacias = 1 - cantidadpartidas
-    '            Case Fases.SemiFinal
-    '                partidasvacias = 2 - cantidadpartidas
-    '            Case Fases.CuartosFinal
-    '                partidasvacias = 4 - cantidadpartidas
-    '            Case Fases.OctavosFinal
-    '                partidasvacias = 8 - cantidadpartidas
-    '            Case Fases.DieciseisavosFinal
-    '                partidasvacias = 16 - cantidadpartidas
-    '            Case Fases.TreintaidosavosFinal
-    '                partidasvacias = 32 - cantidadpartidas
-    '            Case Fases.SesentaicuatroavosFinal
-    '                partidasvacias = 64 - cantidadpartidas
-    '        End Select
-
-    '        For x = 1 To partidasvacias
-    '            Dim Partida As New Entidades.Partida
-    '            Partida.Fase = primeraFaseTorneo
-    '            torneoSorteo.Partidas.Add(Partida)
-    '        Next
-    '        Dim FasePosterior As Entidades.Fases = primeraFaseTorneo - 1
-    '        If FasePosterior > 0 Then
-    '            LLenarPartidas(FasePosterior, torneoSorteo, 0)
-    '        End If
-    '    Catch ex As Exception
-    '        Throw ex
-    '    End Try
-
-    'End Sub
     Private Function DeterminaCantidad(torneoSorteo As Torneo) As Integer
         Select Case torneoSorteo.Equipos.Count
             Case 1 To 2
@@ -292,5 +288,6 @@ Public Class TorneoBLL
                 Return Fases.Final
         End Select
     End Function
+
 
 End Class

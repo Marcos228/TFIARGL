@@ -46,6 +46,12 @@ Public Class AgregarIdioma
 
     Private Sub gv_traducciones_DataBound(sender As Object, e As EventArgs) Handles gv_Traducciones.DataBound
         Try
+            Try
+                Dim ddl2 As DropDownList = CType(gv_Traducciones.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
             Dim ddl As DropDownList = CType(gv_Traducciones.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_Traducciones.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_Traducciones.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)

@@ -108,6 +108,28 @@ Public Class PartidaBLL
         End Try
     End Function
 
+    Public Function TraerPartidasTorneoVisualizacion(id_torneo As Integer) As List(Of Partida)
+        Try
+            Dim DALPartida As New DAL.PartidaDAL
+
+            Dim listaretorno = DALPartida.TraerPartidasTorneoVisualizacion(id_torneo)
+            For Each partida As Entidades.Partida In listaretorno
+                If partida.Equipos.Count = 0 Then
+                    Dim EquipoLibre As New Entidades.Equipo With {.Nombre = "TBD", .ID_Equipo = 0}
+                    Dim EquipoLibre2 As New Entidades.Equipo With {.Nombre = "TBD", .ID_Equipo = 0}
+                    partida.Equipos.Add(EquipoLibre)
+                    partida.Equipos.Add(EquipoLibre2)
+                ElseIf partida.Equipos.Count = 1 Then
+                    Dim EquipoLibre As New Entidades.Equipo With {.Nombre = "TBD", .ID_Equipo = 0}
+                    partida.Equipos.Add(EquipoLibre)
+                End If
+            Next
+            Return listaretorno
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Sub AgregarHorarioPartida(partida As Partida)
         Try
             Dim DALPartida As New DAL.PartidaDAL

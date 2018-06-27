@@ -1,102 +1,28 @@
 ﻿Imports System.IO
 Imports System.Web.HttpContext
-Public Class InscribirTorneo
+Public Class BuscarTorneo
     Inherits System.Web.UI.Page
 
     Private Sub CrearEquipo_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not IsPostBack Then
-            Me.Datos.Visible = False
-        End If
-        If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
-            If Not IsNothing(Request.QueryString("game")) Then
-                If IsNumeric(Request.QueryString("game")) Then
-                    Me.id_game.Value = Request.QueryString("game")
-                    If Me.Datos.Visible = False Then
-                        CargarTorneos(Me.id_game.Value)
-                    End If
-
-                Else
-                    CargarJuegos()
-                End If
-            Else
-                CargarJuegos()
-            End If
+            CargarTorneos()
         End If
     End Sub
-    Private Sub CargarTorneos(ByRef id_game As Integer)
+    Private Sub CargarTorneos()
         Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad
-            If IsNothing(Current.Session("Cliente")) Then
-                IdiomaActual = Application("Español")
-            Else
-                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-            End If
+
             Dim lista As List(Of Entidades.Torneo)
             Dim Gestor As New Negocio.TorneoBLL
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            lista = Gestor.TraerTorneosInscripcion(New Entidades.Game With {.ID_Game = id_game}, clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = Me.id_game.Value))
+            lista = Gestor.TraerTodosTorneos()
             Me.gv_torneos.DataSource = lista
             Me.gv_torneos.DataBind()
-            If lista.Count = 0 Then
-                Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "InsTorneoError1").Traduccion
-            Else
-                Session("Torneos") = lista
-                Me.Datos.Visible = True
-                Me.alertvalid.Visible = False
-            End If
-        Catch equipono As Negocio.ExceptionEquipoIncompleto
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim IdiomaActual As Entidades.IdiomaEntidad
-            If IsNothing(Current.Session("Cliente")) Then
-                IdiomaActual = Application("Español")
-            Else
-                IdiomaActual = Application(clienteLogeado.Idioma.Nombre)
-            End If
-            Me.alertvalid.Visible = True
-            Me.textovalid.InnerText = equipono.Mensaje(IdiomaActual)
-        End Try
-    End Sub
-    Private Sub CargarJuegos()
-        Try
-            Dim IdiomaActual As Entidades.IdiomaEntidad = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-            Dim GestorJuegos As New Negocio.GameBLL
-            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            Dim Juegos As List(Of Entidades.Game) = GestorJuegos.TraerJuegosSolicitud(clienteLogeado)
-
-            If Juegos.Count = 1 Then
-                Response.Redirect("/InscribirTorneo.aspx" & "?game=" & Juegos(0).ID_Game, False)
-            ElseIf Juegos.Count = 0 Then
-                Me.alertvalid.Visible = True
-                Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "InsTorneoError2").Traduccion
-            End If
-
-            For Each Game In Juegos
-                Dim base64string As String = Convert.ToBase64String(Game.Imagen, 0, Game.Imagen.Length)
-                Dim ImgBut As New ImageButton()
-
-                ImgBut.ImageUrl = Convert.ToString("data:image/jpg;base64,") & base64string
-                ImgBut.ID = "Logo" & Game.Nombre
-                ImgBut.Height = 150
-                ImgBut.CssClass = "img-responsive"
-                ImgBut.ImageAlign = ImageAlign.Middle
-
-                ImgBut.PostBackUrl = "/InscribirTorneo.aspx" & "?game=" & Game.ID_Game
-                Dim div As HtmlGenericControl = New HtmlGenericControl("div")
-                If Juegos.IndexOf(Game) Mod 2 = 0 Then
-                    div.Attributes.Add("class", "col-md-5 col-md-offset-1 media")
-                Else
-                    div.Attributes.Add("class", "col-md-5 media")
-                End If
-                div.Controls.Add(ImgBut)
-                Panel.Controls.Add(div)
-            Next
+            Session("Torneos") = lista
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
-
     End Sub
 
     Private Sub gv_torneos_DataBound(sender As Object, e As EventArgs) Handles gv_torneos.DataBound
@@ -182,7 +108,7 @@ Public Class InscribirTorneo
 
     Protected Sub gv_torneos_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
         Try
-            CargarTorneos(Me.id_game.Value)
+            CargarTorneos()
             gv_torneos.PageIndex = e.NewPageIndex
             gv_torneos.DataBind()
         Catch ex As Exception
@@ -206,7 +132,7 @@ Public Class InscribirTorneo
         Try
             Dim ddl As DropDownList = CType(gv_torneos.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             gv_torneos.PageSize = ddl.SelectedValue
-            CargarTorneos(Me.id_game.Value)
+            CargarTorneos()
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

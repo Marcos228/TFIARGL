@@ -107,6 +107,7 @@
     <Compile Include="Solicitudes.vb" />
     <Compile Include="Sponsor.vb" />
     <Compile Include="Tipo_Estadistica.vb" />
+    <Compile Include="Tipo_Premios.vb" />
     <Compile Include="Tipo_Juego.vb" />
     <Compile Include="Tipo_Pago.vb" />
     <Compile Include="Tipo_Rol.vb" />

@@ -61,7 +61,7 @@ Public Class ConfirmarPAgos
             If Not lstestado.SelectedValue = -1 Then
                 estado = lstestado.SelectedValue
             Else
-                estado = Nothing
+                estado = -1
             End If
 
             If txtusuarios.Text <> "" Then
@@ -85,6 +85,13 @@ Public Class ConfirmarPAgos
 
     Private Sub gv_Facturas_DataBound(sender As Object, e As EventArgs) Handles gv_Facturas.DataBound
         Try
+
+            Try
+                Dim ddl2 As DropDownList = CType(gv_Facturas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
+            Catch ex As Exception
+                Return
+            End Try
+
             Dim ddl As DropDownList = CType(gv_Facturas.BottomPagerRow.Cells(0).FindControl("ddlPaging"), DropDownList)
             Dim ddlpage As DropDownList = CType(gv_Facturas.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             Dim txttotal As Label = CType(gv_Facturas.BottomPagerRow.Cells(0).FindControl("lbltotalpages"), Label)
@@ -224,14 +231,15 @@ Public Class ConfirmarPAgos
                     Dim Bitac2 As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraVisTorneoSuccess1").Traduccion & " " & Fact.Equipo.Nombre & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraConPagosSuccess3").Traduccion & " " & Fact.Torneo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                     Negocio.BitacoraBLL.CrearBitacora(Bitac2)
                     Me.success.Visible = True
+                    Me.success.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "lblSuccessConPagos").Traduccion
                     Me.alertvalid.Visible = False
                 Next
+                FiltrarFActuras()
             Else
                 Me.alertvalid.Visible = True
                 Me.alertvalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "ConPagosError1").Traduccion
                 Me.success.Visible = False
             End If
-             FiltrarFacturas()
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

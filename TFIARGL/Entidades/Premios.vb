@@ -11,13 +11,13 @@ Public Class Premio
             _id_premio = value
         End Set
     End Property
-    Private _descripcion As String
-    Public Property Descripcion() As String
+    Private _tipo_Premio As Tipo_Premios
+    Public Property Tipo_Premio() As Tipo_Premios
         Get
-            Return _descripcion
+            Return _tipo_Premio
         End Get
-        Set(ByVal value As String)
-            _descripcion = value
+        Set(ByVal value As Tipo_Premios)
+            _tipo_Premio = value
         End Set
     End Property
 
