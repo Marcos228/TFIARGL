@@ -16,6 +16,9 @@ Public Class VisualizarTorneo
             End If
         Else
             CargarDatos()
+            If Not IsPostBack Then
+                CargarPartidas()
+            End If
             btnins.Visible = False
         End If
     End Sub
@@ -46,6 +49,26 @@ Public Class VisualizarTorneo
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
 
+            Dim Gestor As New Negocio.PartidaBLL
+            Torneo.Partidas = Gestor.TraerPartidasTorneoVisualizacion(Me.id_torneo.Value)
+
+            Dim script As String = "        $(document).ready(function () {
+            var singleElimination =" +
+            Newtonsoft.Json.JsonConvert.SerializeObject(New Bracket(Torneo)) + "
+            $('.demo').bracket({
+                skipConsolationRound: true,
+
+                init: singleElimination
+
+            });
+        });"
+
+
+
+            ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", script, True)
+
+
+
             If Torneo.Premios.Count > 0 Then
                 Me.H3premios.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "lblpremios").Traduccion
             End If
@@ -70,6 +93,7 @@ Public Class VisualizarTorneo
             End If
             Me.gv_partidas.DataSource = lista
             Me.gv_partidas.DataBind()
+
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

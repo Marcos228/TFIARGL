@@ -6,6 +6,33 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+    <script type="text/javascript">
+        //$(document).ready(function () {
+        //    var singleElimination = {
+        //        "teams": [              // Matchups
+        //            ["Team 1", "Team 2"], // First match
+        //            ["Team 3", "Team 4"]  // Second match
+        //        ],
+        //        "results": [            // List of brackets (single elimination, so only one bracket)
+        //            [                     // List of rounds in bracket
+        //                [                   // First round in this bracket
+        //                    [1, 2],           // Team 1 vs Team 2
+        //                    [3, 4]            // Team 3 vs Team 4
+        //                ],
+        //                [                   // Second (final) round in single elimination bracket
+        //                    [5, 6],           // Match for first place
+        //                ]
+        //            ]
+        //        ]
+        //    }
+        //    $('.demo').bracket({
+        //        skipConsolationRound: true,
+
+        //        init: singleElimination
+
+        //    });
+        //});
+    </script>
 
     <script src="http://player.twitch.tv/js/embed/v1.js"></script>
     <div id="<player div ID>"></div>
@@ -68,8 +95,17 @@
                 <br />
                 <br />
                 <br />
+                <br />
+                <br />
+                <div class="demo col-md-offset-4"></div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
                 <div>
-                         <h3 id="H3partidas" class="text-center" runat="server"></h3>
+                    <h3 id="H3partidas" class="text-center" runat="server"></h3>
                     <asp:GridView CssClass="table table-bordered table-responsive" ID="gv_partidas" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_partidas_PageIndexChanging" RowStyle-Height="40px">
                         <HeaderStyle CssClass="thead-dark" />
                         <PagerTemplate>
@@ -102,7 +138,7 @@
                     </asp:GridView>
                 </div>
                 <div>
-                        <h3 id="H3premios" class="text-center" runat="server"></h3>
+                    <h3 id="H3premios" class="text-center" runat="server"></h3>
                     <asp:GridView CssClass="table table-bordered table-responsive table-Secondary " ID="gv_premios" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" RowStyle-Height="40px">
                         <HeaderStyle CssClass="thead-dark" />
                         <Columns>
