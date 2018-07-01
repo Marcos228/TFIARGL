@@ -38,13 +38,23 @@
         End Set
     End Property
 
-    Private _resultado As String
-    Public Property Resultado() As String
+    Private _resultado_local As Integer
+    Public Property ResultadoLocal() As Integer
         Get
-            Return _resultado
+            Return _resultado_local
         End Get
-        Set(ByVal value As String)
-            _resultado = value
+        Set(ByVal value As Integer)
+            _resultado_local = value
+        End Set
+    End Property
+
+    Private _resultado_visitante As Integer
+    Public Property ResultadoVisitante() As Integer
+        Get
+            Return _resultado_visitante
+        End Get
+        Set(ByVal value As Integer)
+            _resultado_visitante = value
         End Set
     End Property
 

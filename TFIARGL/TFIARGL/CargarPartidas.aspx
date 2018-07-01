@@ -109,15 +109,27 @@
                                     </div>
                                 </div>
                                 <div class="form-group" runat="server">
-                                    <asp:Label ID="lblresultado" runat="server" Text="Resultado:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                    <asp:Label ID="lblresultadolocal" runat="server" Text="Resultado Local:" CssClass="col-sm-4 control-label labelform"></asp:Label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <asp:TextBox ID="txtresultado" runat="server" CssClass="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="txtresultadoloc" runat="server" CssClass="form-control"></asp:TextBox>
                                             <span class="input-group-addon" id="basic-addon8"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
                                         </div>
                                     </div>
                                     <div class="col-md-1">
-                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="txtresultado" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="txtresultadoloc" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+                                <div class="form-group" runat="server">
+                                    <asp:Label ID="lblresultadovisitante" runat="server" Text="Resultado Visitante:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <asp:TextBox ID="txtresultadovis" runat="server" CssClass="form-control"></asp:TextBox>
+                                            <span class="input-group-addon" id="basic-addon18"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server" ControlToValidate="txtresultadovis" ErrorMessage="*" EnableClientScript="false" Display="Dynamic" CssClass="textoValidacion"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
 
@@ -163,7 +175,7 @@
                                                 </div>
                                             </PagerTemplate>
                                             <Columns>
-                                                  <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
                                                     <ItemTemplate>
                                                         <div>
                                                             <asp:ImageButton ID="btn_Seleccionar" runat="server" CommandName="S" ImageUrl="~/Imagenes/arrow.png" Height="18px" />
@@ -173,19 +185,24 @@
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="Jugador.Nickname" HeaderText="Jugador" />
                                                 <asp:BoundField DataField="Equipo.Nombre" HeaderText="Equipo" />
-                                              
+
                                             </Columns>
                                         </asp:GridView>
                                     </div>
                                 </div>
 
-                                   <div id="EstadisticasTextbox" runat="server">
-                            
+                                <div id="EstadisticasTextbox" runat="server">
                                 </div>
 
                                 <div id="Div3" runat="server" class="row">
                                     <div class="col-md-4 col-md-offset-4">
                                         <asp:Button ClientIDMode="Static" ID="btncargar" name="btnCargar" runat="server" Text="Cargar Estadistica" CssClass="btn btn-block btn-success" />
+                                    </div>
+                                </div>
+                                <br />
+                                      <div id="Div10" runat="server" class="row">
+                                    <div class="col-md-4 col-md-offset-4">
+                                        <asp:Button ClientIDMode="Static" ID="btnGenerar" name="btnGenerar" runat="server" Text="Generar Puntajes" CssClass="btn btn-block btn-success" />
                                     </div>
                                 </div>
                             </div>

@@ -17,16 +17,7 @@
                     </div>
                     <div class="panel-body FondoPanel">
                         <br />
-                                                <div class="col-md-2 col-md-offset-3">
-                            <asp:Button ID="btnjugadores" runat="server" Text="Ranking Jugadores" CssClass="btn btn-block btn-warning" />
-                        </div>
-
-                        <div class="col-md-2 col-md-offset-1">
-                            <asp:Button ID="btnequipos" runat="server" Text="Ranking Equipos" CssClass="btn btn-block btn-warning" />
-                        </div>
                         <br />
-                                  <br />
-                                  <br />
                         <div class="form-inline has-success">
                             <div class="col-md-3 col-md-offset-3">
                                 <asp:Label ID="lbljuego" runat="server" Text="Juego:" CssClass="control-label labelform"></asp:Label>
@@ -43,8 +34,17 @@
                                 </div>
                             </div>
                         </div>
-                            <br />
-                                  <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="col-md-2 col-md-offset-3">
+                            <asp:Button ID="btnjugadores" runat="server" Text="Ranking Jugadores" CssClass="btn btn-block btn-warning" />
+                        </div>
+
+                        <div class="col-md-2 col-md-offset-1">
+                            <asp:Button ID="btnequipos" runat="server" Text="Ranking Equipos" CssClass="btn btn-block btn-warning" />
+                        </div>
+                        <br />
                         <br />
                         <br />
                         <div class="form-horizontal">
@@ -79,6 +79,14 @@
                                             <asp:BoundField DataField="Game.Nombre" HeaderText="Juego" />
                                             <asp:BoundField DataField="Rol_Jugador.Nombre" HeaderText="Rol" />
                                             <asp:BoundField DataField="Puntos" HeaderText="Puntos" />
+                                            <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                <ItemTemplate>
+                                                    <div>
+                                                        <asp:ImageButton ID="btn_Seleccionar" runat="server" CommandName="S" ImageUrl="~/Imagenes/arrow.png" Height="18px" />
+                                                    </div>
+                                                </ItemTemplate>
+                                                <HeaderStyle Width="100px"></HeaderStyle>
+                                            </asp:TemplateField>
                                         </Columns>
                                     </asp:GridView>
                                 </div>
@@ -109,11 +117,27 @@
                                             </div>
                                         </PagerTemplate>
                                         <Columns>
-                                            <asp:TemplateField HeaderText="Posicion" ></asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Posicion"></asp:TemplateField>
                                             <asp:BoundField DataField="Nombre" HeaderText="Equipo" />
+                                            <asp:TemplateField HeaderText="Logo" HeaderStyle-Width="100px">
+                                                <ItemTemplate>
+                                                    <div>
+                                                        <asp:Image ID="Logo" runat="server" Height="18px" />
+                                                    </div>
+                                                </ItemTemplate>
+                                                <HeaderStyle Width="100px"></HeaderStyle>
+                                            </asp:TemplateField>
                                             <asp:BoundField DataField="Game.Nombre" HeaderText="Juego" />
                                             <asp:BoundField DataField="Fecha_Inicio" HeaderText="Fecha Creacion" />
                                             <asp:BoundField DataField="Puntos" HeaderText="Puntos" />
+                                            <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="100px">
+                                                <ItemTemplate>
+                                                    <div>
+                                                        <asp:ImageButton ID="btn_Seleccionar" runat="server" CommandName="S" ImageUrl="~/Imagenes/arrow.png" Height="18px" />
+                                                    </div>
+                                                </ItemTemplate>
+                                                <HeaderStyle Width="100px"></HeaderStyle>
+                                            </asp:TemplateField>
                                         </Columns>
                                     </asp:GridView>
                                 </div>

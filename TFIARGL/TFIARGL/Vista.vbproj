@@ -97,6 +97,8 @@
   <ItemGroup>
     <Content Include="AccesoRestringido.aspx" />
     <Content Include="ABMSponsor.aspx" />
+    <Content Include="IMAGENES\flag-white-icon.png" />
+    <Content Include="VisualizarEstadisticas.aspx" />
     <Content Include="CSS\jquery.bracket.min.css" />
     <Content Include="BuscarTorneo.aspx" />
     <Content Include="JS\jquery.bracket.min.js" />
@@ -218,6 +220,13 @@
     </Compile>
     <Compile Include="ABMSponsor.aspx.vb">
       <DependentUpon>ABMSponsor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VisualizarEstadisticas.aspx.designer.vb">
+      <DependentUpon>VisualizarEstadisticas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VisualizarEstadisticas.aspx.vb">
+      <DependentUpon>VisualizarEstadisticas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Clases Vista\Bracket.vb" />

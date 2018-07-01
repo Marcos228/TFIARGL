@@ -8,17 +8,11 @@ Public Class VisualizarTorneo
         If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
             If Not IsNothing(Session("Torneo")) Then
                 CargarDatos()
-                If Not IsPostBack Then
-                    CargarPartidas()
-                End If
             Else
                 Response.Redirect("/InscribirTorneo.aspx", False)
             End If
         Else
             CargarDatos()
-            If Not IsPostBack Then
-                CargarPartidas()
-            End If
             btnins.Visible = False
         End If
     End Sub
@@ -57,7 +51,7 @@ Public Class VisualizarTorneo
             Newtonsoft.Json.JsonConvert.SerializeObject(New Bracket(Torneo)) + "
             $('.demo').bracket({
                 skipConsolationRound: true,
-
+                teamWidth: 150,
                 init: singleElimination
 
             });
@@ -66,8 +60,6 @@ Public Class VisualizarTorneo
 
 
             ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", script, True)
-
-
 
             If Torneo.Premios.Count > 0 Then
                 Me.H3premios.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "lblpremios").Traduccion

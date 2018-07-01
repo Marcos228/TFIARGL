@@ -12,6 +12,7 @@ Public Class EnviarSolicitud
             If Not IsNothing(Request.QueryString("game")) Then
                 If IsNumeric(Request.QueryString("game")) Then
                     CargarCombos(CInt(Request.QueryString("game")))
+                    CargarSolicitudes()
                 Else
                     CargarJuegos()
                 End If

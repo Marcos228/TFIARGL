@@ -122,6 +122,24 @@ Partial Public Class CrearEquipo
     Protected WithEvents lstgame As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
+    '''Control lbllogo.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lbllogo As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control FileUpload1.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents FileUpload1 As Global.System.Web.UI.WebControls.FileUpload
+    
+    '''<summary>
     '''Control btnAceptar.
     '''</summary>
     '''<remarks>

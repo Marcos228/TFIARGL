@@ -72,6 +72,16 @@ Public Class EquipoBLL
         End Try
     End Function
 
+    Public Function ActualizaImagen(ByVal imagen As Byte(), ByVal id_equipo As Integer) As Boolean
+        Try
+
+            Dim DALEquipo As New DAL.EquipoDAL
+            Return DALEquipo.ActualizaImagen(imagen, id_equipo)
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
+
     Public Function TraerUsuariosEquipo(iD_Jugador As Integer) As List(Of UsuarioEntidad)
         Try
             Dim Listaretorno As New List(Of UsuarioEntidad)

@@ -22,6 +22,7 @@ Public Class VisualizarRanking
         Me.gv_jugadores.DataBind()
         Me.datosequipos.Visible = False
         Me.datosjugadores.Visible = True
+        Session("Jugadores") = lista
     End Sub
 
     Private Sub CargarRankingEquipos()
@@ -33,6 +34,7 @@ Public Class VisualizarRanking
         Me.gv_equipos.DataBind()
         Me.datosjugadores.Visible = False
         Me.datosequipos.Visible = True
+        Session("Equipos") = lista
     End Sub
 
     Private Sub CargarJuegos()
@@ -108,6 +110,9 @@ Public Class VisualizarRanking
 
             For Each row As GridViewRow In gv_jugadores.Rows
                 row.Cells(0).Text = row.RowIndex + 1
+                Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                imagen3.CommandArgument = row.RowIndex
+
             Next
 
             With gv_jugadores.HeaderRow
@@ -116,6 +121,7 @@ Public Class VisualizarRanking
                 .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
                 .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderRol").Traduccion
                 .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPuntos").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_jugadores.BottomPagerRow.Visible = True
@@ -162,16 +168,28 @@ Public Class VisualizarRanking
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
+            Dim Equipos As List(Of Entidades.Equipo) = Session("Equipos")
             For Each row As GridViewRow In gv_equipos.Rows
                 row.Cells(0).Text = row.RowIndex + 1
+                Dim logo As System.Web.UI.WebControls.Image = DirectCast(row.FindControl("logo"), System.Web.UI.WebControls.Image)
+                If Not IsNothing(Equipos(row.RowIndex).Logo) Then
+                    Dim base64string As String = Convert.ToBase64String(Equipos(row.RowIndex).Logo, 0, Equipos(row.RowIndex).Logo.Length)
+                    logo.ImageUrl = Convert.ToString("data:image/jpg;base64,") & base64string
+                Else
+                    logo.ImageUrl = "~/Imagenes/flag-white-icon.png"
+                End If
+
+                Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
+                imagen3.CommandArgument = row.RowIndex
             Next
 
             With gv_equipos.HeaderRow
                 .Cells(0).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPosicion").Traduccion
                 .Cells(1).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderEquipo").Traduccion
-                .Cells(2).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
-                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaAlta").Traduccion
-                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPuntos").Traduccion
+                .Cells(3).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderJuego").Traduccion
+                .Cells(4).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderFechaAlta").Traduccion
+                .Cells(5).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderPuntos").Traduccion
+                .Cells(6).Text = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "HeaderAcciones").Traduccion
             End With
 
             gv_equipos.BottomPagerRow.Visible = True
@@ -245,6 +263,50 @@ Public Class VisualizarRanking
             Dim ddl As DropDownList = CType(gv_jugadores.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             gv_jugadores.PageSize = ddl.SelectedValue
             CargarRankingJugadores()
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Private Sub gv_equipos_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_equipos.RowCommand
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Select Case e.CommandName.ToString
+                Case "S"
+                    Session("Equipo") = TryCast(Session("Equipos"), List(Of Entidades.Equipo))(e.CommandArgument + (gv_equipos.PageIndex * gv_equipos.PageSize))
+                    Session("Equipos") = Nothing
+                    Session("Jugador") = Nothing
+                    Response.Redirect("/VisualizarEstadisticas.aspx", False)
+            End Select
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
+    End Sub
+
+    Private Sub gv_jugadores_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles gv_jugadores.RowCommand
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Select Case e.CommandName.ToString
+                Case "S"
+                    Session("Jugador") = TryCast(Session("Jugadores"), List(Of Entidades.Jugador))(e.CommandArgument + (gv_jugadores.PageIndex * gv_jugadores.PageSize))
+                    Session("Jugadores") = Nothing
+                    Session("Equipo") = Nothing
+                    Response.Redirect("/VisualizarEstadisticas.aspx", False)
+            End Select
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)

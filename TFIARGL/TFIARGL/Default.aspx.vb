@@ -4,6 +4,8 @@ Public Class index
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
+            Me.btnsolicitudjugadores.Visible = False
+            Me.btninvitacionequipo.Visible = False
             Application("Corruption") = Negocio.DigitoVerificadorBLL.VerifyAllIntegrity()
             If Not IsNothing(Current.Session("cliente")) And Not IsDBNull(Current.Session("Cliente")) Then
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
@@ -11,9 +13,12 @@ Public Class index
                     Me.carusel.Visible = False
                     If Not IsPostBack Then
                         CargarTorneos()
+                        CargarSolicitudes()
                     End If
                 Else
                     Me.datos.Visible = False
+                    Me.carusel.Visible = True
+
                 End If
             End If
         Catch ex As Exception
@@ -42,6 +47,31 @@ Public Class index
             Me.datos.Visible = True
             Session("Torneos") = lista
         End If
+    End Sub
+    Private Sub CargarSolicitudes()
+        Dim IdiomaActual As Entidades.IdiomaEntidad = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+        Dim gestorequi As New Negocio.EquipoBLL
+        Dim gestorjug As New Negocio.JugadorBLL
+        Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+        Dim solicitudes As New List(Of Entidades.Solicitudes)
+        Dim invitaciones As New List(Of Entidades.Solicitudes)
+        For Each PerfilJugador In clienteLogeado.Perfiles_Jugador
+            solicitudes.AddRange(gestorequi.TraeSolicitudesEquipo(PerfilJugador))
+            invitaciones.AddRange(gestorjug.TraeSolicitudesJugador(PerfilJugador))
+        Next
+        If solicitudes.Count > 0 Then
+            Me.solicitudgame.Value = solicitudes.First().Equipo.Game.ID_Game
+            Me.btnsolicitudjugadores.Visible = True
+        Else
+            Me.btnsolicitudjugadores.Visible = False
+        End If
+        If invitaciones.Count > 0 Then
+            Me.invitaciongame.Value = invitaciones.First().Equipo.Game.ID_Game
+            Me.btninvitacionequipo.Visible = True
+        Else
+            Me.btninvitacionequipo.Visible = False
+        End If
+
     End Sub
 
     Private Sub gv_torneos_DataBound(sender As Object, e As EventArgs) Handles gv_torneos.DataBound
@@ -157,4 +187,11 @@ Public Class index
         End Try
     End Sub
 
+    Protected Sub btnsolicitudjugadores_Click(sender As Object, e As EventArgs) Handles btnsolicitudjugadores.Click
+        Response.Redirect("/EnviarInvitacion.aspx?game=" & Me.solicitudgame.Value, False)
+    End Sub
+
+    Protected Sub btninvitacionequipo_Click(sender As Object, e As EventArgs) Handles btninvitacionequipo.Click
+        Response.Redirect("/EnviarSolicitud.aspx?game=" & Me.invitaciongame.Value, False)
+    End Sub
 End Class

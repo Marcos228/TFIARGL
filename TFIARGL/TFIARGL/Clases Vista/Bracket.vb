@@ -23,11 +23,11 @@ Public Class Bracket
                     listaFase.Add(New Integer() {})
                 Else
                     If (partida.Ganador.ID_Equipo = partida.Equipos(0).ID_Equipo) Then
-                        a = 1
-                        b = 0
+                        a = partida.ResultadoLocal
+                        b = partida.ResultadoVisitante
                     Else
-                        b = 1
-                        a = 0
+                        b = partida.ResultadoVisitante
+                        a = partida.ResultadoLocal
                     End If
 
                     listaFase.Add(New Integer() {

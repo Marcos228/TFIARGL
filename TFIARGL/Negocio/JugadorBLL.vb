@@ -17,6 +17,7 @@ Public Class JugadorBLL
         End Try
     End Function
 
+
     Public Function ValidaNombre(Jugador As Entidades.Jugador) As Boolean
         Try
             Dim DALJugador As New DAL.JugadorDAL
@@ -60,6 +61,5 @@ Public Class JugadorBLL
             Throw ex
         End Try
     End Function
-
 
 End Class

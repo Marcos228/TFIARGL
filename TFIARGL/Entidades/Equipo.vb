@@ -69,7 +69,15 @@
         End Set
     End Property
 
-
+    Private _Logo As Byte()
+    Public Property Logo() As Byte()
+        Get
+            Return _Logo
+        End Get
+        Set(ByVal value As Byte())
+            _Logo = value
+        End Set
+    End Property
 
     Private _nombre As String
     Public Property Nombre() As String

@@ -86,22 +86,22 @@ Partial Public Class CargarPartidas
     Protected WithEvents gv_partidas As Global.System.Web.UI.WebControls.GridView
     
     '''<summary>
-    '''Control lblresultado.
+    '''Control lblresultadolocal.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblresultado As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblresultadolocal As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control txtresultado.
+    '''Control txtresultadoloc.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents txtresultado As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents txtresultadoloc As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
     '''Control RequiredFieldValidator6.
@@ -111,6 +111,33 @@ Partial Public Class CargarPartidas
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
     Protected WithEvents RequiredFieldValidator6 As Global.System.Web.UI.WebControls.RequiredFieldValidator
+    
+    '''<summary>
+    '''Control lblresultadovisitante.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents lblresultadovisitante As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''Control txtresultadovis.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents txtresultadovis As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''Control RequiredFieldValidator10.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents RequiredFieldValidator10 As Global.System.Web.UI.WebControls.RequiredFieldValidator
     
     '''<summary>
     '''Control lblganador.
@@ -183,6 +210,24 @@ Partial Public Class CargarPartidas
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
     Protected WithEvents btncargar As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''Control Div10.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents Div10 As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''Control btnGenerar.
+    '''</summary>
+    '''<remarks>
+    '''Campo generado automáticamente.
+    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    '''</remarks>
+    Protected WithEvents btnGenerar As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
     '''Control id_torneo.

@@ -4,7 +4,7 @@ Imports Entidades
 Public Class EstadisticaDAL
     Public Function AltaEstadistica(ByRef estad As Entidades.Estadistica, ByVal ID_Partida As Integer) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Estadistica (ID_Jugador,ID_Partida,ID_Equipo,ID_Tipo_Estadistica,Valor_Estadistica) values (@ID_Jugador,@ID_Partida,@ID_Equipo,@ID_Tipo_Estadistica,0)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Estadistica (ID_Jugador,ID_Partida,ID_Equipo,ID_Tipo_Estadistica,Valor_Estadistica) values (@ID_Jugador,@ID_Partida,@ID_Equipo,@ID_Tipo_Estadistica,-1)")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Jugador", estad.Jugador.ID_Jugador))
                 .Add(New SqlParameter("@ID_Partida", ID_Partida))

@@ -41,6 +41,8 @@ Public Class JugadorDAL
         End Try
     End Function
 
+
+
     Public Function TraerJugadoresSolicitud(game As Game) As List(Of Jugador)
         Try
             Dim Command As SqlCommand = Acceso.MiComando("Select * from Jugador where id_game=@id_game and not exists(select ID_Jugador from Jugador_Equipo where Jugador_Equipo.ID_Jugador=Jugador.ID_Jugador and Jugador_Equipo.Fecha_fin is null)")

@@ -116,8 +116,8 @@ Public Class CargarPartidas
             Me.datosEst.Visible = True
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-        Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
-        Negocio.BitacoraBLL.CrearBitacora(Bitac)
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
     End Sub
     Private Sub CargarTextboxs(ByRef estad2 As Entidades.Estadistica)
@@ -234,7 +234,7 @@ Public Class CargarPartidas
                     gv_torneos.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
                     Me.id_torneo.Value = Torneo.ID_Torneo
                     Me.id_game.Value = Torneo.Game.ID_Game
-                    CargarPArtidas()
+                    CargarPartidas()
             End Select
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
@@ -363,7 +363,8 @@ Public Class CargarPartidas
                         Me.lstequipo.Items.FindByValue(Partida.Ganador.ID_Equipo).Selected = True
                     End If
 
-                    Me.txtresultado.Text = Partida.Resultado
+                    Me.txtresultadoloc.Text = Partida.ResultadoLocal
+                    Me.txtresultadovis.Text = Partida.ResultadoVisitante
 
                     gv_partidas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
                     Session("Partida") = Partida
@@ -378,7 +379,7 @@ Public Class CargarPartidas
 
     Protected Sub gv_partidas_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
         Try
-            CargarPArtidas()
+            CargarPartidas()
             gv_partidas.PageIndex = e.NewPageIndex
             gv_partidas.DataBind()
         Catch ex As Exception
@@ -402,7 +403,7 @@ Public Class CargarPartidas
         Try
             Dim ddl As DropDownList = CType(gv_partidas.BottomPagerRow.Cells(0).FindControl("ddlPageSize"), DropDownList)
             gv_partidas.PageSize = ddl.SelectedValue
-            CargarPArtidas()
+            CargarPartidas()
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
             Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
@@ -446,6 +447,18 @@ Public Class CargarPartidas
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
             For Each row As GridViewRow In gv_estadisticas.Rows
+                If row.Cells(3).Text = "-1" Then
+                    row.Cells(3).Text = "Sin Asignar"
+                End If
+                If row.Cells(4).Text = "-1" Then
+                    row.Cells(4).Text = "Sin Asignar"
+                End If
+                If row.Cells(5).Text = "-1" Then
+                    row.Cells(5).Text = "Sin Asignar"
+                End If
+                If row.Cells(6).Text = "-1" Then
+                    row.Cells(6).Text = "Sin Asignar"
+                End If
                 Dim imagen3 As System.Web.UI.WebControls.ImageButton = DirectCast(row.FindControl("btn_seleccionar"), System.Web.UI.WebControls.ImageButton)
                 imagen3.CommandArgument = row.RowIndex
             Next
@@ -484,7 +497,12 @@ Public Class CargarPartidas
                     For Each estad In Estadastica.Estadisticas
 
                         Dim textbox As TextBox = Me.EstadisticasTextbox.FindControl("1-" & estad.tipo_Estadistica.Nombre).FindControl("2-" & estad.tipo_Estadistica.Nombre).FindControl("3-" & estad.tipo_Estadistica.Nombre).FindControl("txt" & estad.tipo_Estadistica.Nombre)
-                        textbox.Text = estad.Valor_Estadistica
+                        If estad.Valor_Estadistica >= 0 Then
+                            textbox.Text = estad.Valor_Estadistica
+                        Else
+                            textbox.Text = ""
+                        End If
+
                     Next
                     gv_estadisticas.Rows.Item(e.CommandArgument).BackColor = Drawing.Color.Cyan
                     Session("Estadistica") = Estadastica
@@ -542,9 +560,10 @@ Public Class CargarPartidas
             Else
                 IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
             End If
-            If txtresultado.Text <> "" Then
+            If IsNumeric(txtresultadoloc.Text) And IsNumeric(txtresultadovis.Text) Then
                 Dim Partida As Entidades.Partida = TryCast(Session("Partida"), Entidades.Partida)
-                Partida.Resultado = txtresultado.Text
+                Partida.ResultadoLocal = CInt(txtresultadoloc.Text)
+                Partida.ResultadoVisitante = CInt(txtresultadovis.Text)
                 Partida.Ganador = Partida.Equipos.Find(Function(p) p.ID_Equipo = lstequipo.SelectedValue)
                 Dim gestorPartida As New Negocio.PartidaBLL
                 gestorPartida.FinalizarPartida(Partida)
@@ -552,7 +571,7 @@ Public Class CargarPartidas
                 Me.datosEst.Visible = False
 
                 Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess1").Traduccion & " " & Partida.ID_Partida & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess2").Traduccion & " " & Partida.Resultado & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess3").Traduccion & " " & Partida.Ganador.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
+                Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess1").Traduccion & " " & Partida.ID_Partida & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess2").Traduccion & " " & Partida.ResultadoLocal & "-" & Partida.ResultadoVisitante & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess3").Traduccion & " " & Partida.Ganador.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
                 Negocio.BitacoraBLL.CrearBitacora(Bitac)
                 Me.alertvalid.Visible = False
             Else
@@ -589,7 +608,7 @@ Public Class CargarPartidas
                 For Each estad In Session("Estadistica").Estadisticas
                     Dim textbox As TextBox = Me.EstadisticasTextbox.FindControl("1-" & estad.tipo_Estadistica.Nombre).FindControl("2-" & estad.tipo_Estadistica.Nombre).FindControl("3-" & estad.tipo_Estadistica.Nombre).FindControl("txt" & estad.tipo_Estadistica.Nombre)
                     Dim estadistica As Entidades.Estadistica = estad
-                    estadistica.Valor_Estadistica = CDbl(TextBox.Text)
+                    estadistica.Valor_Estadistica = CDbl(textbox.Text)
                     Dim gestoresta As New Negocio.EstadisticaBLL
                     gestoresta.CargarEstadistica(estadistica, TryCast(Session("Partida"), Entidades.Partida).ID_Partida)
                     CargarEstadisticas()
@@ -603,21 +622,6 @@ Public Class CargarPartidas
                 Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
             End If
 
-            'If IsNumeric(txtvalor.Text) Then
-            '    Dim estadistica As Entidades.Estadistica = TryCast(Session("Estadistica"), Entidades.Estadistica)
-            '    estadistica.Valor_Estadistica = CDbl(txtvalor.Text)
-
-            '    Dim gestoresta As New Negocio.EstadisticaBLL
-            '    gestoresta.CargarEstadistica(estadistica, TryCast(Session("Partida"), Entidades.Partida).ID_Partida)
-            '    CargarEstadisticas()
-            '    Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
-            '    Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess4").Traduccion & estadistica.Valor_Estadistica & " " & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraCarPartidaSuccess5").Traduccion & " " & TryCast(Session("Partida"), Entidades.Partida).ID_Partida & " " & estadistica.Jugador.NickName & "-" & estadistica.tipo_Estadistica.Nombre & "-" & estadistica.Equipo.Nombre & ".", Entidades.Tipo_Bitacora.Modificacion, Now, Request.UserAgent, Request.UserHostAddress, "", "")
-            '    Negocio.BitacoraBLL.CrearBitacora(Bitac)
-            '    Me.alertvalid.Visible = False
-            'Else
-            '    Me.alertvalid.Visible = True
-            '    Me.textovalid.InnerText = IdiomaActual.Palabras.Find(Function(p) p.Codigo = "FieldValidator1").Traduccion
-            'End If
 
         Catch ex As Exception
             Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
@@ -625,5 +629,43 @@ Public Class CargarPartidas
             Negocio.BitacoraBLL.CrearBitacora(Bitac)
         End Try
 
+    End Sub
+
+    Protected Sub btnGenerar_Click(sender As Object, e As EventArgs) Handles btnGenerar.Click
+        Try
+            Dim IdiomaActual As Entidades.IdiomaEntidad
+            Dim Gestor As New Negocio.ManejadorPuntos
+            If IsNothing(Current.Session("Cliente")) Then
+                IdiomaActual = Application("Español")
+            Else
+                IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
+            End If
+            Dim validador As Boolean = True
+            Dim Partida As Entidades.Partida = Session("Partida")
+            For Each estad In Partida.Estadisticas
+                If estad.Valor_Estadistica = -1 Then
+                    validador = False
+                    Exit For
+                End If
+            Next
+            Dim Manejador As New Negocio.ManejadorPuntos
+            If validador = True Then
+                For Each Equipo In Partida.Equipos
+                    Equipo.Puntos = Manejador.CalcularPuntosEquipo(Equipo, Partida)
+                    For Each Jugador In Equipo.Jugadores
+                        Jugador.Puntos = Manejador.CalcularPuntosJugador(Jugador, Partida)
+                        Gestor.GuardarPuntajeJugador(Jugador, Partida)
+                    Next
+                    Gestor.GuardarPuntajeEquipo(Equipo, Partida)
+                Next
+            Else
+                'Mensaje Error
+            End If
+
+        Catch ex As Exception
+            Dim clienteLogeado As Entidades.UsuarioEntidad = Current.Session("cliente")
+            Dim Bitac As New Entidades.BitacoraErrores(clienteLogeado, ex.Message, Entidades.Tipo_Bitacora.Errores, Now, Request.UserAgent, Request.UserHostAddress, ex.StackTrace, ex.GetType().ToString, Request.Url.ToString)
+            Negocio.BitacoraBLL.CrearBitacora(Bitac)
+        End Try
     End Sub
 End Class

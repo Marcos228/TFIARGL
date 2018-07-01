@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class VisualizarRanking
+Partial Public Class VisualizarEstadisticas
     
     '''<summary>
     '''Control alertvalid.
@@ -23,101 +23,74 @@ Partial Public Class VisualizarRanking
     Protected WithEvents alertvalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblPanelVisRanking.
+    '''Control textovalid.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblPanelVisRanking As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents textovalid As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lbljuego.
+    '''Control lblPanelVisEstadisticas.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lbljuego As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblPanelVisEstadisticas As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''Control lstgame.
+    '''Control Panel.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lstgame As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents Panel As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lblroljugador.
+    '''Control Nombre.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lblroljugador As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Nombre As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control lstrol.
+    '''Control Datos.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents lstrol As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents Datos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Control btnjugadores.
+    '''Control gv_partidas.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnjugadores As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents gv_partidas As Global.System.Web.UI.WebControls.GridView
     
     '''<summary>
-    '''Control btnequipos.
+    '''Control gv_estadisticas.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents btnequipos As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents gv_estadisticas As Global.System.Web.UI.WebControls.GridView
     
     '''<summary>
-    '''Control datosjugadores.
+    '''Control id_game.
     '''</summary>
     '''<remarks>
     '''Campo generado automáticamente.
     '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     '''</remarks>
-    Protected WithEvents datosjugadores As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
-    '''<summary>
-    '''Control gv_jugadores.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents gv_jugadores As Global.System.Web.UI.WebControls.GridView
-    
-    '''<summary>
-    '''Control datosequipos.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents datosequipos As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
-    '''<summary>
-    '''Control gv_equipos.
-    '''</summary>
-    '''<remarks>
-    '''Campo generado automáticamente.
-    '''Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    '''</remarks>
-    Protected WithEvents gv_equipos As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents id_game As Global.System.Web.UI.WebControls.HiddenField
 End Class

@@ -50,6 +50,15 @@
                                     </div>
                                 </div>
                             </div>
+                                 <div class="form-group">
+                                <asp:Label ID="lbllogo" runat="server" Text="Logo:" CssClass="col-sm-4 control-label labelform"></asp:Label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                     <asp:FileUpload ID="FileUpload1" CssClass="btn btn-block btn-default" runat="server" />
+                                        <span class="input-group-addon" id="basic-addon17"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></span>
+                                    </div>
+                                </div>
+                            </div>
                             <br />
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4">

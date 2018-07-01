@@ -4,12 +4,13 @@ Imports Entidades
 Public Class EquipoDAL
     Public Function AltaEquipo(ByRef Equipo As Entidades.Equipo) As Boolean
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("insert into Equipo (Nombre,Fecha_Creacion,ID_Game,Historia) OUTPUT INSERTED.ID_Equipo values (@Nombre,@Fecha_Creacion,@ID_Game,@Historia)")
+            Dim Command As SqlCommand = Acceso.MiComando("insert into Equipo (Nombre,Fecha_Creacion,ID_Game,Historia,Logo) OUTPUT INSERTED.ID_Equipo values (@Nombre,@Fecha_Creacion,@ID_Game,@Historia,@Logo)")
             With Command.Parameters
                 .Add(New SqlParameter("@Nombre", Equipo.Nombre))
                 .Add(New SqlParameter("@Fecha_Creacion", Equipo.Fecha_Inicio))
                 .Add(New SqlParameter("@ID_Game", Equipo.Game.ID_Game))
                 .Add(New SqlParameter("@Historia", Equipo.Historia))
+                         .Add(New SqlParameter("@Logo", Equipo.Logo))
             End With
             Equipo.ID_Equipo = Acceso.Scalar(Command)
             Command.Dispose()
@@ -29,7 +30,20 @@ Public Class EquipoDAL
         End Try
     End Function
 
-
+    Public Function ActualizaImagen(imagen() As Byte, ID_Equipo As Integer) As Boolean
+        Try
+            Dim Command As SqlCommand = Acceso.MiComando("update Equipo set Logo=@logo where ID_Equipo=@ID_Equipo")
+            With Command.Parameters
+                .Add(New SqlParameter("@ID_Equipo", ID_Equipo))
+                .Add(New SqlParameter("@logo", imagen))
+            End With
+            Acceso.Escritura(Command)
+            Command.Dispose()
+            Return True
+        Catch ex As Exception
+            Throw ex
+        End Try
+    End Function
 
     Public Function TraeSolicitudesEquipo(jugador As Jugador) As List(Of Solicitudes)
         Try
@@ -295,6 +309,10 @@ Public Class EquipoDAL
             Dim gestorGame As New GameDAL
             Equip.Game = gestorGame.TraerJuego(row("ID_Game"))
             Equip.Jugadores = TraerJugadoresEquipo(Equip)
+            If Not IsDBNull(row("Logo")) Then
+                Equip.Logo = row("Logo")
+            End If
+
         Catch ex As Exception
             Throw ex
         End Try

@@ -79,9 +79,10 @@ Public Class CrearEquipo
             Dim IdiomaActual As Entidades.IdiomaEntidad
             Dim clienteLogeado As Entidades.UsuarioEntidad
             IdiomaActual = Application(TryCast(Current.Session("Cliente"), Entidades.UsuarioEntidad).Idioma.Nombre)
-            If txtnombre.Text <> "" And txthistoria.Text <> "" Then
+            If txtnombre.Text <> "" And txthistoria.Text <> "" And FileUpload1.HasFile Then
                 clienteLogeado = Current.Session("cliente")
                 Dim Equi As New Entidades.Equipo(New Entidades.Game With {.ID_Game = lstgame.SelectedValue}, txtnombre.Text, txthistoria.Text, Now, clienteLogeado.Perfiles_Jugador.Find(Function(p) p.Game.ID_Game = lstgame.SelectedValue))
+                Equi.Logo = FileUpload1.FileBytes
                 Dim Gestorequi As New Negocio.EquipoBLL
                 If Gestorequi.AltaEquipo(Equi) Then
                     Dim Bitac As New Entidades.BitacoraAuditoria(clienteLogeado, IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraAddEquipoSuccess1").Traduccion & " " & Equi.Nombre & IdiomaActual.Palabras.Find(Function(p) p.Codigo = "BitacoraSuccesfully").Traduccion, Entidades.Tipo_Bitacora.Alta, Now, Request.UserAgent, Request.UserHostAddress, "", "")

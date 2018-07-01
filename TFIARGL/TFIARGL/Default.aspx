@@ -44,7 +44,6 @@
                     <asp:Label ID="lblTorneosParticipativos" runat="server" Text="Torneos Participativos" CssClass="TituloPanel"></asp:Label>
                 </div>
                 <div id="Panel" runat="server" class="panel-body FondoPanel">
-
                     <div class="form-group">
                         <div>
                             <asp:GridView CssClass="table table-hover table-bordered table-responsive table-success " ID="gv_torneos" runat="server" AutoGenerateColumns="False" HorizontalAlign="Center" AllowPaging="true" PageSize="5" OnPageIndexChanging="gv_torneos_PageIndexChanging" RowStyle-Height="40px">
@@ -88,7 +87,20 @@
                                 </Columns>
                             </asp:GridView>
                         </div>
-                </div>
+                    </div>
+                    <div class="row" runat="server" id="InvitacionesPendientes" >
+                        <div class="col-md-4 col-md-offset-4">
+                            <asp:Button ClientIDMode="Static" ID="btninvitacionequipo" name="btninvitacionequipo" runat="server" Text="Tiene Invitaciones de Equipo Pendientes" CssClass="btn btn-block btn-success" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" runat="server" id="SolicitudesPendientes">
+                        <div class="col-md-4 col-md-offset-4">
+                            <asp:Button ClientIDMode="Static" ID="btnsolicitudjugadores" name="btnsolicitudjugadores" runat="server" Text="Tiene Solicitudes de Jugadores Pendientes" CssClass="btn btn-block btn-warning" />
+                        </div>
+        <asp:HiddenField ID="solicitudgame" runat="server" />
+        <asp:HiddenField ID="invitaciongame" runat="server" />
+                    </div>
                 </div>
             </div>
         </div>

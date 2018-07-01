@@ -6,33 +6,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <script type="text/javascript">
-        //$(document).ready(function () {
-        //    var singleElimination = {
-        //        "teams": [              // Matchups
-        //            ["Team 1", "Team 2"], // First match
-        //            ["Team 3", "Team 4"]  // Second match
-        //        ],
-        //        "results": [            // List of brackets (single elimination, so only one bracket)
-        //            [                     // List of rounds in bracket
-        //                [                   // First round in this bracket
-        //                    [1, 2],           // Team 1 vs Team 2
-        //                    [3, 4]            // Team 3 vs Team 4
-        //                ],
-        //                [                   // Second (final) round in single elimination bracket
-        //                    [5, 6],           // Match for first place
-        //                ]
-        //            ]
-        //        ]
-        //    }
-        //    $('.demo').bracket({
-        //        skipConsolationRound: true,
-
-        //        init: singleElimination
-
-        //    });
-        //});
-    </script>
 
     <script src="http://player.twitch.tv/js/embed/v1.js"></script>
     <div id="<player div ID>"></div>
@@ -94,10 +67,17 @@
                 <br />
                 <br />
                 <br />
+                  <br />
+                <br />
+                <div class="demo col-md-offset-3"></div>
                 <br />
                 <br />
                 <br />
-                <div class="demo col-md-offset-4"></div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
                 <br />
                 <br />
                 <br />

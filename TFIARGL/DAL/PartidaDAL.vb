@@ -110,10 +110,11 @@ Public Class PartidaDAL
 
     Public Sub FinalizarPartida(partida As Partida)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("Update Partida set Resultado=@Resultado, Ganador_Local=@Ganador where id_partida=@ID_Partida")
+            Dim Command As SqlCommand = Acceso.MiComando("Update Partida set Resultado_Local=@ResultadoLocal,Resultado_Visitante=@ResultadoVisitante, Ganador_Local=@Ganador where id_partida=@ID_Partida")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Partida", partida.ID_Partida))
-                .Add(New SqlParameter("@Resultado", partida.Resultado))
+                .Add(New SqlParameter("@ResultadoLocal", partida.ResultadoLocal))
+                .Add(New SqlParameter("@ResultadoVisitante", partida.ResultadoVisitante))
                 If partida.Ganador.ID_Equipo = partida.Equipos(0).ID_Equipo Then
                     .Add(New SqlParameter("@Ganador", True))
                 Else
@@ -122,6 +123,29 @@ Public Class PartidaDAL
             End With
             Acceso.Escritura(Command)
             Command.Dispose()
+
+            Dim CommandVer As SqlCommand = Acceso.MiComando(" select ID_Partida_Determinar, 1 as Localia from Partida_Partida where ID_Partida_Jugar=@ID_Partida union   select ID_Partida_Determinar, 0 as Localia from Partida_Partida where ID_Partida_Jugar2=@ID_Partida")
+            With CommandVer.Parameters
+                .Add(New SqlParameter("@ID_Partida", partida.ID_Partida))
+            End With
+
+            Dim dt As DataTable = Acceso.Lectura(CommandVer)
+
+            If dt.Rows.Count > 0 Then
+                Dim Command2 As SqlCommand
+                If dt.Rows(0)("Localia") = 1 Then
+                    Command2 = Acceso.MiComando("Update Partida set ID_Equipo_Local=@ID_Equipo where id_partida=@ID_Partida")
+                Else
+                    Command2 = Acceso.MiComando("Update Partida set ID_Equipo_Visitante=@ID_Equipo where id_partida=@ID_Partida")
+                End If
+
+                With Command2.Parameters
+                    .Add(New SqlParameter("@ID_Partida", dt.Rows(0)("ID_Partida_Determinar")))
+                    .Add(New SqlParameter("@ID_Equipo", partida.Ganador.ID_Equipo))
+                End With
+                Acceso.Escritura(Command2)
+                Command2.Dispose()
+            End If
         Catch ex As Exception
             Throw ex
         End Try
@@ -163,7 +187,7 @@ Public Class PartidaDAL
 
     Public Function TraerPartidasTorneoVisualizacion(id_torneo As Integer) As List(Of Partida)
         Try
-            Dim Command As SqlCommand = Acceso.MiComando("select P.ID_Partida,P.ID_Torneo,P.ID_Equipo_Local,P.ID_Equipo_Visitante,P.ID_Fase,P.Resultado,P.Ganador_Local,IIF(T.Fechas_Publicas=0,null,P.FechaHora) as FechaHora from Partida as P inner join Torneo as T on T.ID_Torneo=P.ID_Torneo  where P.ID_Torneo=@ID_Torneo")
+            Dim Command As SqlCommand = Acceso.MiComando("select P.ID_Partida,P.ID_Torneo,P.ID_Equipo_Local,P.ID_Equipo_Visitante,P.ID_Fase,P.Resultado_Local,P.Resultado_Visitante,P.Ganador_Local,IIF(T.Fechas_Publicas=0,null,P.FechaHora) as FechaHora from Partida as P inner join Torneo as T on T.ID_Torneo=P.ID_Torneo  where P.ID_Torneo=@ID_Torneo")
             With Command.Parameters
                 .Add(New SqlParameter("@ID_Torneo", id_torneo))
             End With
@@ -189,8 +213,11 @@ Public Class PartidaDAL
                 partida.FechaHora = row("FechaHora")
             End If
 
-            If Not IsDBNull(row("Resultado")) Then
-                partida.Resultado = row("Resultado")
+            If Not IsDBNull(row("Resultado_Local")) Then
+                partida.ResultadoLocal = row("Resultado_Local")
+            End If
+            If Not IsDBNull(row("Resultado_Visitante")) Then
+                partida.ResultadoVisitante = row("Resultado_Visitante")
             End If
             Dim gestorEquipo As New EquipoDAL
             If Not IsDBNull(row("ID_Equipo_Local")) Then
@@ -200,7 +227,7 @@ Public Class PartidaDAL
                 partida.Equipos.Add(gestorEquipo.TraerEquipoID(row("ID_Equipo_Visitante")))
             End If
             If Not IsDBNull(row("Ganador_Local")) Then
-                If row("Ganador_Local") = 1 Then
+                If row("Ganador_Local") = True Then
                     partida.Ganador = partida.Equipos(0)
                 Else
                     partida.Ganador = partida.Equipos(1)

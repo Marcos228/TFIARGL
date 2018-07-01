@@ -71,6 +71,7 @@
     <Compile Include="DigitoVerificadorDAL.vb" />
     <Compile Include="FacturaDAL.vb" />
     <Compile Include="EstadisticaDAL.vb" />
+    <Compile Include="PuntajeDAL.vb" />
     <Compile Include="SponsorDAL.vb" />
     <Compile Include="EquipoDAL.vb" />
     <Compile Include="PartidaDAL.vb" />

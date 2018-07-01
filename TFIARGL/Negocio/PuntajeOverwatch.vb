@@ -88,11 +88,12 @@ Public Class PuntajeOverwatch
                             PrimerModulo = 3
                         End If
                         R = (PrimerModulo * Testad.Valor_Base)
+                        Puntaje += R
                     End If
                 Else
-                    Dim PrimerModulo As Single = VM(Testad.ID_Tipo_Estadistica) * VJ(Testad.ID_Tipo_Estadistica)
+                    Dim PrimerModulo As Single = Testad.Valor_Base / VM(Testad.ID_Tipo_Estadistica)
                     If Not Double.IsNaN(PrimerModulo) And PrimerModulo <> 0 Then
-                        R = (Testad.Valor_Base / PrimerModulo)
+                        R = (PrimerModulo * VJ(Testad.ID_Tipo_Estadistica))
                     End If
 
                     Puntaje += R
